@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use SportExperiment\Repository\Eloquent\User;
 
-use SportExperiment\Framework\Repository\Eloquent\User as UserModel;
 class CreateUserTable extends Migration {
 
 	/**
@@ -12,14 +12,13 @@ class CreateUserTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('users', function($table){
-			$table->increments(UserModel::$ID_KEY);
-			$table->string(UserModel::$USER_NAME_KEY)->unique();
-			$table->string(UserModel::$PASSWORD_KEY);
-            $table->integer('role')->unsigned();
-			$table->boolean('active')->default(false);
+		Schema::create(User::$TABLE_KEY, function($table){
+			$table->increments(User::$ID_KEY);
+			$table->string(User::$USER_NAME_KEY)->unique();
+			$table->string(User::$PASSWORD_KEY);
+            $table->integer(User::$ROLE_KEY)->unsigned();
+			$table->boolean(User::$ACTIVE_KEY)->default(false);
             $table->timestamps();
-            $table->engine= 'InnoDB';
         });
 	}
 
@@ -30,7 +29,7 @@ class CreateUserTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('users');
+		Schema::drop(User::$TABLE_KEY);
 	}
 
 }

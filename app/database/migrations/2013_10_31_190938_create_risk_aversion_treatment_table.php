@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
 
 class CreateRiskAversionTreatmentTable extends Migration {
 
@@ -11,13 +12,13 @@ class CreateRiskAversionTreatmentTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('risk_aversion_treatment', function($table)
+		Schema::create(RiskAversion::$TABLE_KEY, function($table)
 		{
-			$table->string('id')->unique();
-			$table->integer('session_id')->unsigned();
-            $table->integer('low_prize');
-            $table->integer('mid_prize');
-            $table->integer('high_prize');
+			$table->string(RiskAversion::$ID_KEY)->unique();
+			$table->integer(RiskAversion::$SESSION_ID_KEY)->unsigned();
+            $table->integer(RiskAversion::$LOW_PRIZE_KEY);
+            $table->integer(RiskAversion::$MID_PRIZE_KEY);
+            $table->integer(RiskAversion::$LOW_PRIZE_KEY);
 		});
 	}
 
@@ -28,7 +29,7 @@ class CreateRiskAversionTreatmentTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('risk_aversion_treatment');
+        Schema::drop(RiskAversion::$TABLE_KEY);
 	}
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use SportExperiment\Repository\Eloquent\Subject;
 
 class CreateSubjectsTable extends Migration {
 
@@ -11,20 +12,19 @@ class CreateSubjectsTable extends Migration {
 	 */
 	public function up()
 	{
-        Schema::create('subjects', function($table){
-            $table->increments('id');
-            $table->integer('session_id')->unsigned();
-            $table->string('user_id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('profession');
-            $table->string('education');
-            $table->string('gender');
-            $table->integer('age')->unsigned();
-            $table->string('ethnicity');
-            $table->boolean('active')->default(false);
+        Schema::create(Subject::$TABLE_KEY, function($table){
+            $table->increments(Subject::$ID_KEY);
+            $table->integer(Subject::$SESSION_ID_KEY)->unsigned();
+            $table->string(Subject::$USER_ID_KEY);
+            $table->string(Subject::$FIRST_NAME_KEY);
+            $table->string(Subject::$LAST_NAME_KEY);
+            $table->string(Subject::$PROFESSION_KEY);
+            $table->string(Subject::$EDUCATION_KEY);
+            $table->string(Subject::$GENDER_KEY);
+            $table->integer(Subject::$AGE_KEY)->unsigned();
+            $table->string(Subject::$ETHNICITY_KEY);
+            $table->boolean(Subject::$ACTIVE_KEY)->default(false);
             $table->timestamps();
-            $table->engine= 'InnoDB';
         });
 	}
 
@@ -35,7 +35,7 @@ class CreateSubjectsTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('subjects');
+        Schema::drop(Subject::$TABLE_KEY);
 	}
 
 }

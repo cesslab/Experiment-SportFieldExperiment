@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use SportExperiment\Repository\Eloquent\Session;
 
 class CreateExperimentSessionTable extends Migration {
 
@@ -11,10 +12,10 @@ class CreateExperimentSessionTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('experiment_sessions', function($table)
+		Schema::create(Session::$TABLE_KEY, function($table)
 		{
-			$table->string('id')->unique();
-			$table->integer('num_subjects');
+			$table->string(Session::$ID_KEY)->unique();
+			$table->integer(Session::$NUM_SUBJECTS_KEY);
 		});
 	}
 
@@ -25,7 +26,7 @@ class CreateExperimentSessionTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('experiment_sessions');
+		Schema::drop(Session::$TABLE_KEY);
 	}
 
 }
