@@ -5,26 +5,22 @@ Route::get('/', function()
     echo "OK";
 });
 
-use SportExperiment\Framework\Controller\Researcher\Login;
-use SportExperiment\Framework\Controller\Researcher\Dashboard;
-use SportExperiment\Framework\Controller\Researcher\Session;
+use SportExperiment\Controller\Researcher\Login;
+use SportExperiment\Controller\Researcher\Dashboard;
+use SportExperiment\Controller\Researcher\Session;
+use SportExperiment\Filter\AuthorizeResearcher;
 
-Route::get('/researcher/login', Login::getNamespace() . '@getLogin');
+Route::get(Login::$URI, Login::getNamespace() . '@getLogin');
 
-Route::post('/researcher/login',
-    array(
-        'before'=>'csrf',
-        'uses'=>Login::getNamespace() .'@postLogin'));
+Route::post(Login::$URI, array('before'=>'csrf', 'uses'=>Login::getNamespace() .'@postLogin'));
 
-Route::get('/researcher/dashboard',
-    array(
-        'before'=>'authResearcher',
-        'uses'=>Dashboard::getNamespace() . '@getDashboard'));
+Route::get(Dashboard::$URI, array(
+    'before'=>AuthorizeResearcher::$FILTER_NAME, 'uses'=>Dashboard::getNamespace() . '@getDashboard'));
 
-Route::post('/researcher/dashboard',
-    array(
-        'before'=>'authResearcher',
-        'uses'=>Session::getNamespace() . '@postSession'));
+Route::post(Dashboard::$URI, array(
+    'before'=>AuthorizeResearcher::$FILTER_NAME, 'uses'=>Session::getNamespace() . '@postSession'));
 
-Route::filter('authResearcher', 
-    '\\SportExperiment\\Framework\\Filter\\AuthResearcher');
+/*
+ * Filters
+ */
+Route::filter(AuthorizeResearcher::$FILTER_NAME, AuthorizeResearcher::getNamespace());
