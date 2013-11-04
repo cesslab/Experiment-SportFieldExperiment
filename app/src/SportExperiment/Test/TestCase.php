@@ -1,12 +1,9 @@
 <?php namespace SportExperiment\Test;
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase {
+use Illuminate\Foundation\Testing\TestCase as IlluminateTestCase;
 
-	/**
-	 * Creates the application.
-	 *
-	 * @return Symfony\Component\HttpKernel\HttpKernelInterface
-	 */
+class TestCase extends IlluminateTestCase {
+
 	public function createApplication()
 	{
 		$unitTesting = true;
