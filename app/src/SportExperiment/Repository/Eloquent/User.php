@@ -2,8 +2,10 @@
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Support\Facades\Hash;
+use SportExperiment\Repository\Eloquent\Role;
 
-class User extends BaseEloquent implements UserInterface {
+class User extends BaseEloquent implements UserInterface
+{
     public static $TABLE_KEY = 'users';
 
     public static $ID_KEY = 'id';
@@ -23,28 +25,34 @@ class User extends BaseEloquent implements UserInterface {
         $this->table = self::$TABLE_KEY;
         $this->fillable = array(self::$USER_NAME_KEY, self::$PASSWORD_KEY, self::$ROLE_KEY, self::$ACTIVE_KEY);
         $this->rules = array(
-            self::$USER_NAME_KEY=>'required|alpha_num|min:3|max:16',
-            self::$PASSWORD_KEY=>'required|alpha_num|min:3|max:16');
+            self::$USER_NAME_KEY=>'required|alpha_num|min:1|max:16',
+            self::$PASSWORD_KEY=>'required|alpha_num|min:1|max:16');
 
         parent::__construct($attributes);
     }
 
     public function subject()
     {
-        return $this->hasOne(Subject::getNamespace(), 'user_id');
+        return $this->hasOne(Subject::getNamespace(), Subject::$USER_ID_KEY);
     }
 
-    public function isResearcher()
+    public function researcher()
     {
-        $userModel = User::where('username', $this->getUserName())
-            ->where('role', Role::$RESEARCHER)
-            ->where('active', true)->first();
+        return $this->hasOne(Subject::getNamespace(), Researcher::$USER_ID_KEY);
+    }
+
+    public function isRole(Role $role)
+    {
+        $userModel = User::where(self::$USER_NAME_KEY, $this->getUserName())
+            ->where(self::$ROLE_KEY, $role->getRole())
+            ->where(self::$ACTIVE_KEY, true)->first();
 
         // Researcher not found
         if ($userModel == null)
             return false;
 
         return Hash::check($this->getPassword(), $userModel->password);
+
     }
 
     public function getAuthInfo()
