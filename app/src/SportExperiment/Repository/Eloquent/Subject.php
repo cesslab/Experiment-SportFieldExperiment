@@ -2,7 +2,7 @@
 
 class Subject extends BaseEloquent
 {
-    public static $TABLE_KEY = 'experiment_sessions';
+    public static $TABLE_KEY = 'subjects';
 
     public static $ID_KEY = 'id';
     public static $USER_ID_KEY = 'user_id';
@@ -14,31 +14,49 @@ class Subject extends BaseEloquent
     public static $GENDER_KEY = 'gender';
     public static $AGE_KEY = 'age';
     public static $ETHNICITY_KEY = 'ethnicity';
-    public static $ACTIVE_KEY = 'active';
 
+    protected $rules;
     protected $table;
     protected $fillable;
 
     public function __construct($attributes = array())
     {
         $this->table = self::$TABLE_KEY;
+        $this->rules = array(
+            self::$FIRST_NAME_KEY=>'required|alpha|min:2|max:100',
+            self::$LAST_NAME_KEY=>'required|alpha|min:2|max:100',
+            self::$PROFESSION_KEY=>'required|alpha|min:2|max:250',
+            self::$EDUCATION_KEY=>'required|alpha|min:2|max:250',
+            self::$GENDER_KEY=>'required|alpha|in:male,female',
+            self::$AGE_KEY=>'required|integer|min:18|max:100',
+            self::$ETHNICITY_KEY=>'required|alpha|min:2|max:100',
+        );
 
-        $this->fillable = array(self::$FIRST_NAME_KEY, self::$USER_ID_KEY, self::$LAST_NAME_KEY, self::$SESSION_ID_KEY,
-            self::$PROFESSION_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY, self::$AGE_KEY, self::$ACTIVE_KEY, self::$ETHNICITY_KEY);
+        $this->fillable = array(self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY,
+            self::$PROFESSION_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY, self::$AGE_KEY, self::$ETHNICITY_KEY);
 
         parent::__construct($attributes);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::getNamespace(), 'user_id');
+        return $this->belongsTo(User::getNamespace(), self::$USER_ID_KEY);
     }
 
     public function session()
     {
-        return $this->belongsTo(Session::getNamespace(), 'session_id');
+        return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
     }
 
+    public function setId($id)
+    {
+        $this->setAttribute(self::$ID_KEY, $id);
+    }
+
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
+    }
 
     /**
      * @param mixed $sessionId
@@ -167,6 +185,4 @@ class Subject extends BaseEloquent
     {
         return $this->getAttribute(self::$PROFESSION_KEY);
     }
-
-
 }
