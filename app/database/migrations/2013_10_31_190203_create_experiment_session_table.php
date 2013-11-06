@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use SportExperiment\Repository\Eloquent\Session;
+use Illuminate\Support\Facades\Schema;
 
 class CreateExperimentSessionTable extends Migration {
 
@@ -14,8 +15,9 @@ class CreateExperimentSessionTable extends Migration {
 	{
 		Schema::create(Session::$TABLE_KEY, function($table)
 		{
-			$table->string(Session::$ID_KEY)->unique();
+            $table->increments(Session::$ID_KEY);
 			$table->integer(Session::$NUM_SUBJECTS_KEY);
+            $table->timestamps();
 		});
 	}
 
