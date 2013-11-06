@@ -1,7 +1,9 @@
 <?php namespace SportExperiment\View\Composer\Researcher;
 
 use SportExperiment\View\Composer\BaseComposer;
+use SportExperiment\Controller\Researcher\Session as SessionController;
 use SportExperiment\Repository\ResearcherRepositoryInterface;
+use Illuminate\Support\Facades\URL;
 
 class Dashboard extends BaseComposer
 {
@@ -16,10 +18,7 @@ class Dashboard extends BaseComposer
     public function compose($view)
     {
         $view->with('sessions', $this->researcherRepository->getSessions());
-    }
-
-    public static function getNamespace()
-    {
-        return get_called_class();
+        $view->with('subjects', $this->researcherRepository->getSubjects());
+        $view->with('sessionUrl', URL::to(SessionController::$URI));
     }
 }
