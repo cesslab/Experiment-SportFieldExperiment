@@ -5,7 +5,7 @@ use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
 
 class Session extends BaseEloquent
 {
-    public static $TABLE_KEY = 'experiment_session';
+    public static $TABLE_KEY = 'experiment_sessions';
 
     public static $ID_KEY = 'id';
     public static $NUM_SUBJECTS_KEY = 'num_subjects';
@@ -22,12 +22,27 @@ class Session extends BaseEloquent
         parent::__construct($attributes);
     }
 
+    public function subjects()
+    {
+        return $this->hasMany(Subject::getNamespace(), Subject::$SESSION_ID_KEY);
+    }
+
+    public function willingnessPay()
+    {
+        return $this->hasOne(WillingnessPay::getNamespace(), WillingnessPay::$SESSION_ID_KEY);
+    }
+
+    public function riskAversion()
+    {
+        return $this->hasOne(RiskAversion::getNamespace(), RiskAversion::$SESSION_ID_KEY);
+    }
+
     /**
      * @param mixed $id
      */
     public function setId($id)
     {
-        $this->setAttributes(self::$ID_KEY, $id);
+        $this->setAttribute(self::$ID_KEY, $id);
     }
 
     /**
@@ -35,7 +50,7 @@ class Session extends BaseEloquent
      */
     public function setNumSubjects($numSubjects)
     {
-        $this->setAttributes(self::$NUM_SUBJECTS_KEY, $numSubjects);
+        $this->setAttribute(self::$NUM_SUBJECTS_KEY, $numSubjects);
     }
 
     /**
@@ -43,7 +58,7 @@ class Session extends BaseEloquent
      */
     public function getId()
     {
-        return $this->getAttributes(self::$ID_KEY);
+        return $this->getAttribute(self::$ID_KEY);
     }
 
     /**
@@ -51,21 +66,6 @@ class Session extends BaseEloquent
      */
     public function getNumSubjects()
     {
-        return $this->getAttributes(self::$NUM_SUBJECTS_KEY);
-    }
-
-    public function subjects()
-    {
-        return $this->hasMany(Subject::getNamespace(), 'session_id');
-    }
-
-    public function willingnessPay()
-    {
-        return $this->hasOne(WillingnessPay::getNamespace(), 'session_id');
-    }
-
-    public function riskAversion()
-    {
-        return $this->hasOne(RiskAversion::getNamespace(), 'session_id');
+        return $this->getAttribute(self::$NUM_SUBJECTS_KEY);
     }
 }
