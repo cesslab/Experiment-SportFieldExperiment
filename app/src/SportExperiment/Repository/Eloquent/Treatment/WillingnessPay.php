@@ -5,11 +5,13 @@ use SportExperiment\Repository\Eloquent\Session;
 
 class WillingnessPay extends BaseEloquent
 {
-    public static $TABLE_KEY = 'willingness_to_pay_treatment';
+    public static $TABLE_KEY = 'willingness_to_pay_treatments';
 
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
     public static $ENDOWMENT_KEY = 'endowment';
+
+    public $timestamps = false;
 
     protected $table;
     protected $fillable;
@@ -33,7 +35,7 @@ class WillingnessPay extends BaseEloquent
      */
     public function getEndowment()
     {
-        return $this->getAttributes(self::$ENDOWMENT_KEY);
+        return $this->getAttribute(self::$ENDOWMENT_KEY);
     }
 
     /**
@@ -41,7 +43,7 @@ class WillingnessPay extends BaseEloquent
      */
     public function getSessionId()
     {
-        return $this->getAttributes(self::$SESSION_ID_KEY);
+        return $this->getAttribute(self::$SESSION_ID_KEY);
     }
 
 }
