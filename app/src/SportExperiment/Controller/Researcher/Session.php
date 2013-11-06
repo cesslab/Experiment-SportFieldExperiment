@@ -1,7 +1,7 @@
 <?php namespace SportExperiment\Controller\Researcher;
 
 use SportExperiment\Repository\ResearcherRepositoryInterface;
-use SportExperiment\View\Composer\Researcher\Dashboard as DashboardComposer;
+use SportExperiment\View\Composer\Researcher\Session as SessionComposer;
 use SportExperiment\Repository\ModelCollection;
 use SportExperiment\Repository\Eloquent\Session as ExperimentSession;
 use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
@@ -13,12 +13,19 @@ use \Illuminate\Support\Facades\Input;
 
 class Session extends BaseController
 {
+    public static $URI = 'researcher/experiment/session';
+
     private $researcherRepository;
 
     public function __construct(ResearcherRepositoryInterface $researcherRepository)
     {
         $this->researcherRepository = $researcherRepository;
-        View::composer(DashboardComposer::$VIEW_PATH, DashboardComposer::getNamespace());
+        View::composer(SessionComposer::$VIEW_PATH, SessionComposer::getNamespace());
+    }
+
+    public function getSession()
+    {
+        return View::make(SessionComposer::$VIEW_PATH);
     }
 
     public function postSession()
@@ -29,7 +36,7 @@ class Session extends BaseController
         $modelCollection->addModel(new RiskAversion(Input::all()));
 
         if ($modelCollection->validationFails())
-            return Redirect::to(Dashboard::$URI)->with('errors', $modelCollection->getErrorMessages());
+            return Redirect::to(self::$URI)->withInput()->with('errors', $modelCollection->getErrorMessages());
 
         $this->researcherRepository->saveSession($modelCollection);
         return Redirect::to(Dashboard::$URI);
