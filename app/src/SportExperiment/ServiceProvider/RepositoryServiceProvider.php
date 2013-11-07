@@ -2,6 +2,7 @@
 
 use SportExperiment\Repository\ResearcherRepository;
 use Illuminate\Support\ServiceProvider;
+use SportExperiment\Repository\SubjectRepository;
 
 class RepositoryServiceProvider extends ServiceProvider {
 
@@ -10,6 +11,10 @@ class RepositoryServiceProvider extends ServiceProvider {
         $this->app->bind('SportExperiment\\Repository\\ResearcherRepositoryInterface', function()
         {
             return new ResearcherRepository;
+        });
+        $this->app->bind('SportExperiment\\Repository\\SubjectRepositoryInterface', function()
+        {
+            return new SubjectRepository;
         });
     }
 
