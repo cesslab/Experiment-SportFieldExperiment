@@ -20,7 +20,7 @@ class WillingnessPay extends BaseEloquent
     public function __construct($attributes = array()){
         $this->table = self::$TABLE_KEY;
         $this->fillable = array(self::$SESSION_ID_KEY, self::$ENDOWMENT_KEY);
-        $this->rules = array(self::$ENDOWMENT_KEY=>'required|integer|min:1|max:1000000');
+        $this->rules = array(self::$ENDOWMENT_KEY=>'required|numeric|min:1|max:1000000');
 
         parent::__construct($attributes);
     }
