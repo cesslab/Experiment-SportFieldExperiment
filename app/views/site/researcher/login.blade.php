@@ -2,8 +2,8 @@
 
 @section('content')
     {{ Form::open(array('url'=>URL::to('researcher/login'), 'method'=>'post')) }}
-    {{ Form::label('username', 'User Name') }}
-    {{ Form::text('username', '') }}
+    {{ Form::label('user_name', 'User Name') }}
+    {{ Form::text('user_name', '') }}
     {{ Form::label('password', 'Password') }}
     {{ Form::password('password') }}
     {{ Form::submit('login') }}
