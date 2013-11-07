@@ -16,7 +16,10 @@ class CreateSubjectsTable extends Migration {
         Schema::create(Subject::$TABLE_KEY, function($table){
             $table->increments(Subject::$ID_KEY);
             $table->integer(Subject::$SESSION_ID_KEY)->unsigned();
-            $table->string(Subject::$USER_ID_KEY)->nullable();
+            $table->integer(Subject::$USER_ID_KEY)->unsigned();
+
+            $table->integer(Subject::$GAME_STATE_KEY);
+
             $table->string(Subject::$FIRST_NAME_KEY)->nullable();
             $table->string(Subject::$LAST_NAME_KEY)->nullable();
             $table->string(Subject::$PROFESSION_KEY)->nullable();
