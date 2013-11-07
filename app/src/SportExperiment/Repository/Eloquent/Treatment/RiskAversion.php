@@ -28,9 +28,9 @@ class RiskAversion extends BaseEloquent
             self::$HIGH_PRIZE_KEY, self::$GAMBLE_PROBABILITY_KEY);
 
         $this->rules = array(
-            self::$LOW_PRIZE_KEY=>'required|integer|min:1|max:1000000',
-            self::$MID_PRIZE_KEY=>'required|integer|min:1|max:1000000',
-            self::$HIGH_PRIZE_KEY=>'required|integer|min:1|max:1000000',
+            self::$LOW_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
+            self::$MID_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
+            self::$HIGH_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$GAMBLE_PROBABILITY_KEY=>'required|numeric|min:0|max:1'
         );
 
