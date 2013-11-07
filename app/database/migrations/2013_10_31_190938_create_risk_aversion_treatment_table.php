@@ -17,10 +17,10 @@ class CreateRiskAversionTreatmentTable extends Migration {
 		{
             $table->increments(RiskAversion::$ID_KEY);
 			$table->integer(RiskAversion::$SESSION_ID_KEY)->unsigned();
-            $table->integer(RiskAversion::$LOW_PRIZE_KEY);
-            $table->integer(RiskAversion::$MID_PRIZE_KEY);
-            $table->integer(RiskAversion::$HIGH_PRIZE_KEY);
-            $table->integer(RiskAversion::$GAMBLE_PROBABILITY_KEY);
+            $table->double(RiskAversion::$LOW_PRIZE_KEY);
+            $table->double(RiskAversion::$MID_PRIZE_KEY);
+            $table->double(RiskAversion::$HIGH_PRIZE_KEY);
+            $table->double(RiskAversion::$GAMBLE_PROBABILITY_KEY);
 		});
 	}
 

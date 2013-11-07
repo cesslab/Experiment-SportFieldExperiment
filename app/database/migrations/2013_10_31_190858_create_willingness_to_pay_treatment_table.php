@@ -18,7 +18,7 @@ class CreateWillingnessToPayTreatmentTable extends Migration {
 		{
             $table->increments(WillingnessPay::$ID_KEY);
 			$table->integer(WillingnessPay::$SESSION_ID_KEY)->unsigned();
-            $table->integer(WillingnessPay::$ENDOWMENT_KEY);
+            $table->double(WillingnessPay::$ENDOWMENT_KEY);
 		});
 	}
 
