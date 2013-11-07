@@ -1,10 +1,13 @@
 <?php namespace SportExperiment\Repository\Eloquent;
 
+use SportExperiment\Repository\Eloquent\Subject\GameState;
+
 class Subject extends BaseEloquent
 {
     public static $TABLE_KEY = 'subjects';
 
     public static $ID_KEY = 'id';
+    public static $GAME_STATE_KEY = 'game_state';
     public static $USER_ID_KEY = 'user_id';
     public static $FIRST_NAME_KEY = 'first_name';
     public static $LAST_NAME_KEY = 'last_name';
@@ -128,6 +131,17 @@ class Subject extends BaseEloquent
     public function setProfession($profession)
     {
         $this->setAttribute(self::$PROFESSION_KEY, $profession);
+    }
+
+    public function setGameState(GameState $gameState)
+    {
+        $this->setAttribute(self::$GAME_STATE_KEY, $gameState->getState());
+    }
+
+
+    public function getGameState()
+    {
+        return $this->getAttribute(self::$GAME_STATE_KEY);
     }
 
     /**
