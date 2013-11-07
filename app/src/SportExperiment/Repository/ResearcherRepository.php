@@ -7,6 +7,8 @@ use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
 use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
 use SportExperiment\Repository\Eloquent\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use SportExperiment\Repository\Eloquent\Subject\GameState;
 
 class ResearcherRepository implements ResearcherRepositoryInterface
 {
@@ -26,39 +28,46 @@ class ResearcherRepository implements ResearcherRepositoryInterface
     private function createSessionSubjects(Session $session)
     {
         // Add Subjects
-        for ($i = 0; $i < $session->getNumSubjects(); ++$i) {
+        $id = DB::table(Subject::$TABLE_KEY)->max(Subject::$ID_KEY) + 1;
+        for ($i = 1; $i <= $session->getNumSubjects(); ++$i, ++$id) {
             $user = new User();
-            $user->setUserName("$i");
-            $user->setPassword(Hash::make("$i"));
+            $user->setUserName("$id");
+            $user->setPassword(Hash::make("pass$id"));
+            $user->setRole(Role::$SUBJECT);
             $user->setActive(true);
             $user->save();
 
             $subject = new Subject();
+            $subject->setGameState(new GameState(GameState::$REGISTRATION));
             $subject->session()->associate($session);
             $subject->user()->associate($user);
             $subject->save();
         }
-
     }
 
     public function saveSession(ModelCollection $modelCollection)
     {
-        $sessionModel = $modelCollection->getModel(Session::getNamespace());
-        $sessionModel->save();
+        $session = $modelCollection->getModel(Session::getNamespace());
+        $session->save();
 
-        $riskAversionModel = $modelCollection->getModel(RiskAversion::getNamespace());
-        $riskAversionModel->session()->associate($sessionModel);
-        $riskAversionModel->save();
+        $riskAversion = $modelCollection->getModel(RiskAversion::getNamespace());
+        $riskAversion->session()->associate($session);
+        $riskAversion->save();
 
-        $willingnessPayModel = $modelCollection->getModel(WillingnessPay::getNamespace());
-        $willingnessPayModel->session()->associate($sessionModel);
-        $willingnessPayModel->save();
+        $willingnessPay = $modelCollection->getModel(WillingnessPay::getNamespace());
+        $willingnessPay->session()->associate($session);
+        $willingnessPay->save();
 
-        $this->createSessionSubjects($sessionModel);
+        $this->createSessionSubjects($session);
     }
 
     public function getSessions()
     {
         return Session::all();
+    }
+
+    public function getSubjects()
+    {
+        return Subject::all();
     }
 }
