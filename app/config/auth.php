@@ -28,7 +28,7 @@ return array(
 	|
 	*/
 
-	'model' => '\\SportExperiment\\Framework\\Repository\\Eloquent\\User',
+	'model' => '\\SportExperiment\\Repository\\Eloquent\\User',
 
 	/*
 	|--------------------------------------------------------------------------
