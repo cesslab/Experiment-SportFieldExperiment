@@ -21,5 +21,4 @@ class Dashboard extends BaseController
     {
         return View::make(DashboardComposer::$VIEW_PATH);
     }
-
 }
