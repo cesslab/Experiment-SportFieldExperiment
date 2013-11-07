@@ -1,12 +1,14 @@
 <?php namespace SportExperiment\Controller\Subject;
 
 use SportExperiment\Controller\BaseController;
+use SportExperiment\Repository\Eloquent\Subject\GameState;
 use SportExperiment\Repository\SubjectRepositoryInterface;
 use SportExperiment\View\Composer\Subject\Registration as DemographicComposer;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use SportExperiment\Controller\Subject\Experiment as ExperimentController;
 
 class Registration extends BaseController
 {
@@ -32,7 +34,8 @@ class Registration extends BaseController
         if ($subject->validationFails())
             return Redirect::to(self::$URI)->with('errors', $subject->getErrorMessages());
 
+        $subject->setGameState(new GameState(GameState::$PRE_GAME_HOLD_STATE));
         $subject->save();
-        return Redirect::to(self::$URI);
+        return Redirect::to(ExperimentController::$URI);
     }
 }
