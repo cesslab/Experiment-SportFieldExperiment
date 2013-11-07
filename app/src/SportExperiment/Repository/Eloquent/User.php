@@ -38,7 +38,7 @@ class User extends BaseEloquent implements UserInterface
 
     public function researcher()
     {
-        return $this->hasOne(Subject::getNamespace(), Researcher::$USER_ID_KEY);
+        return $this->hasOne(Researcher::getNamespace(), Researcher::$USER_ID_KEY);
     }
 
     public function isRole(Role $role)
