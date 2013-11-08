@@ -41,4 +41,9 @@ class BaseValidator
     {
         return $this->validator->getData();
     }
+
+    public function getRules()
+    {
+        return $this->validator->getRules();
+    }
 }
