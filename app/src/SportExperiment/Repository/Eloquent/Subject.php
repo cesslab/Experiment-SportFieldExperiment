@@ -1,6 +1,6 @@
 <?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\Subject\GameState;
+use SportExperiment\Repository\Eloquent\Subject\SubjectState;
 
 class Subject extends BaseEloquent
 {
@@ -133,13 +133,13 @@ class Subject extends BaseEloquent
         $this->setAttribute(self::$PROFESSION_KEY, $profession);
     }
 
-    public function setGameState(GameState $gameState)
+    public function setState($subjectGameState)
     {
-        $this->setAttribute(self::$GAME_STATE_KEY, $gameState->getState());
+        $this->setAttribute(self::$GAME_STATE_KEY, $subjectGameState);
     }
 
 
-    public function getGameState()
+    public function getState()
     {
         return $this->getAttribute(self::$GAME_STATE_KEY);
     }
