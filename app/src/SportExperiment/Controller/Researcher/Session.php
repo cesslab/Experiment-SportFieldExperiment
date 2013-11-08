@@ -1,5 +1,10 @@
 <?php namespace SportExperiment\Controller\Researcher;
 
+use \Illuminate\Support\Facades\View;
+use \Illuminate\Support\Facades\Redirect;
+use \Illuminate\Support\Facades\Input;
+
+use SportExperiment\Repository\Eloquent\SessionState;
 use SportExperiment\Repository\ResearcherRepositoryInterface;
 use SportExperiment\View\Composer\Researcher\Session as SessionComposer;
 use SportExperiment\Repository\ModelCollection;
@@ -7,13 +12,13 @@ use SportExperiment\Repository\Eloquent\Session as ExperimentSession;
 use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
 use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
 use SportExperiment\Controller\BaseController;
-use \Illuminate\Support\Facades\View;
-use \Illuminate\Support\Facades\Redirect;
-use \Illuminate\Support\Facades\Input;
+use SportExperiment\Repository\Eloquent\Session as SessionModel;
+use SportExperiment\Validation\IdValidator;
 
 class Session extends BaseController
 {
-    public static $URI = 'researcher/experiment/session';
+    private static $URI = 'researcher/experiment/session';
+    private static $UPDATE_URI = 'researcher/experiment/session/update';
 
     private $researcherRepository;
 
@@ -36,10 +41,43 @@ class Session extends BaseController
         $modelCollection->addModel(new RiskAversion(Input::all()));
 
         if ($modelCollection->validationFails())
-            return Redirect::to(self::$URI)->withInput()->with('errors', $modelCollection->getErrorMessages());
+            return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
 
         $this->researcherRepository->saveSession($modelCollection);
-        return Redirect::to(Dashboard::$URI);
+        return Redirect::to(Dashboard::getRoute());
+    }
+
+    public function updateSession()
+    {
+        $idValidator = new IdValidator();
+        $idValidator->setId(0);
+        if ($idValidator->validationFails()){
+            die();
+            return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $idValidator->getErrorMessages());
+        }
+
+        $session = SessionModel::find($idValidator->getId());
+        if (is_null($session))
+            return Redirect::to(Dashboard::getRoute())->withInput()->with('error', 'Session not found.');
+
+        $sessionState = new SessionState();
+        $sessionState->setState(Input::get(SessionModel::$STATE_KEY));
+        if ($sessionState->validationFails())
+            return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $sessionState->getErrorMessages());
+
+        $session->setState($sessionState->getState());
+        $session->save();
+        return Redirect::to(Dashboard::getRoute());
+    }
+
+    public static function getRoute()
+    {
+        return self::$URI;
+    }
+
+    public static function getUpdateRoute()
+    {
+        return self::$UPDATE_URI;
     }
 
 } 
