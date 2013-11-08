@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class Experiment extends BaseController
 {
-    public static $URI = 'subject/experiment';
+    private static $URI = 'subject/experiment';
 
     private $subjectRepository;
 
@@ -41,9 +41,14 @@ class Experiment extends BaseController
             $modelCollection->addModel(new RiskAversion(Input::all()));
 
         if ($modelCollection->validationFails())
-            return Redirect::to(self::$URI)->withInput()->with('errors', $modelCollection->getErrorMessages());
+            return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
 
         $this->subjectRepository->saveSubjectData(Auth::user()->subject, $modelCollection);
-        return Redirect::to(self::$URI);
+        return Redirect::to(self::getRoute());
+    }
+
+    public static function getRoute()
+    {
+        return self::$URI;
     }
 }
