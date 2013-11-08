@@ -8,9 +8,9 @@ class IdValidator extends BaseValidator
     {
         $rules = array(self::$ID_KEY=>array('required', 'integer'));
         if (is_integer($min))
-            $rules[] = sprintf("min:%s", $min);
+            $rules[self::$ID_KEY][] = sprintf("min:%s", $min);
         if ($max !== null && is_integer($max))
-            $rules[] = sprintf("max:%s", $max);
+            $rules[self::$ID_KEY][] = sprintf("max:%s", $max);
 
         parent::__construct($rules);
     }
