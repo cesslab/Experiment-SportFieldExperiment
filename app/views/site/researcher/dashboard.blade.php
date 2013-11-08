@@ -33,11 +33,12 @@
                 </td>
                 <td>
                     {{ Form::open(array('url'=>URL::to($updateSessionUrl), 'method'=>'post')) }}
+                        {{ Form::hidden($sessionIdKey, $session->getId()) }}
                         @if ($session->getState() == $sessionStartState)
-                            {{ Form::hidden($sessionStateKey, $sessionStartState) }}
+                            {{ Form::hidden($sessionStateKey, $sessionStopState) }}
                             {{ Form::submit('Stop') }}
                         @else
-                            {{ Form::hidden($sessionStateKey, $sessionStopState) }}
+                            {{ Form::hidden($sessionStateKey, $sessionStartState) }}
                             {{ Form::submit('Start') }}
                         @endif
                     {{ Form::close() }}
