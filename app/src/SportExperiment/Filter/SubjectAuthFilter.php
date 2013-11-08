@@ -7,24 +7,18 @@ use Illuminate\Support\Facades\Route;
 use SportExperiment\Controller\Subject\Login;
 use SportExperiment\Router\SubjectRouter;
 
-class AuthorizeSubject  extends BaseFilter
+class SubjectAuthFilter  extends BaseFilter
 {
     public static $FILTER_NAME = 'authSubject';
 
     public function filter()
     {
         if( ! Auth::check())
-            return Redirect::to(Login::$URI);
+            return Redirect::to(Login::getRoute());
 
         if (Auth::user()->role != Role::$SUBJECT || Auth::user()->subject == null) {
             Auth::logout();
-            return Redirect::to(Login::$URI);
-        }
-
-        $subject = Auth::user()->subject;
-        $subjectRouter = new SubjectRouter();
-        if ( ! $subjectRouter->isValidRoute($subject, Route::getCurrentRoute()->getPath())) {
-            return Redirect::to($subjectRouter->getRoute($subject));
+            return Redirect::to(Login::getRoute());
         }
     }
 
