@@ -9,8 +9,8 @@ class SessionState extends BaseValidator
 
     public function __construct()
     {
-        $inRule = sprintf("in:%i,%i", self::$STARTED, self::$STOPPED);
-        $rules = array(self::$ID_KEY=>array('required', 'integer', $inRule));
+        $inSessionState = sprintf("in:%s,%s", self::$STARTED, self::$STOPPED);
+        $rules = array(Session::$STATE_KEY=>array('required', 'integer', $inSessionState));
 
         parent::__construct($rules);
     }
