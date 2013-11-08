@@ -4,7 +4,8 @@ use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Researcher\Session as SessionController;
 use SportExperiment\Repository\ResearcherRepositoryInterface;
 use Illuminate\Support\Facades\URL;
-use SportExperiment\Repository\Eloquent\Subject\GameState;
+use SportExperiment\Repository\Eloquent\SessionState;
+use SportExperiment\Repository\Eloquent\Session;
 
 class Dashboard extends BaseComposer
 {
@@ -20,7 +21,10 @@ class Dashboard extends BaseComposer
     {
         $view->with('sessions', $this->researcherRepository->getSessions());
         $view->with('subjects', $this->researcherRepository->getSubjects());
-        $view->with('gameState', new GameState());
-        $view->with('sessionUrl', URL::to(SessionController::$URI));
+        $view->with('sessionStartState', SessionState::$STARTED);
+        $view->with('sessionStopState', SessionState::$STOPPED);
+        $view->with('sessionStateKey', Session::$STATE_KEY);
+        $view->with('sessionUrl', URL::to(SessionController::getRoute()));
+        $view->with('updateSessionUrl', URL::to(SessionController::getUpdateRoute()));
     }
 }

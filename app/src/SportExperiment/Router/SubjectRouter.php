@@ -1,11 +1,13 @@
 <?php namespace SportExperiment\Router;
 
 use SportExperiment\Controller\Researcher\Login;
-use SportExperiment\Repository\Eloquent\Subject\GameState;
 use SportExperiment\Controller\Subject\Registration;
 use SportExperiment\Controller\Subject\PreGameHold;
 use SportExperiment\Controller\Subject\Experiment;
 use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Repository\Eloquent\SessionState;
+use Illuminate\Support\Facades\Route;
+use SportExperiment\Repository\Eloquent\SubjectState;
 
 class SubjectRouter {
     private $route;
@@ -13,29 +15,48 @@ class SubjectRouter {
     public function __construct()
     {
         $this->route = array(
-            GameState::$REGISTRATION=>Registration::$URI,
-            GameState::$PRE_GAME_HOLD_STATE=>PreGameHold::$URI,
-            GameState::$GAME_PLAY=>Experiment::$URI,
-            GameState::$COMPLETED=>Login::$URI
+            SubjectState::$REGISTRATION=>Registration::getRoute(),
+            SubjectState::$PRE_GAME_HOLD_STATE=>PreGameHold::getRoute(),
+            SubjectState::$GAME_PLAY=>Experiment::getRoute(),
+            SubjectState::$COMPLETED=>Login::getRoute(),
             // TODO: Add the remaining game states
+            SubjectState::$PAYOFF=>0,
+            SubjectState::$OUTGOING_QUESTIONNAIRE=>0,
+            SubjectState::$COMPLETED=>0
         );
     }
 
-    public function getGameStateRoute(GameState $state)
+    public function getGameStateRoute($state)
     {
         return $this->route[$state->getState()];
     }
 
-    public function isValidRoute(Subject $subject, $route)
+    public function isCurrentRouteValid(Subject $subject)
     {
-        $gameStateRoute = '/' . $this->getGameStateRoute(new GameState($subject->getGameState()));
-        return $gameStateRoute === $route;
+        $currentRoute = Route::getCurrentRoute()->getPath();
+        $subjectStateRoute = '/' . $this->getRoute($subject);
+        return $subjectStateRoute === $currentRoute;
     }
 
     public function getRoute(Subject $subject)
     {
-        $gameState = new GameState($subject->getGameState());
-        return $this->route[$gameState->getState()];
-    }
+        $sessionState = $subject->session->getState();
+        $subjectGameState = $subject->getState();
 
+        /*
+         * The subject's game state is auto transitioned in two cases:
+         */
+        if (SubjectState::isPreGameHoldState($subjectGameState) && SessionState::isStartedState($sessionState)) {
+            $subject->setState(SubjectState::$GAME_PLAY);
+            $subject->save();
+            return $this->route[SubjectState::$GAME_PLAY];
+        }
+        if (SubjectState::isGamePlayState($subjectGameState) && SessionState::isStoppedState($sessionState)) {
+            $subject->setState(SubjectState::$PAYOFF);
+            $subject->save();
+            return $this->route[SubjectState::$PAYOFF];
+        }
+
+        return $this->route[$subjectGameState];
+    }
 }

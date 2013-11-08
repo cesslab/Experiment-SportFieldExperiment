@@ -30,6 +30,6 @@ class Experiment extends BaseController
             $view->with('gambleProb', $riskAversion->getGambleProbability());
         }
 
-        $view->with('postUrl', URL::to(ExperimentController::$URI));
+        $view->with('postUrl', URL::to(ExperimentController::getRoute()));
     }
 }

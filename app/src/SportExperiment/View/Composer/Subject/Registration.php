@@ -12,6 +12,6 @@ class Registration extends BaseComposer
 
     public function compose($view)
     {
-        $view->with('postUrl', URL::to(RegistrationController::$URI));
+        $view->with('postUrl', URL::to(RegistrationController::getRoute()));
     }
 }

@@ -14,8 +14,8 @@ class Session extends BaseComposer
 
     public function compose($view)
     {
-        $view->with('dashboardUrl', URL::to(DashboardController::$URI));
-        $view->with('postUrl', URL::to(SessionController::$URI));
+        $view->with('dashboardUrl', URL::to(DashboardController::getRoute()));
+        $view->with('postUrl', URL::to(SessionController::getRoute()));
         $view->with('numSubjectsKey', SessionModel::$NUM_SUBJECTS_KEY);
         $view->with('endowmentKey', WillingnessPay::$ENDOWMENT_KEY);
         $view->with('lowPrizeKey', RiskAversion::$LOW_PRIZE_KEY);
