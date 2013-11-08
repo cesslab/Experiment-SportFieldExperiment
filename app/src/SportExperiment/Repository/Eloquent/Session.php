@@ -9,6 +9,7 @@ class Session extends BaseEloquent
 
     public static $ID_KEY = 'id';
     public static $NUM_SUBJECTS_KEY = 'num_subjects';
+    public static $STATE_KEY = 'state';
 
     protected $table;
     protected $fillable;
@@ -17,7 +18,9 @@ class Session extends BaseEloquent
     public function __construct($attributes = array()){
         $this->table = self::$TABLE_KEY;
         $this->fillable = array(self::$NUM_SUBJECTS_KEY);
-        $this->rules = array(self::$NUM_SUBJECTS_KEY=>'required|integer|min:1|max:1000');
+
+        $this->rules = array(
+            self::$NUM_SUBJECTS_KEY=>'required|integer|min:1|max:1000');
 
         parent::__construct($attributes);
     }
@@ -35,6 +38,16 @@ class Session extends BaseEloquent
     public function riskAversion()
     {
         return $this->hasOne(RiskAversion::getNamespace(), RiskAversion::$SESSION_ID_KEY);
+    }
+
+    public function setState($state)
+    {
+        $this->setAttribute(self::$STATE_KEY, $state);
+    }
+
+    public function getState()
+    {
+        return $this->getAttribute(self::$STATE_KEY);
     }
 
     /**
