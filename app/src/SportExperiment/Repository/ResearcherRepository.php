@@ -8,7 +8,8 @@ use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
 use SportExperiment\Repository\Eloquent\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use SportExperiment\Repository\Eloquent\Subject\GameState;
+use SportExperiment\Repository\Eloquent\SubjectState;
+use SportExperiment\Repository\Eloquent\SessionState;
 
 class ResearcherRepository implements ResearcherRepositoryInterface
 {
@@ -38,7 +39,7 @@ class ResearcherRepository implements ResearcherRepositoryInterface
             $user->save();
 
             $subject = new Subject();
-            $subject->setGameState(new GameState(GameState::$REGISTRATION));
+            $subject->setState(SubjectState::$REGISTRATION);
             $subject->session()->associate($session);
             $subject->user()->associate($user);
             $subject->save();
@@ -48,6 +49,7 @@ class ResearcherRepository implements ResearcherRepositoryInterface
     public function saveSession(ModelCollection $modelCollection)
     {
         $session = $modelCollection->getModel(Session::getNamespace());
+        $session->setState(SessionState::$STOPPED);
         $session->save();
 
         $riskAversion = $modelCollection->getModel(RiskAversion::getNamespace());
