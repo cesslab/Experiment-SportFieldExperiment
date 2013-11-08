@@ -17,6 +17,7 @@ class CreateExperimentSessionTable extends Migration {
 		{
             $table->increments(Session::$ID_KEY);
 			$table->integer(Session::$NUM_SUBJECTS_KEY);
+            $table->integer(Session::$STATE_KEY);
             $table->timestamps();
 		});
 	}
