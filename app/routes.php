@@ -3,14 +3,15 @@
 use SportExperiment\Controller\Researcher\Login as ResearcherLogin;
 use SportExperiment\Controller\Researcher\Dashboard;
 use SportExperiment\Controller\Researcher\Session;
-use SportExperiment\Filter\AuthorizeResearcher;
+use SportExperiment\Filter\ResearcherAuthFilter;
 use Illuminate\Support\Facades\Route;
 
 use SportExperiment\Controller\Subject\Login as SubjectLogin;
 use SportExperiment\Controller\Subject\Registration;
-use SportExperiment\Filter\AuthorizeSubject;
+use SportExperiment\Filter\SubjectAuthFilter;
 use SportExperiment\Controller\Subject\Experiment;
 use SportExperiment\Controller\Subject\PreGameHold;
+use SportExperiment\Filter\SubjectRouteFilter;
 
 Route::get('/', function(){});
 
@@ -19,48 +20,49 @@ Route::get('/', function(){});
 | Researcher Routes
 |--------------------------------------------------------------------------
  */
-// Researcher
-Route::get(ResearcherLogin::$URI, ResearcherLogin::getNamespace() . '@getLogin');
-Route::post(ResearcherLogin::$URI, array('before'=>'csrf', 'uses'=>ResearcherLogin::getNamespace() .'@postLogin'));
+// Researcher Login
+Route::get(ResearcherLogin::getRoute(), ResearcherLogin::getNamespace() . '@getLogin');
+Route::post(ResearcherLogin::getRoute(), array('before'=>'csrf', 'uses'=>ResearcherLogin::getNamespace() .'@postLogin'));
 
+// Researcher Auth Filter Routes
+Route::group(array('before'=>ResearcherAuthFilter::getName()), function(){
+    // Dashboard
+    Route::get(Dashboard::getRoute(), Dashboard::getNamespace() . '@getDashboard');
 
-Route::get(Dashboard::$URI, array(
-    'before'=>AuthorizeResearcher::$FILTER_NAME, 'uses'=>Dashboard::getNamespace() . '@getDashboard'));
-
-Route::get(Session::$URI, array(
-    'before'=>AuthorizeResearcher::$FILTER_NAME, 'uses'=>Session::getNamespace() . '@getSession'));
-Route::post(Session::$URI, array(
-    'before'=>AuthorizeResearcher::$FILTER_NAME, 'uses'=>Session::getNamespace() . '@postSession'));
+    // Session
+    Route::get(Session::getRoute(), Session::getNamespace() . '@getSession');
+    Route::post(Session::getRoute(), Session::getNamespace() . '@postSession');
+    Route::post(Session::getUpdateRoute(), Session::getNamespace() . '@updateSession');
+});
 
 /*
 |--------------------------------------------------------------------------
 | Subject Routes
 |--------------------------------------------------------------------------
  */
-// Login
-Route::get(SubjectLogin::$URI, SubjectLogin::getNamespace() . '@getLogin');
-Route::post(SubjectLogin::$URI, array('before'=>'csrf', 'uses'=>SubjectLogin::getNamespace() .'@postLogin'));
+// Subject Login
+Route::get(SubjectLogin::getRoute(), SubjectLogin::getNamespace() . '@getLogin');
+Route::post(SubjectLogin::getRoute(), SubjectLogin::getNamespace() .'@postLogin');
 
-// Registration
-Route::get(Registration::$URI, array(
-    'before'=>AuthorizeSubject::$FILTER_NAME, 'uses'=>Registration::getNamespace() . '@getRegistration'));
-Route::post(Registration::$URI, array(
-    'before'=>AuthorizeSubject::$FILTER_NAME, 'uses'=>Registration::getNamespace() . '@postRegistration'));
+// Subject Auth Filter Routes
+Route::group(array('before'=>array(SubjectAuthFilter::getName(), SubjectRouteFilter::getName())), function(){
+    // Registration
+    Route::get(Registration::getRoute(), Registration::getNamespace() . '@getRegistration');
+    Route::post(Registration::getRoute(), Registration::getNamespace() . '@postRegistration');
 
-// Pre-Game Hold Screen
-Route::get(PreGameHold::$URI, array(
-    'before'=>AuthorizeSubject::$FILTER_NAME, 'uses'=>PreGameHold::getNamespace() . '@getHold'));
+    // Pre-Game Hold Screen
+    Route::get(PreGameHold::getRoute(), PreGameHold::getNamespace() . '@getHold');
 
-// Game
-Route::get(Experiment::$URI, array(
-    'before'=>AuthorizeSubject::$FILTER_NAME, 'uses'=>Experiment::getNamespace() . '@getExperiment'));
-Route::post(Experiment::$URI, array(
-    'before'=>AuthorizeSubject::$FILTER_NAME, 'uses'=>Experiment::getNamespace() . '@postExperiment'));
+    // Game
+    Route::get(Experiment::getRoute(), Experiment::getNamespace() . '@getExperiment');
+    Route::post(Experiment::getRoute(), Experiment::getNamespace() . '@postExperiment');
+});
 
 /*
 |--------------------------------------------------------------------------
 | Filters
 |--------------------------------------------------------------------------
  */
-Route::filter(AuthorizeResearcher::$FILTER_NAME, AuthorizeResearcher::getNamespace());
-Route::filter(AuthorizeSubject::$FILTER_NAME, AuthorizeSubject::getNamespace());
+Route::filter(ResearcherAuthFilter::getName(), ResearcherAuthFilter::getNamespace());
+Route::filter(SubjectAuthFilter::getName(), SubjectAuthFilter::getNamespace());
+Route::filter(SubjectRouteFilter::getName(), SubjectRouteFilter::getNamespace());
