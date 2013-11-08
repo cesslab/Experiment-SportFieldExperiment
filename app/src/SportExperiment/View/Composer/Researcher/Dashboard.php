@@ -20,6 +20,7 @@ class Dashboard extends BaseComposer
     public function compose($view)
     {
         $view->with('sessions', $this->researcherRepository->getSessions());
+        $view->with('sessionIdKey', Session::$ID_KEY);
         $view->with('subjects', $this->researcherRepository->getSubjects());
         $view->with('sessionStartState', SessionState::$STARTED);
         $view->with('sessionStopState', SessionState::$STOPPED);
