@@ -7,7 +7,7 @@ use \Illuminate\Support\Facades\View;
 
 class Dashboard extends BaseController
 {
-    public static $URI = 'researcher/dashboard';
+    private static $URI = 'researcher/dashboard';
 
     private $researcherRepository;
 
@@ -20,5 +20,10 @@ class Dashboard extends BaseController
     public function getDashboard() 
     {
         return View::make(DashboardComposer::$VIEW_PATH);
+    }
+
+    public static function getRoute()
+    {
+        return self::$URI;
     }
 }
