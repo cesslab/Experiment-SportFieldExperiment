@@ -24,17 +24,22 @@ class Login extends BaseController
 
         // Validate raw user attributes
         if ($user->validationFails())
-            return Redirect::to(self::$URI)->withErrors($user->getValidator());
+            return Redirect::to(self::getRoute())->withErrors($user->getValidator());
 
         // Confirm researcher account exists and is active
         if ( ! $user->isRole(new Role(Role::$SUBJECT)))
-            return Redirect::to(self::$URI)->with('error', 'Account not found');
+            return Redirect::to(self::getRoute())->with('error', 'Account not found');
 
         // Attempt login using Auth
         if ( ! Auth::attempt($user->getAuthInfo()))
-            return Redirect::to(self::$URI)->with('error', 'Unable to authorize');
+            return Redirect::to(self::getRoute())->with('error', 'Unable to authorize');
 
-        return Redirect::to(Registration::$URI);
+        return Redirect::to(Registration::getRoute());
+    }
+
+    public static function getRoute()
+    {
+        return self::$URI;
     }
 
 }
