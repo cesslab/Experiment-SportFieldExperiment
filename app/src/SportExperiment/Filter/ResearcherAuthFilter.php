@@ -5,7 +5,7 @@ use SportExperiment\Repository\Eloquent\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
-class AuthorizeResearcher  extends BaseFilter
+class ResearcherAuthFilter  extends BaseFilter
 {
     public static $FILTER_NAME = 'authResearcher';
 
