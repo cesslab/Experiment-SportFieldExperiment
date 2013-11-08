@@ -11,7 +11,7 @@ use SportExperiment\Repository\Eloquent\Role;
 
 class Login extends BaseController
 {
-    public static $URI = 'researcher/login';
+    private static $URI = 'researcher/login';
 
     private $researcherRepository;
 
@@ -32,17 +32,21 @@ class Login extends BaseController
 
         // Validate raw user attributes
         if ($user->validationFails())
-            return Redirect::to(self::$URI)->withErrors($user->getValidator());
+            return Redirect::to(self::getRoute())->withErrors($user->getValidator());
 
         // Confirm researcher account exists and is active
         if ( ! $user->isRole(new Role(Role::$RESEARCHER)))
-            return Redirect::to(self::$URI)->with('error', 'Account not found');
+            return Redirect::to(self::getRoute())->with('error', 'Account not found');
 
         // Attempt login using Auth
         if ( ! Auth::attempt($user->getAuthInfo()))
-            return Redirect::to(self::$URI)->with('error', 'Unable to authorize');
+            return Redirect::to(self::getRoute())->with('error', 'Unable to authorize');
 
-        return Redirect::to(Dashboard::$URI);
+        return Redirect::to(Dashboard::getRoute());
     }
 
+    public static function getRoute()
+    {
+        return self::$URI;
+    }
 }
