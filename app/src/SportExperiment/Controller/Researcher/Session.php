@@ -50,9 +50,10 @@ class Session extends BaseController
     public function updateSession()
     {
         $idValidator = new IdValidator();
-        $idValidator->setId(0);
+
+        // Validate ID
+        $idValidator->setId(Input::get(SessionModel::$ID_KEY));
         if ($idValidator->validationFails()){
-            die();
             return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $idValidator->getErrorMessages());
         }
 
@@ -62,6 +63,8 @@ class Session extends BaseController
 
         $sessionState = new SessionState();
         $sessionState->setState(Input::get(SessionModel::$STATE_KEY));
+
+        // Validate Session State
         if ($sessionState->validationFails())
             return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $sessionState->getErrorMessages());
 
