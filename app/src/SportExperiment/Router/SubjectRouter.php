@@ -8,6 +8,7 @@ use SportExperiment\Repository\Eloquent\Subject;
 use SportExperiment\Repository\Eloquent\SessionState;
 use Illuminate\Support\Facades\Route;
 use SportExperiment\Repository\Eloquent\SubjectState;
+use SportExperiment\Controller\Subject\Payoff;
 
 class SubjectRouter {
     private $route;
@@ -20,7 +21,7 @@ class SubjectRouter {
             SubjectState::$GAME_PLAY=>Experiment::getRoute(),
             SubjectState::$COMPLETED=>Login::getRoute(),
             // TODO: Add the remaining game states
-            SubjectState::$PAYOFF=>0,
+            SubjectState::$PAYOFF=>Payoff::getRoute(),
             SubjectState::$OUTGOING_QUESTIONNAIRE=>0,
             SubjectState::$COMPLETED=>0
         );
