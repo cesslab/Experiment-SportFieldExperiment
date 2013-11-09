@@ -3,7 +3,6 @@
 use SportExperiment\Repository\Eloquent\BaseEloquent;
 use SportExperiment\Repository\Eloquent\Session;
 use SportExperiment\Repository\Eloquent\Subject;
-use SportExperiment\Repository\Eloquent\Subject\WillingnessPay as SubjectWillingnessPay;
 
 class WillingnessPay extends BaseEloquent
 {
@@ -19,10 +18,10 @@ class WillingnessPay extends BaseEloquent
     protected $fillable;
     protected $rules;
 
-    public function __construct($attributes = array()){
+    public function __construct($attributes = []){
         $this->table = self::$TABLE_KEY;
-        $this->fillable = array(self::$SESSION_ID_KEY, self::$ENDOWMENT_KEY);
-        $this->rules = array(self::$ENDOWMENT_KEY=>'required|numeric|min:1|max:1000000');
+        $this->fillable = [self::$SESSION_ID_KEY, self::$ENDOWMENT_KEY];
+        $this->rules = [self::$ENDOWMENT_KEY=>'required|numeric|min:1|max:1000000'];
 
         parent::__construct($attributes);
     }
@@ -46,15 +45,19 @@ class WillingnessPay extends BaseEloquent
         $willingnessPayEntry = $willingnessPayEntries[rand(0, count($willingnessPayEntries)-1)];
 
         $endowment = $subject->session->willingnessPay->getEndowment();
+        $randomGoodPrice = lcg_value()*$endowment; // Generate a random number between 0 and the endowment
 
-        // Generate a random number between 0 and the endowment
-        $randomGoodPrice = lcg_value()*$endowment;
-
+        // Subject Won Item
         if ($randomGoodPrice <= $willingnessPayEntry->getWillingnessPay()) {
-            return array(SubjectWillingnessPay::$ITEM_PURCHASED_KEY=>true, SubjectWillingnessPay::$PAYOFF_KEY=>($endowment - $randomGoodPrice));
+            $willingnessPayEntry->setPayoff($endowment - $randomGoodPrice);
+            $willingnessPayEntry->setItemPurchased(true);
+            return $willingnessPayEntry;
         }
 
-        return array(SubjectWillingnessPay::$ITEM_PURCHASED_KEY=>false, SubjectWillingnessPay::$PAYOFF_KEY=>$endowment);
+        // Subject Didn't Win Item
+        $willingnessPayEntry->setPayoff($endowment);
+        $willingnessPayEntry->setItemPurchased(false);
+        return $willingnessPayEntry;
     }
 
     /* ---------------------------------------------------------------------

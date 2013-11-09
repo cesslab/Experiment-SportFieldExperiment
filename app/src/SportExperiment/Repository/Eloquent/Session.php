@@ -15,12 +15,12 @@ class Session extends BaseEloquent
     protected $fillable;
     protected $rules;
 
-    public function __construct($attributes = array()){
+    public function __construct($attributes = []){
         $this->table = self::$TABLE_KEY;
-        $this->fillable = array(self::$NUM_SUBJECTS_KEY);
+        $this->fillable = [self::$NUM_SUBJECTS_KEY];
 
-        $this->rules = array(
-            self::$NUM_SUBJECTS_KEY=>'required|integer|min:1|max:1000');
+        $this->rules = [
+            self::$NUM_SUBJECTS_KEY=>'required|integer|min:1|max:1000'];
 
         parent::__construct($attributes);
     }

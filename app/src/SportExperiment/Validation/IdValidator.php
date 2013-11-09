@@ -6,7 +6,7 @@ class IdValidator extends BaseValidator
 
     public function __construct($min = 1, $max = null)
     {
-        $rules = array(self::$ID_KEY=>array('required', 'integer'));
+        $rules = [self::$ID_KEY=>['required', 'integer']];
         if (is_integer($min))
             $rules[self::$ID_KEY][] = sprintf("min:%s", $min);
         if ($max !== null && is_integer($max))
@@ -17,7 +17,7 @@ class IdValidator extends BaseValidator
 
     public function setId($id)
     {
-        $this->setData(array(self::$ID_KEY=>$id));
+        $this->setData([self::$ID_KEY=>$id]);
     }
 
     public function getId()

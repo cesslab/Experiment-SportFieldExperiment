@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BaseEloquent extends Model
 {
-    protected $rules = array();
+    protected $rules = [];
 
     /* @var \Illuminate\Support\Facades\Validator; $validator */
     protected $validator;

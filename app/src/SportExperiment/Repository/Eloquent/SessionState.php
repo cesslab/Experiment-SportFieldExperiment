@@ -10,14 +10,14 @@ class SessionState extends BaseValidator
     public function __construct()
     {
         $inSessionState = sprintf("in:%s,%s", self::$STARTED, self::$STOPPED);
-        $rules = array(Session::$STATE_KEY=>array('required', 'integer', $inSessionState));
+        $rules = [Session::$STATE_KEY=>['required', 'integer', $inSessionState]];
 
         parent::__construct($rules);
     }
 
     public function setState($state)
     {
-        $this->setData(array(Session::$STATE_KEY=>$state));
+        $this->setData([Session::$STATE_KEY=>$state]);
     }
 
     public function getState()

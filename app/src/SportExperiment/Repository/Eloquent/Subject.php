@@ -1,6 +1,5 @@
 <?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\Subject\Payoff;
 use SportExperiment\Repository\Eloquent\Subject\RiskAversion;
 use SportExperiment\Repository\Eloquent\Subject\WillingnessPay;
 
@@ -24,10 +23,10 @@ class Subject extends BaseEloquent
     protected $table;
     protected $fillable;
 
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
-        $this->rules = array(
+        $this->rules = [
             self::$FIRST_NAME_KEY=>'required|alpha|min:2|max:100',
             self::$LAST_NAME_KEY=>'required|alpha|min:2|max:100',
             self::$PROFESSION_KEY=>'required|alpha|min:2|max:250',
@@ -35,10 +34,10 @@ class Subject extends BaseEloquent
             self::$GENDER_KEY=>'required|alpha|in:male,female',
             self::$AGE_KEY=>'required|integer|min:18|max:100',
             self::$ETHNICITY_KEY=>'required|alpha|min:2|max:100'
-        );
+        ];
 
-        $this->fillable = array(self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY,
-            self::$PROFESSION_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY, self::$AGE_KEY, self::$ETHNICITY_KEY);
+        $this->fillable = [self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY,
+            self::$PROFESSION_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY, self::$AGE_KEY, self::$ETHNICITY_KEY];
 
         parent::__construct($attributes);
     }

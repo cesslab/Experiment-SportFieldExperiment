@@ -16,10 +16,10 @@ class Researcher extends BaseEloquent
     protected $table;
     protected $fillable;
 
-    function __construct($attributes = array())
+    function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
-        $this->fillable = array(self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY, self::$EMAIL_KEY);
+        $this->fillable = [self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY, self::$EMAIL_KEY];
 
         parent::__construct($attributes);
     }

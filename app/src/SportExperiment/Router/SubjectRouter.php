@@ -15,7 +15,7 @@ class SubjectRouter {
 
     public function __construct()
     {
-        $this->route = array(
+        $this->route = [
             SubjectState::$REGISTRATION=>Registration::getRoute(),
             SubjectState::$PRE_GAME_HOLD_STATE=>PreGameHold::getRoute(),
             SubjectState::$GAME_PLAY=>Experiment::getRoute(),
@@ -24,7 +24,7 @@ class SubjectRouter {
             SubjectState::$PAYOFF=>Payoff::getRoute(),
             SubjectState::$OUTGOING_QUESTIONNAIRE=>0,
             SubjectState::$COMPLETED=>0
-        );
+        ];
     }
 
     public function getGameStateRoute($state)

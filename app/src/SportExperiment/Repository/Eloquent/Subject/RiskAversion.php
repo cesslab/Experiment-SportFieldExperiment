@@ -16,14 +16,14 @@ class RiskAversion extends BaseEloquent
     protected $table;
     protected $fillable;
 
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
-        $this->rules = array(
+        $this->rules = [
             self::$INDIFFERENCE_PROBABILITY_KEY=>'required|numeric|min:0|max:1',
-        );
+        ];
 
-        $this->fillable = array(self::$INDIFFERENCE_PROBABILITY_KEY);
+        $this->fillable = [self::$INDIFFERENCE_PROBABILITY_KEY];
 
         parent::__construct($attributes);
     }
@@ -37,9 +37,23 @@ class RiskAversion extends BaseEloquent
         return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
     }
 
+    /* ---------------------------------------------------------------------
+     * Getters and Setters
+     * ---------------------------------------------------------------------*/
+
+    public function setPayoff($payoff)
+    {
+        $this->setAttribute(self::$PAYOFF_KEY, $payoff);
+    }
+
     public function getIndifferenceProbability()
     {
         return $this->getAttribute(self::$INDIFFERENCE_PROBABILITY_KEY);
+    }
+
+    public function getPayoff()
+    {
+        return $this->getAttribute(self::$PAYOFF_KEY);
     }
 
 } 

@@ -2,7 +2,6 @@
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Support\Facades\Hash;
-use SportExperiment\Repository\Eloquent\Role;
 
 class User extends BaseEloquent implements UserInterface
 {
@@ -18,15 +17,15 @@ class User extends BaseEloquent implements UserInterface
     protected $fillable;
 	protected $table;
 
-	protected $hidden = array('password');
+	protected $hidden = ['password'];
 
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
-        $this->fillable = array(self::$USER_NAME_KEY, self::$PASSWORD_KEY, self::$ROLE_KEY, self::$ACTIVE_KEY);
-        $this->rules = array(
+        $this->fillable = [self::$USER_NAME_KEY, self::$PASSWORD_KEY, self::$ROLE_KEY, self::$ACTIVE_KEY];
+        $this->rules = [
             self::$USER_NAME_KEY=>'required|alpha_num|min:1|max:16',
-            self::$PASSWORD_KEY=>'required|alpha_num|min:1|max:16');
+            self::$PASSWORD_KEY=>'required|alpha_num|min:1|max:16'];
 
         parent::__construct($attributes);
     }
@@ -57,7 +56,7 @@ class User extends BaseEloquent implements UserInterface
 
     public function getAuthInfo()
     {
-        return array(self::$USER_NAME_KEY=>$this->getUserName(), self::$PASSWORD_KEY=>$this->getPassword());
+        return [self::$USER_NAME_KEY=>$this->getUserName(), self::$PASSWORD_KEY=>$this->getPassword()];
     }
 
     /**

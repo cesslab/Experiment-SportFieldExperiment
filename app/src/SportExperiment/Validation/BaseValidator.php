@@ -9,7 +9,7 @@ class BaseValidator
 
     public function __construct($rules)
     {
-        $this->validator = Validator::make(array(), $rules);
+        $this->validator = Validator::make([], $rules);
     }
 
     public function validationFails()
