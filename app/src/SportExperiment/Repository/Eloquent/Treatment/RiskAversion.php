@@ -2,6 +2,7 @@
 
 use SportExperiment\Repository\Eloquent\Session;
 use SportExperiment\Repository\Eloquent\BaseEloquent;
+use SportExperiment\Repository\Eloquent\Subject;
 
 class RiskAversion extends BaseEloquent
 {
@@ -37,10 +38,46 @@ class RiskAversion extends BaseEloquent
         parent::__construct($attributes);
     }
 
+    /* ---------------------------------------------------------------------
+     * Model Relationships
+     * ---------------------------------------------------------------------*/
+
     public function session()
     {
         return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
     }
+
+    /* ---------------------------------------------------------------------
+     * Model Routines
+     * ---------------------------------------------------------------------*/
+
+    public function calculatePayoff(Subject $subject)
+    {
+        $riskAversionEntries = $subject->riskAversionEntries;
+        $numEntries = count($riskAversionEntries);
+
+        // No entries made
+        if ($numEntries == 0)
+            return 0;
+
+        $randSubmission = rand(0, count($riskAversionEntries)-1);
+        $riskAversionEntry = $riskAversionEntries[$randSubmission];
+
+        $prizeDraw = lcg_value();
+        if ($prizeDraw < $riskAversionEntry->getIndifferenceProbability())
+            return $subject->session->riskAversion->getMidPrize();
+
+        $gambleDraw = lcg_value();
+        if ($gambleDraw < $riskAversionEntry->getIndifferenceProbability())
+            return $subject->session->riskAversion->getHighPrize();
+
+
+        return $subject->session->riskAversion->getLowPrize();
+    }
+
+    /* ---------------------------------------------------------------------
+     * Getters and Setters
+     * ---------------------------------------------------------------------*/
 
     /**
      * @return mixed
