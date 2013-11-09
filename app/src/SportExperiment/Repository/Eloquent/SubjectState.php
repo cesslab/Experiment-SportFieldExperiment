@@ -5,8 +5,8 @@ class SubjectState
     public static $REGISTRATION = 1;
     public static $PRE_GAME_HOLD_STATE = 2;
     public static $GAME_PLAY = 3;
-    public static $OUTGOING_QUESTIONNAIRE = 4;
-    public static $PAYOFF = 5;
+    public static $PAYOFF = 4;
+    public static $OUTGOING_QUESTIONNAIRE = 5;
     public static $COMPLETED = 6;
 
     private $gameState;
