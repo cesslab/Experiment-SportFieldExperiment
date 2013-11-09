@@ -10,6 +10,8 @@ class WillingnessPay extends BaseEloquent
     public static $ID_KEY = 'id';
     public static $SUBJECT_ID_KEY = 'subject_id';
     public static $WILLING_PAY_KEY = 'willing_pay';
+    public static $PAYOFF_KEY = 'payoff';
+    public static $ITEM_PURCHASED_KEY = 'item_purchased';
 
     protected $rules;
     protected $table;
@@ -26,10 +28,18 @@ class WillingnessPay extends BaseEloquent
         parent::__construct($attributes);
     }
 
+    /* ---------------------------------------------------------------------
+     * Model Relationships
+     * ---------------------------------------------------------------------*/
+
     public function subject()
     {
         return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
     }
+
+    /* ---------------------------------------------------------------------
+     * Getters and Setters
+     * ---------------------------------------------------------------------*/
 
     public function setWillingnessPay($willingnessPay)
     {
