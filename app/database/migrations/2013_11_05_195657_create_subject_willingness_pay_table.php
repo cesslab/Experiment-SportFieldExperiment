@@ -18,6 +18,8 @@ class CreateSubjectWillingnessPayTable extends Migration {
             $table->increments(SubjectWillingnessPay::$ID_KEY);
             $table->integer(SubjectWillingnessPay::$SUBJECT_ID_KEY)->unsigned();
             $table->double(SubjectWillingnessPay::$WILLING_PAY_KEY);
+            $table->double(SubjectWillingnessPay::$PAYOFF_KEY);
+            $table->boolean(SubjectWillingnessPay::$ITEM_PURCHASED_KEY);
             $table->timestamps();
         });
 	}
