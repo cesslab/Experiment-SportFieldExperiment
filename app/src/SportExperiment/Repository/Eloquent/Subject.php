@@ -1,6 +1,8 @@
 <?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\Subject\SubjectState;
+use SportExperiment\Repository\Eloquent\Subject\Payoff;
+use SportExperiment\Repository\Eloquent\Subject\RiskAversion;
+use SportExperiment\Repository\Eloquent\Subject\WillingnessPay;
 
 class Subject extends BaseEloquent
 {
@@ -32,13 +34,26 @@ class Subject extends BaseEloquent
             self::$EDUCATION_KEY=>'required|alpha|min:2|max:250',
             self::$GENDER_KEY=>'required|alpha|in:male,female',
             self::$AGE_KEY=>'required|integer|min:18|max:100',
-            self::$ETHNICITY_KEY=>'required|alpha|min:2|max:100',
+            self::$ETHNICITY_KEY=>'required|alpha|min:2|max:100'
         );
 
         $this->fillable = array(self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY,
             self::$PROFESSION_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY, self::$AGE_KEY, self::$ETHNICITY_KEY);
 
         parent::__construct($attributes);
+    }
+
+    /* ---------------------------------------------------------------------
+     * Model Relationships
+     * ---------------------------------------------------------------------*/
+    public function riskAversionEntries()
+    {
+        return $this->hasMany(RiskAversion::getNamespace(), RiskAversion::$SUBJECT_ID_KEY);
+    }
+
+    public function willingnessPayEntries()
+    {
+        return $this->hasMany(WillingnessPay::getNamespace(), WillingnessPay::$SUBJECT_ID_KEY);
     }
 
     public function user()
@@ -50,6 +65,10 @@ class Subject extends BaseEloquent
     {
         return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
     }
+
+    /* ---------------------------------------------------------------------
+     * Getters and Setters
+     * ---------------------------------------------------------------------*/
 
     public function setId($id)
     {
@@ -137,7 +156,6 @@ class Subject extends BaseEloquent
     {
         $this->setAttribute(self::$GAME_STATE_KEY, $subjectGameState);
     }
-
 
     public function getState()
     {
