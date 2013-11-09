@@ -7,7 +7,6 @@ use SportExperiment\Controller\Subject\Registration as RegistrationController;
 
 class Registration extends BaseComposer
 {
-    public $researcherRepository;
     public static $VIEW_PATH = 'site.subject.registration';
 
     public function compose($view)
