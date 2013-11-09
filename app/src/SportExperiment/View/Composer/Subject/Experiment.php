@@ -1,11 +1,11 @@
 <?php namespace SportExperiment\View\Composer\Subject;
 
 use Illuminate\Support\Facades\Auth;
-use SportExperiment\Controller\BaseController;
+use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Subject\Experiment as ExperimentController;
 use Illuminate\Support\Facades\URL;
 
-class Experiment extends BaseController
+class Experiment extends BaseComposer
 {
     public static $VIEW_PATH = 'site.subject.experiment';
 
