@@ -10,6 +10,7 @@ class RiskAversion extends BaseEloquent
     public static $ID_KEY = 'id';
     public static $SUBJECT_ID_KEY = 'subject_id';
     public static $INDIFFERENCE_PROBABILITY_KEY = 'indifference_probability';
+    public static $PAYOFF_KEY = 'payoff';
 
     protected $rules;
     protected $table;
@@ -27,9 +28,18 @@ class RiskAversion extends BaseEloquent
         parent::__construct($attributes);
     }
 
+    /* ---------------------------------------------------------------------
+     * Model Relationships
+     * ---------------------------------------------------------------------*/
+
     public function subject()
     {
         return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
+    }
+
+    public function getIndifferenceProbability()
+    {
+        return $this->getAttribute(self::$INDIFFERENCE_PROBABILITY_KEY);
     }
 
 } 
