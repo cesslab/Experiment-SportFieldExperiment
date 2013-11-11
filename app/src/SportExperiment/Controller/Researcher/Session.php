@@ -9,8 +9,8 @@ use SportExperiment\Repository\ResearcherRepositoryInterface;
 use SportExperiment\View\Composer\Researcher\Session as SessionComposer;
 use SportExperiment\Repository\ModelCollection;
 use SportExperiment\Repository\Eloquent\Session as ExperimentSession;
-use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
-use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
+use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
+use SportExperiment\Repository\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\BaseController;
 use SportExperiment\Repository\Eloquent\Session as SessionModel;
 use SportExperiment\Validation\IdValidator;
@@ -37,8 +37,8 @@ class Session extends BaseController
     {
         $modelCollection = new ModelCollection();
         $modelCollection->addModel(new ExperimentSession(Input::all()));
-        $modelCollection->addModel(new WillingnessPay(Input::all()));
-        $modelCollection->addModel(new RiskAversion(Input::all()));
+        $modelCollection->addModel(new WillingnessPayTreatment(Input::all()));
+        $modelCollection->addModel(new RiskAversionTreatment(Input::all()));
 
         if ($modelCollection->validationFails())
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
