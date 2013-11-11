@@ -2,8 +2,7 @@
 
 @section('content')
 <a href="{{ $sessionUrl }}">Add New Session</a>
-<p>Game States: Registration = 1, Pre-Game Hold = 2, Game Play = 3, Questionnaire = 4, Payoff = 5, Completed = 6</p>
-    <table>
+    <table border="1">
         <tr>
             <th>Session ID</th>
             <th>Number of Subjects</th>
@@ -32,7 +31,7 @@
                     @endif
                 </td>
                 <td>
-                    {{ Form::open(array('url'=>URL::to($updateSessionUrl), 'method'=>'post')) }}
+                    {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
                         {{ Form::hidden($sessionIdKey, $session->getId()) }}
                         @if ($session->getState() == $sessionStartState)
                             {{ Form::hidden($sessionStateKey, $sessionStopState) }}
@@ -52,7 +51,7 @@
     @endforeach
 </ul>
 
-    <table>
+    <table border="1">
         <tr>
             <th>Subject ID</th>
             <th>Session ID</th>
@@ -64,7 +63,17 @@
             <td>{{ $subject->id }}</td>
             <td>{{ $subject->session_id }}</td>
             <td>{{ $subject->user->user_name }}</td>
-            <td>{{ $subject->getState() }}</td>
+            @if ($subject->getState() == $registrationState)
+                <td>Registration</td>
+            @elseif ($subject->getState() == $holdState)
+                <td>Hold</td>
+            @elseif ($subject->getState() == $gameState)
+                <td>Game</td>
+            @elseif ($subject->getState() == $payoffState)
+                <td>Payoff</td>
+            @elseif ($subject->getState() == $questionnaireState)
+                <td>Questionnaire</td>
+            @endif
         </tr>
         @endforeach
     </table>
