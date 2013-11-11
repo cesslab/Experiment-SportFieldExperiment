@@ -3,8 +3,8 @@
 use SportExperiment\Repository\Eloquent\User;
 use SportExperiment\Repository\Eloquent\Subject;
 use SportExperiment\Repository\Eloquent\Session;
-use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
-use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
+use SportExperiment\Repository\Eloquent\RiskAversionTreatment;
+use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
 use SportExperiment\Repository\Eloquent\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -52,11 +52,11 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         $session->setState(SessionState::$STOPPED);
         $session->save();
 
-        $riskAversion = $modelCollection->getModel(RiskAversion::getNamespace());
+        $riskAversion = $modelCollection->getModel(RiskAversionTreatment::getNamespace());
         $riskAversion->session()->associate($session);
         $riskAversion->save();
 
-        $willingnessPay = $modelCollection->getModel(WillingnessPay::getNamespace());
+        $willingnessPay = $modelCollection->getModel(WillingnessPayTreatment::getNamespace());
         $willingnessPay->session()->associate($session);
         $willingnessPay->save();
 
