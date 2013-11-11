@@ -15,6 +15,9 @@ class Session extends BaseEloquent
     protected $fillable;
     protected $rules;
 
+    /**
+     * @param array $attributes
+     */
     public function __construct($attributes = []){
         $this->table = self::$TABLE_KEY;
         $this->fillable = [self::$NUM_SUBJECTS_KEY];
@@ -25,26 +28,47 @@ class Session extends BaseEloquent
         parent::__construct($attributes);
     }
 
+    /* ---------------------------------------------------------------------
+     * Model Relationships
+     * ---------------------------------------------------------------------*/
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function subjects()
     {
         return $this->hasMany(Subject::getNamespace(), Subject::$SESSION_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function willingnessPay()
     {
         return $this->hasOne(WillingnessPay::getNamespace(), WillingnessPay::$SESSION_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function riskAversion()
     {
         return $this->hasOne(RiskAversion::getNamespace(), RiskAversion::$SESSION_ID_KEY);
     }
 
+    /* ---------------------------------------------------------------------
+     * Getters and Setters
+     * ---------------------------------------------------------------------*/
+    /**
+     * @param $state
+     */
     public function setState($state)
     {
         $this->setAttribute(self::$STATE_KEY, $state);
     }
 
+    /**
+     * @return mixed
+     */
     public function getState()
     {
         return $this->getAttribute(self::$STATE_KEY);
