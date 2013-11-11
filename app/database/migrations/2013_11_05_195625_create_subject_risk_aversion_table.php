@@ -20,6 +20,7 @@ class CreateSubjectRiskAversionTable extends Migration {
             $table->integer(SubjectRiskAversion::$SUBJECT_ID_KEY)->unsigned();
             $table->double(SubjectRiskAversion::$INDIFFERENCE_PROBABILITY_KEY);
             $table->double(SubjectRiskAversion::$PAYOFF_KEY);
+            $table->boolean(SubjectRiskAversion::$SELECTED_FOR_PAYOFF)->default(false);
             $table->timestamps();
         });
 	}
