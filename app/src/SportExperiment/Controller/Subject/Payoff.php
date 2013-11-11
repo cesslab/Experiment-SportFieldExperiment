@@ -1,8 +1,10 @@
 <?php namespace SportExperiment\Controller\Subject;
 
+use Illuminate\Support\Facades\Redirect;
 use SportExperiment\Controller\BaseController;
 use Illuminate\Support\Facades\View;
 use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Repository\Eloquent\SubjectState;
 use SportExperiment\View\Composer\Subject\Payoff as PayoffComposer;
 
 class Payoff extends BaseController
@@ -14,6 +16,7 @@ class Payoff extends BaseController
     function __construct(Subject $subject)
     {
         $this->subject = $subject;
+        View::composer(PayoffComposer::$VIEW_PATH, PayoffComposer::getNamespace());
     }
 
 
@@ -23,6 +26,16 @@ class Payoff extends BaseController
             $this->subject->saveCalculatedPayoffs();
 
         return View::make(PayoffComposer::$VIEW_PATH);
+    }
+
+    public function postPayoff()
+    {
+        if ($this->subject->getState() === SubjectState::$PAYOFF) {
+            $this->subject->setState(SubjectState::$OUTGOING_QUESTIONNAIRE);
+            $this->subject->save();
+        }
+
+        return Redirect::to(Questionnaire::getRoute());
     }
 
     public static function getRoute()
