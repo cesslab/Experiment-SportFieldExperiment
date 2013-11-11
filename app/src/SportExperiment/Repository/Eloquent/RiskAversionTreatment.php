@@ -1,10 +1,6 @@
-<?php namespace SportExperiment\Repository\Eloquent\Treatment;
+<?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\Session;
-use SportExperiment\Repository\Eloquent\BaseEloquent;
-use SportExperiment\Repository\Eloquent\Subject;
-
-class RiskAversion extends BaseEloquent
+class RiskAversionTreatment extends BaseEloquent
 {
     public static $TABLE_KEY = 'risk_aversion_treatments';
 
@@ -15,25 +11,30 @@ class RiskAversion extends BaseEloquent
     public static $HIGH_PRIZE_KEY = 'high_prize';
     public static $GAMBLE_PROBABILITY_KEY = 'gamble_probability';
 
+    private static $TASK_ID = 1;
+
     public $timestamps = false;
 
     protected $table;
     protected $fillable;
     protected $rules;
 
-    public function __construct($attributes = array()){
+    /**
+     * @param array $attributes
+     */
+    public function __construct($attributes = []){
         $this->table = self::$TABLE_KEY;
 
-        $this->fillable = array(
+        $this->fillable = [
             self::$SESSION_ID_KEY, self::$LOW_PRIZE_KEY, self::$MID_PRIZE_KEY,
-            self::$HIGH_PRIZE_KEY, self::$GAMBLE_PROBABILITY_KEY);
+            self::$HIGH_PRIZE_KEY, self::$GAMBLE_PROBABILITY_KEY];
 
-        $this->rules = array(
+        $this->rules = [
             self::$LOW_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$MID_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$HIGH_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$GAMBLE_PROBABILITY_KEY=>'required|numeric|min:0|max:1'
-        );
+        ];
 
         parent::__construct($attributes);
     }
@@ -42,6 +43,9 @@ class RiskAversion extends BaseEloquent
      * Model Relationships
      * ---------------------------------------------------------------------*/
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function session()
     {
         return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
@@ -51,33 +55,42 @@ class RiskAversion extends BaseEloquent
      * Model Routines
      * ---------------------------------------------------------------------*/
 
+    /**
+     * @param Subject $subject
+     * @return RiskAversionEntry
+     */
     public function calculatePayoff(Subject $subject)
     {
-        $riskAversionEntries = $subject->riskAversionEntries;
-        $numEntries = count($riskAversionEntries);
-
-        // No entries made
-        if ($numEntries == 0)
-            return 0;
-
-        $randSubmission = rand(0, count($riskAversionEntries)-1);
-        $riskAversionEntry = $riskAversionEntries[$randSubmission];
-
+        $entry = $subject->getRandomRiskAversionEntry();
         $prizeDraw = lcg_value();
-        if ($prizeDraw < $riskAversionEntry->getIndifferenceProbability())
-            return $subject->session->riskAversion->getMidPrize();
+        if ($prizeDraw < $entry->getIndifferenceProbability()) {
+            $entry->setPayoff($this->getMidPrize());
+            return $entry;
+        }
 
         $gambleDraw = lcg_value();
-        if ($gambleDraw < $riskAversionEntry->getIndifferenceProbability())
-            return $subject->session->riskAversion->getHighPrize();
+        if ($gambleDraw < $entry->getIndifferenceProbability()) {
+            $entry->setPayoff($this->getHighPrize());
+            return $entry;
+        }
 
-
-        return $subject->session->riskAversion->getLowPrize();
+        $entry->setPayoff($this->getLowPrize());
+        return $entry;
     }
 
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+    /**
+     * Returns the Task ID.
+     *
+     * @return int
+     */
+    public static function getTaskId()
+    {
+        return self::$TASK_ID;
+    }
 
     /**
      * @return mixed
@@ -111,11 +124,17 @@ class RiskAversion extends BaseEloquent
         return $this->getAttribute(self::$SESSION_ID_KEY);
     }
 
+    /**
+     * @return mixed
+     */
     public function getGambleProbability()
     {
         return $this->getAttribute(self::$GAMBLE_PROBABILITY_KEY);
     }
 
+    /**
+     * @param $gambleProbability
+     */
     public function setGambleProbability($gambleProbability)
     {
         $this->setAttribute(self::$GAMBLE_PROBABILITY_KEY, $gambleProbability);

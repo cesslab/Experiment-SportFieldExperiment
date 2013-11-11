@@ -1,10 +1,6 @@
-<?php namespace SportExperiment\Repository\Eloquent\Treatment;
+<?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\BaseEloquent;
-use SportExperiment\Repository\Eloquent\Session;
-use SportExperiment\Repository\Eloquent\Subject;
-
-class WillingnessPay extends BaseEloquent
+class WillingnessPayTreatment extends BaseEloquent
 {
     public static $TABLE_KEY = 'willingness_to_pay_treatments';
 
@@ -12,12 +8,17 @@ class WillingnessPay extends BaseEloquent
     public static $SESSION_ID_KEY = 'session_id';
     public static $ENDOWMENT_KEY = 'endowment';
 
+    private static $TASK_ID = 2;
+
     public $timestamps = false;
 
     protected $table;
     protected $fillable;
     protected $rules;
 
+    /**
+     * @param array $attributes
+     */
     public function __construct($attributes = []){
         $this->table = self::$TABLE_KEY;
         $this->fillable = [self::$SESSION_ID_KEY, self::$ENDOWMENT_KEY];
@@ -29,6 +30,9 @@ class WillingnessPay extends BaseEloquent
     /* ---------------------------------------------------------------------
      * Model Relationships
      * ---------------------------------------------------------------------*/
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function session()
     {
         return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
@@ -38,31 +42,42 @@ class WillingnessPay extends BaseEloquent
      * Model Routines
      * ---------------------------------------------------------------------*/
 
+    /**
+     * @param Subject $subject
+     * @return WillingnessPayEntry
+     */
     public function calculatePayoff(Subject $subject)
     {
-        $willingnessPayEntries = $subject->willingnessPayEntries;
-        /* @var $willingnessPayEntry \SportExperiment\Repository\Eloquent\Subject\WillingnessPay */
-        $willingnessPayEntry = $willingnessPayEntries[rand(0, count($willingnessPayEntries)-1)];
-
-        $endowment = $subject->session->willingnessPay->getEndowment();
+        $entry = $subject->getRandomWillingnessPayEntry();
+        $endowment = $subject->getWillingnessPayTreatment()->getEndowment();
         $randomGoodPrice = lcg_value()*$endowment; // Generate a random number between 0 and the endowment
 
         // Subject Won Item
-        if ($randomGoodPrice <= $willingnessPayEntry->getWillingnessPay()) {
-            $willingnessPayEntry->setPayoff($endowment - $randomGoodPrice);
-            $willingnessPayEntry->setItemPurchased(true);
-            return $willingnessPayEntry;
+        if ($randomGoodPrice <= $entry->getWillingnessPay()) {
+            $entry->setPayoff($endowment - $randomGoodPrice);
+            $entry->setItemPurchased(true);
+            return $entry;
         }
 
         // Subject Didn't Win Item
-        $willingnessPayEntry->setPayoff($endowment);
-        $willingnessPayEntry->setItemPurchased(false);
-        return $willingnessPayEntry;
+        $entry->setPayoff($endowment);
+        $entry->setItemPurchased(false);
+        return $entry;
     }
 
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+    /**
+     * Returns the Task ID
+     * @return int
+     */
+    public static function getTaskId()
+    {
+        return self::$TASK_ID;
+    }
+
     /**
      * @return mixed
      */

@@ -1,30 +1,27 @@
-<?php namespace SportExperiment\Repository\Eloquent\Subject;
+<?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\BaseEloquent;
-use SportExperiment\Repository\Eloquent\Subject;
-
-class RiskAversion extends BaseEloquent
+class WillingnessPayEntry extends BaseEloquent
 {
-    public static $TABLE_KEY = 'subject_risk_aversion';
+    public static $TABLE_KEY = 'willingness_pay_entries';
 
     public static $ID_KEY = 'id';
     public static $SUBJECT_ID_KEY = 'subject_id';
-    public static $INDIFFERENCE_PROBABILITY_KEY = 'indifference_probability';
+    public static $WILLING_PAY_KEY = 'willing_pay';
     public static $PAYOFF_KEY = 'payoff';
+    public static $ITEM_PURCHASED_KEY = 'item_purchased';
     public static $SELECTED_FOR_PAYOFF = 'selected_for_payoff';
 
     protected $rules;
     protected $table;
     protected $fillable;
 
-    public function __construct($attributes = [])
+    public function __construct($attributes = [], $endowment = '100')
     {
         $this->table = self::$TABLE_KEY;
-        $this->rules = [
-            self::$INDIFFERENCE_PROBABILITY_KEY=>'required|numeric|min:0|max:1',
-        ];
 
-        $this->fillable = [self::$INDIFFERENCE_PROBABILITY_KEY];
+        $maxEndowment = sprintf("max:%s", $endowment);
+        $this->rules = [self::$WILLING_PAY_KEY=>['required', 'numeric', 'min:0', $maxEndowment]];
+        $this->fillable = [self::$WILLING_PAY_KEY];
 
         parent::__construct($attributes);
     }
@@ -42,9 +39,9 @@ class RiskAversion extends BaseEloquent
      * Getters and Setters
      * ---------------------------------------------------------------------*/
 
-    public function setSelectedForPayoff($isSelected)
+    public function setWillingnessPay($willingnessPay)
     {
-        $this->setAttribute(self::$SELECTED_FOR_PAYOFF, $isSelected);
+        $this->setAttribute(self::$WILLING_PAY_KEY, $willingnessPay);
     }
 
     public function setPayoff($payoff)
@@ -52,9 +49,19 @@ class RiskAversion extends BaseEloquent
         $this->setAttribute(self::$PAYOFF_KEY, $payoff);
     }
 
-    public function getIndifferenceProbability()
+    public function setItemPurchased($itemPurchased)
     {
-        return $this->getAttribute(self::$INDIFFERENCE_PROBABILITY_KEY);
+        $this->setAttribute(self::$ITEM_PURCHASED_KEY, $itemPurchased);
+    }
+
+    public function setSelectedForPayoff($isSelected)
+    {
+        $this->setAttribute(self::$SELECTED_FOR_PAYOFF, $isSelected);
+    }
+
+    public function getWillingnessPay()
+    {
+        return $this->getAttribute(self::$WILLING_PAY_KEY);
     }
 
     public function getPayoff()
@@ -62,10 +69,13 @@ class RiskAversion extends BaseEloquent
         return $this->getAttribute(self::$PAYOFF_KEY);
     }
 
+    public function getItemPurchased()
+    {
+        return $this->getAttribute(self::$ITEM_PURCHASED_KEY);
+    }
+
     public function getSelectedForPayoff()
     {
         return $this->getAttribute(self::$SELECTED_FOR_PAYOFF);
     }
-
-
-} 
+}
