@@ -11,6 +11,7 @@ class RiskAversion extends BaseEloquent
     public static $SUBJECT_ID_KEY = 'subject_id';
     public static $INDIFFERENCE_PROBABILITY_KEY = 'indifference_probability';
     public static $PAYOFF_KEY = 'payoff';
+    public static $SELECTED_FOR_PAYOFF = 'selected_for_payoff';
 
     protected $rules;
     protected $table;
@@ -41,6 +42,11 @@ class RiskAversion extends BaseEloquent
      * Getters and Setters
      * ---------------------------------------------------------------------*/
 
+    public function setSelectedForPayoff($isSelected)
+    {
+        $this->setAttribute(self::$SELECTED_FOR_PAYOFF, $isSelected);
+    }
+
     public function setPayoff($payoff)
     {
         $this->setAttribute(self::$PAYOFF_KEY, $payoff);
@@ -55,5 +61,11 @@ class RiskAversion extends BaseEloquent
     {
         return $this->getAttribute(self::$PAYOFF_KEY);
     }
+
+    public function getSelectedForPayoff()
+    {
+        return $this->getAttribute(self::$SELECTED_FOR_PAYOFF);
+    }
+
 
 } 
