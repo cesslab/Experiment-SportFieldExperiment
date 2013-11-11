@@ -45,35 +45,99 @@ class Subject extends BaseEloquent
     /* ---------------------------------------------------------------------
      * Model Relationships
      * ---------------------------------------------------------------------*/
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function riskAversionEntries()
     {
         return $this->hasMany(RiskAversion::getNamespace(), RiskAversion::$SUBJECT_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function willingnessPayEntries()
     {
         return $this->hasMany(WillingnessPay::getNamespace(), WillingnessPay::$SUBJECT_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::getNamespace(), self::$USER_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function session()
     {
         return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
     }
 
     /* ---------------------------------------------------------------------
+     * Business Logic
+     * ---------------------------------------------------------------------*/
+
+    /**
+     * Calculates and saves the subjects experiment payoffs.
+     */
+    public function saveCalculatedPayoffs()
+    {
+        /* @var $riskAversionTreatment \SportExperiment\Repository\Eloquent\Treatment\RiskAversion */
+        $riskAversionTreatment = $this->session->riskAversion;
+        if ($this->session->riskAversion !== null && count($this->riskAversionEntries) > 0) {
+            $riskAversionEntry = $riskAversionTreatment->calculatePayoff($this);
+            $riskAversionEntry->save();
+        }
+
+        /* @var $willingnessPayTreatment \SportExperiment\Repository\Eloquent\Treatment\WillingnessPay */
+        $willingnessPayTreatment = $this->session->willingnessPay;
+        if ($this->session->willingnessPay !== null && count($this->willingnessPayEntries) > 0) {
+            $willingnessPayEntry = $willingnessPayTreatment->calculatePayoff($this);
+            $willingnessPayEntry->save();
+        }
+    }
+
+    public function isPayoffSet()
+    {
+        /* @var $riskAversionEntries \SportExperiment\Repository\Eloquent\Subject\RiskAversion[] */
+        $riskAversionEntries = $this->riskAversionEntries;
+        if ($riskAversionEntries != null && count($riskAversionEntries) > 0) {
+            foreach ($riskAversionEntries as $entry) {
+                if ($entry->getSelectedForPayoff())
+                    return true;
+            }
+        }
+
+        /* @var $willingnessPayEntries \SportExperiment\Repository\Eloquent\Subject\WillingnessPay[] */
+        $willingnessPayEntries = $this->willingnessPayEntries;
+        if ($willingnessPayEntries != null && count($willingnessPayEntries) > 0) {
+            foreach ($willingnessPayEntries as $entry) {
+                if ($entry->getSelectedForPayoff())
+                    return true;
+            }
+        }
+    }
+
+    /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
 
+    /**
+     * @param $id
+     */
     public function setId($id)
     {
         $this->setAttribute(self::$ID_KEY, $id);
     }
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->getAttribute(self::$ID_KEY);
@@ -151,11 +215,17 @@ class Subject extends BaseEloquent
         $this->setAttribute(self::$PROFESSION_KEY, $profession);
     }
 
+    /**
+     * @param $subjectGameState
+     */
     public function setState($subjectGameState)
     {
         $this->setAttribute(self::$GAME_STATE_KEY, $subjectGameState);
     }
 
+    /**
+     * @return mixed
+     */
     public function getState()
     {
         return $this->getAttribute(self::$GAME_STATE_KEY);
