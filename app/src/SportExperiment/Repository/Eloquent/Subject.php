@@ -1,8 +1,5 @@
 <?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\Subject\RiskAversion;
-use SportExperiment\Repository\Eloquent\Subject\WillingnessPay;
-
 class Subject extends BaseEloquent
 {
     public static $TABLE_KEY = 'subjects';
@@ -51,7 +48,7 @@ class Subject extends BaseEloquent
      */
     public function riskAversionEntries()
     {
-        return $this->hasMany(RiskAversion::getNamespace(), RiskAversion::$SUBJECT_ID_KEY);
+        return $this->hasMany(RiskAversionEntry::getNamespace(), RiskAversionEntry::$SUBJECT_ID_KEY);
     }
 
     /**
@@ -59,7 +56,7 @@ class Subject extends BaseEloquent
      */
     public function willingnessPayEntries()
     {
-        return $this->hasMany(WillingnessPay::getNamespace(), WillingnessPay::$SUBJECT_ID_KEY);
+        return $this->hasMany(WillingnessPayEntry::getNamespace(), WillingnessPayEntry::$SUBJECT_ID_KEY);
     }
 
     /**
@@ -87,25 +84,27 @@ class Subject extends BaseEloquent
      */
     public function saveCalculatedPayoffs()
     {
-        /* @var $riskAversionTreatment \SportExperiment\Repository\Eloquent\Treatment\RiskAversion */
-        $riskAversionTreatment = $this->session->riskAversion;
-        if ($this->session->riskAversion !== null && count($this->riskAversionEntries) > 0) {
+        $riskAversionTreatment = $this->getSession()->getRiskAversionTreatment();
+        if ($riskAversionTreatment !== null && count($this->getRiskAversionEntries()) > 0) {
             $riskAversionEntry = $riskAversionTreatment->calculatePayoff($this);
+            $riskAversionEntry->setSelectedForPayoff(true);
             $riskAversionEntry->save();
         }
 
-        /* @var $willingnessPayTreatment \SportExperiment\Repository\Eloquent\Treatment\WillingnessPay */
-        $willingnessPayTreatment = $this->session->willingnessPay;
-        if ($this->session->willingnessPay !== null && count($this->willingnessPayEntries) > 0) {
+        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
+        if ($willingnessPayTreatment !== null && count($this->getWillingnessPayEntries()) > 0) {
             $willingnessPayEntry = $willingnessPayTreatment->calculatePayoff($this);
+            $willingnessPayEntry->setSelectedForPayoff(true);
             $willingnessPayEntry->save();
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isPayoffSet()
     {
-        /* @var $riskAversionEntries \SportExperiment\Repository\Eloquent\Subject\RiskAversion[] */
-        $riskAversionEntries = $this->riskAversionEntries;
+        $riskAversionEntries = $this->getRiskAversionEntries();
         if ($riskAversionEntries != null && count($riskAversionEntries) > 0) {
             foreach ($riskAversionEntries as $entry) {
                 if ($entry->getSelectedForPayoff())
@@ -113,8 +112,7 @@ class Subject extends BaseEloquent
             }
         }
 
-        /* @var $willingnessPayEntries \SportExperiment\Repository\Eloquent\Subject\WillingnessPay[] */
-        $willingnessPayEntries = $this->willingnessPayEntries;
+        $willingnessPayEntries = $this->getWillingnessPayEntries();
         if ($willingnessPayEntries != null && count($willingnessPayEntries) > 0) {
             foreach ($willingnessPayEntries as $entry) {
                 if ($entry->getSelectedForPayoff())
@@ -123,9 +121,87 @@ class Subject extends BaseEloquent
         }
     }
 
+    /**
+     * @return RiskAversionEntry
+     */
+    public function getRandomRiskAversionEntry()
+    {
+        $entries = $this->getRiskAversionEntries();
+        $randIndex = rand(0, count($entries)-1);
+        return $entries[$randIndex];
+    }
+
+    /**
+     * @return WillingnessPayEntry
+     */
+    public function getRandomWillingnessPayEntry()
+    {
+        $entries = $this->getWillingnessPayEntries();
+        $randIndex = rand(0, count($entries)-1);
+        return $entries[$randIndex];
+    }
+
+
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+
+    /**
+     * @return RiskAversionEntry
+     */
+    public function getRiskAversionPayoff()
+    {
+        return $this->riskAversionEntries()->where(RiskAversionEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
+    }
+
+    /**
+     * @return WillingnessPayEntry
+     */
+    public function getWillingnessPayPayoff()
+    {
+        return $this->willingnessPayEntries()->where(WillingnessPayEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @return WillingnessPayTreatment
+     */
+    public function getWillingnessPayTreatment()
+    {
+        return $this->getSession()->getWillingnessPayTreatment();
+    }
+
+    /**
+     * @return RiskAversionTreatment
+     */
+    public function getRiskAversionTreatment()
+    {
+        return $this->getSession()->getRiskAversionTreatment();
+    }
+
+    /**
+     * @return RiskAversionEntry[]
+     */
+    public function getRiskAversionEntries()
+    {
+        return $this->riskAversionEntries;
+    }
+
+    /**
+     * @return WillingnessPayEntry[]
+     */
+    public function getWillingnessPayEntries()
+    {
+        return $this->willingnessPayEntries;
+    }
 
     /**
      * @param $id
