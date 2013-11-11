@@ -1,8 +1,5 @@
 <?php namespace SportExperiment\Repository\Eloquent;
 
-use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
-use SportExperiment\Repository\Eloquent\Treatment\RiskAversion;
-
 class Session extends BaseEloquent
 {
     public static $TABLE_KEY = 'experiment_sessions';
@@ -44,7 +41,7 @@ class Session extends BaseEloquent
      */
     public function willingnessPay()
     {
-        return $this->hasOne(WillingnessPay::getNamespace(), WillingnessPay::$SESSION_ID_KEY);
+        return $this->hasOne(WillingnessPayTreatment::getNamespace(), WillingnessPayTreatment::$SESSION_ID_KEY);
     }
 
     /**
@@ -52,12 +49,29 @@ class Session extends BaseEloquent
      */
     public function riskAversion()
     {
-        return $this->hasOne(RiskAversion::getNamespace(), RiskAversion::$SESSION_ID_KEY);
+        return $this->hasOne(RiskAversionTreatment::getNamespace(), RiskAversionTreatment::$SESSION_ID_KEY);
     }
 
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+    /**
+     * @return WillingnessPayTreatment
+     */
+    public function getWillingnessPayTreatment()
+    {
+        return $this->willingnessPay;
+    }
+
+    /**
+     * @return RiskAversionTreatment
+     */
+    public function getRiskAversionTreatment()
+    {
+        return $this->riskAversion;
+    }
+
     /**
      * @param $state
      */
