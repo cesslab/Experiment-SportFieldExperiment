@@ -1,5 +1,6 @@
 <?php namespace SportExperiment\View\Composer\Researcher;
 
+use SportExperiment\Repository\Eloquent\SubjectState;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Researcher\Session as SessionController;
 use SportExperiment\Repository\ResearcherRepositoryInterface;
@@ -26,6 +27,11 @@ class Dashboard extends BaseComposer
         $view->with('sessionStopState', SessionState::$STOPPED);
         $view->with('sessionStateKey', Session::$STATE_KEY);
         $view->with('sessionUrl', URL::to(SessionController::getRoute()));
-        $view->with('updateSessionUrl', URL::to(SessionController::getUpdateRoute()));
+        $view->with('registrationState', SubjectState::$REGISTRATION);
+        $view->with('holdState', SubjectState::$PRE_GAME_HOLD_STATE);
+        $view->with('gameState', SubjectState::$GAME_PLAY);
+        $view->with('payoffState', SubjectState::$PAYOFF);
+        $view->with('questionnaireState', SubjectState::$OUTGOING_QUESTIONNAIRE);
+        $view->with('postUrl', URL::to(SessionController::getUpdateRoute()));
     }
 }
