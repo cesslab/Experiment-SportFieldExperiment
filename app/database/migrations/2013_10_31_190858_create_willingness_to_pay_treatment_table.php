@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\Treatment\WillingnessPay;
+use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
 use Illuminate\Support\Facades\Schema;
 
 class CreateWillingnessToPayTreatmentTable extends Migration {
@@ -14,11 +14,11 @@ class CreateWillingnessToPayTreatmentTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create(WillingnessPay::$TABLE_KEY, function($table)
+		Schema::create(WillingnessPayTreatment::$TABLE_KEY, function($table)
 		{
-            $table->increments(WillingnessPay::$ID_KEY);
-			$table->integer(WillingnessPay::$SESSION_ID_KEY)->unsigned();
-            $table->double(WillingnessPay::$ENDOWMENT_KEY);
+            $table->increments(WillingnessPayTreatment::$ID_KEY);
+			$table->integer(WillingnessPayTreatment::$SESSION_ID_KEY)->unsigned();
+            $table->double(WillingnessPayTreatment::$ENDOWMENT_KEY);
 		});
 	}
 
@@ -29,6 +29,6 @@ class CreateWillingnessToPayTreatmentTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop(WillingnessPay::$TABLE_KEY);
+        Schema::drop(WillingnessPayTreatment::$TABLE_KEY);
 	}
 }
