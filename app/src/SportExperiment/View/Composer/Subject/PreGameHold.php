@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\URL;
 
 class PreGameHold extends BaseComposer
 {
-    public static $VIEW_PATH = 'site.subject.experiment.hold';
+    public static $VIEW_PATH = 'site.subject.experiment.pre_game_hold';
 
     public function compose($view)
     {
