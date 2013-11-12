@@ -1,13 +1,13 @@
 <?php namespace SportExperiment\Controller\Researcher;
 
-use SportExperiment\Repository\ResearcherRepositoryInterface;
-use SportExperiment\Repository\Eloquent\User;
+use SportExperiment\Model\ResearcherRepositoryInterface;
+use SportExperiment\Model\Eloquent\User;
 use SportExperiment\Controller\BaseController;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
-use SportExperiment\Repository\Eloquent\Role;
+use SportExperiment\Model\Eloquent\Role;
 
 class Login extends BaseController
 {

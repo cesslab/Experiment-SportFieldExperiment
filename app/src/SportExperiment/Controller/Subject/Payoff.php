@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Redirect;
 use SportExperiment\Controller\BaseController;
 use Illuminate\Support\Facades\View;
-use SportExperiment\Repository\Eloquent\Subject;
-use SportExperiment\Repository\Eloquent\SubjectState;
+use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\View\Composer\Subject\Payoff as PayoffComposer;
 
 class Payoff extends BaseController

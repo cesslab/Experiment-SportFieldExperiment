@@ -1,8 +1,8 @@
-<?php namespace SportExperiment\Repository;
+<?php namespace SportExperiment\Model;
 
-use SportExperiment\Repository\Eloquent\Subject;
-use SportExperiment\Repository\Eloquent\WillingnessPayEntry;
-use SportExperiment\Repository\Eloquent\RiskAversionEntry;
+use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\WillingnessPayEntry;
+use SportExperiment\Model\Eloquent\RiskAversionEntry;
 
 class SubjectRepository implements SubjectRepositoryInterface
 {
@@ -13,14 +13,14 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function saveSubjectData(Subject $subject, ModelCollection $collection)
     {
-        /* @var $willingnessPay \SportExperiment\Repository\Eloquent\WillingnessPayEntry */
+        /* @var $willingnessPay \SportExperiment\Model\Eloquent\WillingnessPayEntry */
         $willingnessPay = $collection->getModel(WillingnessPayEntry::getNamespace());
         if ($willingnessPay != null) {
             $willingnessPay->subject()->associate($subject);
             $willingnessPay->save();
         }
 
-        /* @var $riskAversion \SportExperiment\Repository\Eloquent\WillingnessPayEntry */
+        /* @var $riskAversion \SportExperiment\Model\Eloquent\WillingnessPayEntry */
         $riskAversion = $collection->getModel(RiskAversionEntry::getNamespace());
         if ($riskAversion != null) {
             $riskAversion->subject()->associate($subject);

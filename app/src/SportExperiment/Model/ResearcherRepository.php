@@ -1,15 +1,15 @@
-<?php namespace SportExperiment\Repository;
+<?php namespace SportExperiment\Model;
 
-use SportExperiment\Repository\Eloquent\User;
-use SportExperiment\Repository\Eloquent\Subject;
-use SportExperiment\Repository\Eloquent\Session;
-use SportExperiment\Repository\Eloquent\RiskAversionTreatment;
-use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
-use SportExperiment\Repository\Eloquent\Role;
+use SportExperiment\Model\Eloquent\User;
+use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\Session;
+use SportExperiment\Model\Eloquent\RiskAversionTreatment;
+use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
+use SportExperiment\Model\Eloquent\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use SportExperiment\Repository\Eloquent\SubjectState;
-use SportExperiment\Repository\Eloquent\SessionState;
+use SportExperiment\Model\Eloquent\SubjectState;
+use SportExperiment\Model\Eloquent\SessionState;
 
 class ResearcherRepository implements ResearcherRepositoryInterface
 {

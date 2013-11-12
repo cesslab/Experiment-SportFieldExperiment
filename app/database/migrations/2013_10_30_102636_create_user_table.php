@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\User;
+use SportExperiment\Model\Eloquent\User;
 
 class CreateUserTable extends Migration {
 

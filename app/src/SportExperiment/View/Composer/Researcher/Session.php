@@ -2,9 +2,9 @@
 
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Researcher\Dashboard as DashboardController;
-use SportExperiment\Repository\Eloquent\Session as SessionModel;
-use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
-use SportExperiment\Repository\Eloquent\RiskAversionTreatment;
+use SportExperiment\Model\Eloquent\Session as SessionModel;
+use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
+use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\Researcher\Session as SessionController;
 use Illuminate\Support\Facades\URL;
 

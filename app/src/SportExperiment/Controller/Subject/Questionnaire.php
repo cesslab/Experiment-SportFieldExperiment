@@ -1,8 +1,8 @@
 <?php namespace SportExperiment\Controller\Subject;
 
 use Illuminate\Support\Facades\Redirect;
-use SportExperiment\Repository\Eloquent\Subject;
-use SportExperiment\Repository\Eloquent\SubjectState;
+use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\View\Composer\Subject\Questionnaire as QuestionnaireComposer;
 use Illuminate\Support\Facades\View;
 use SportExperiment\Controller\BaseController;

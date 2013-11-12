@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\Session;
+use SportExperiment\Model\Eloquent\Session;
 use Illuminate\Support\Facades\Schema;
 
 class CreateExperimentSessionTable extends Migration {

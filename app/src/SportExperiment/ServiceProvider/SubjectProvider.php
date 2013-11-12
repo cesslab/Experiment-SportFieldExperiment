@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
-use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\Subject;
 
 class SubjectProvider extends ServiceProvider
 {

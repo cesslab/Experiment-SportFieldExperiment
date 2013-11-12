@@ -4,15 +4,15 @@ use \Illuminate\Support\Facades\View;
 use \Illuminate\Support\Facades\Redirect;
 use \Illuminate\Support\Facades\Input;
 
-use SportExperiment\Repository\Eloquent\SessionState;
-use SportExperiment\Repository\ResearcherRepositoryInterface;
+use SportExperiment\Model\Eloquent\SessionState;
+use SportExperiment\Model\ResearcherRepositoryInterface;
 use SportExperiment\View\Composer\Researcher\Session as SessionComposer;
-use SportExperiment\Repository\ModelCollection;
-use SportExperiment\Repository\Eloquent\Session as ExperimentSession;
-use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
-use SportExperiment\Repository\Eloquent\RiskAversionTreatment;
+use SportExperiment\Model\ModelCollection;
+use SportExperiment\Model\Eloquent\Session as ExperimentSession;
+use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
+use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\BaseController;
-use SportExperiment\Repository\Eloquent\Session as SessionModel;
+use SportExperiment\Model\Eloquent\Session as SessionModel;
 use SportExperiment\Validation\IdValidator;
 
 class Session extends BaseController

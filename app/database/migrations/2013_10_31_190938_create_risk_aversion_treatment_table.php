@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\RiskAversionTreatment;
+use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use Illuminate\Support\Facades\Schema;
 
 class CreateRiskAversionTreatmentTable extends Migration {

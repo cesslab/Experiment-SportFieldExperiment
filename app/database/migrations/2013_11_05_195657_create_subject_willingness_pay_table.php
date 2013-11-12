@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\WillingnessPayEntry as SubjectWillingnessPay;
+use SportExperiment\Model\Eloquent\WillingnessPayEntry as SubjectWillingnessPay;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSubjectWillingnessPayTable extends Migration {

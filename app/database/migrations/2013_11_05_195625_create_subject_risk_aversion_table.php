@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 
 use Illuminate\Support\Facades\Schema;
-use SportExperiment\Repository\Eloquent\RiskAversionEntry as SubjectRiskAversion;
+use SportExperiment\Model\Eloquent\RiskAversionEntry as SubjectRiskAversion;
 
 class CreateSubjectRiskAversionTable extends Migration {
 

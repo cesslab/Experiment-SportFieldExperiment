@@ -1,6 +1,6 @@
-<?php namespace SportExperiment\Repository;
+<?php namespace SportExperiment\Model;
 
-use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\Subject;
 
 interface SubjectRepositoryInterface
 {

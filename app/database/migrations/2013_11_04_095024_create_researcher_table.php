@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\Researcher;
+use SportExperiment\Model\Eloquent\Researcher;
 use Illuminate\Support\Facades\Schema;
 
 class CreateResearcherTable extends Migration

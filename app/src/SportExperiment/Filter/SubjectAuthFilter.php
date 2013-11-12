@@ -1,6 +1,6 @@
 <?php namespace SportExperiment\Filter;
 
-use SportExperiment\Repository\Eloquent\Role;
+use SportExperiment\Model\Eloquent\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use SportExperiment\Controller\Subject\Login;

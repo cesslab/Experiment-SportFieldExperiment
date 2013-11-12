@@ -1,7 +1,7 @@
-<?php namespace SportExperiment\Repository;
+<?php namespace SportExperiment\Model;
 
 use Illuminate\Support\MessageBag;
-use SportExperiment\Repository\Eloquent\BaseEloquent;
+use SportExperiment\Model\Eloquent\BaseEloquent;
 
 class ModelCollection {
     private $models;

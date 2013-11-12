@@ -1,4 +1,4 @@
-<?php namespace SportExperiment\Repository\Eloquent;
+<?php namespace SportExperiment\Model\Eloquent;
 
 class Subject extends BaseEloquent
 {

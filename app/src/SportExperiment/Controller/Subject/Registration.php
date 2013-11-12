@@ -1,8 +1,8 @@
 <?php namespace SportExperiment\Controller\Subject;
 
 use SportExperiment\Controller\BaseController;
-use SportExperiment\Repository\Eloquent\SubjectState;
-use SportExperiment\Repository\SubjectRepositoryInterface;
+use SportExperiment\Model\Eloquent\SubjectState;
+use SportExperiment\Model\SubjectRepositoryInterface;
 use SportExperiment\View\Composer\Subject\Registration as DemographicComposer;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;

@@ -13,14 +13,14 @@ class Experiment extends BaseComposer
     {
         $subject = Auth::user()->subject;
 
-        /* @var $willingnessPay \SportExperiment\Repository\Eloquent\WillingnessPayTreatment */
+        /* @var $willingnessPay \SportExperiment\Model\Eloquent\WillingnessPayTreatment */
         $willingnessPay = $subject->session->willingnessPay;
         $view->with('displayWillingnessPay', $willingnessPay != null);
         if ($willingnessPay != null)
             $view->with('endowment', $willingnessPay->getEndowment());
 
 
-        /* @var $riskAversion \SportExperiment\Repository\Eloquent\RiskAversionTreatment */
+        /* @var $riskAversion \SportExperiment\Model\Eloquent\RiskAversionTreatment */
         $riskAversion = $subject->session->riskAversion;
         $view->with('displayRiskAversion', $riskAversion != null);
         if ($riskAversion != null) {

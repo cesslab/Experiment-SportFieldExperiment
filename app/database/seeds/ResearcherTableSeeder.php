@@ -1,6 +1,6 @@
 <?php
 
-use SportExperiment\Repository\Eloquent\Researcher;
+use SportExperiment\Model\Eloquent\Researcher;
 use Illuminate\Support\Facades\DB;
 
 class ResearcherTableSeeder

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\WillingnessPayTreatment;
+use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use Illuminate\Support\Facades\Schema;
 
 class CreateWillingnessToPayTreatmentTable extends Migration {

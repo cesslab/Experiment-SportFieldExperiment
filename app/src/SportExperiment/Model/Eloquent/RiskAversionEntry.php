@@ -1,7 +1,7 @@
-<?php namespace SportExperiment\Repository\Eloquent;
+<?php namespace SportExperiment\Model\Eloquent;
 
-use SportExperiment\Repository\Eloquent\BaseEloquent;
-use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\BaseEloquent;
+use SportExperiment\Model\Eloquent\Subject;
 
 class RiskAversionEntry extends BaseEloquent
 {

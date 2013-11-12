@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\Subject;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSubjectsTable extends Migration {

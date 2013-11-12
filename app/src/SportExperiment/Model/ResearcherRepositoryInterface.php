@@ -1,6 +1,6 @@
-<?php namespace SportExperiment\Repository;
+<?php namespace SportExperiment\Model;
 
-use SportExperiment\Repository\Eloquent\User;
+use SportExperiment\Model\Eloquent\User;
 
 interface ResearcherRepositoryInterface
 {

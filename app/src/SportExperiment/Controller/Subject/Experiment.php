@@ -2,14 +2,15 @@
 
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Controller\BaseController;
-use SportExperiment\Repository\SubjectRepositoryInterface;
+use SportExperiment\Model\SubjectRepositoryInterface;
 use SportExperiment\View\Composer\Subject\Experiment as ExperimentComposer;
 use Illuminate\Support\Facades\View;
-use SportExperiment\Repository\Eloquent\RiskAversionEntry;
-use SportExperiment\Repository\Eloquent\WillingnessPayEntry;
+use SportExperiment\Model\Eloquent\RiskAversionEntry;
+use SportExperiment\Model\Eloquent\WillingnessPayEntry;
 use Illuminate\Support\Facades\Input;
-use SportExperiment\Repository\ModelCollection;
+use SportExperiment\Model\ModelCollection;
 use Illuminate\Support\Facades\Redirect;
+use SportExperiment\View\Composer\Subject\GameHold as GameHoldComposer;
 
 class Experiment extends BaseController
 {
@@ -21,6 +22,7 @@ class Experiment extends BaseController
     {
         $this->subjectRepository = $subjectRepository;
         View::composer(ExperimentComposer::$VIEW_PATH, ExperimentComposer::getNamespace());
+        View::composer(GameHoldComposer::$VIEW_PATH, GameHoldComposer::getNamespace());
     }
 
     public function getExperiment()
@@ -44,7 +46,7 @@ class Experiment extends BaseController
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
 
         $this->subjectRepository->saveSubjectData(Auth::user()->subject, $modelCollection);
-        return Redirect::to(self::getRoute());
+        return View::make(GameHoldComposer::$VIEW_PATH);
     }
 
     public static function getRoute()

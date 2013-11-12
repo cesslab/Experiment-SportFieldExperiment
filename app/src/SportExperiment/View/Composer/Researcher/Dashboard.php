@@ -1,12 +1,12 @@
 <?php namespace SportExperiment\View\Composer\Researcher;
 
-use SportExperiment\Repository\Eloquent\SubjectState;
+use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Researcher\Session as SessionController;
-use SportExperiment\Repository\ResearcherRepositoryInterface;
+use SportExperiment\Model\ResearcherRepositoryInterface;
 use Illuminate\Support\Facades\URL;
-use SportExperiment\Repository\Eloquent\SessionState;
-use SportExperiment\Repository\Eloquent\Session;
+use SportExperiment\Model\Eloquent\SessionState;
+use SportExperiment\Model\Eloquent\Session;
 
 class Dashboard extends BaseComposer
 {
@@ -32,6 +32,7 @@ class Dashboard extends BaseComposer
         $view->with('gameState', SubjectState::$GAME_PLAY);
         $view->with('payoffState', SubjectState::$PAYOFF);
         $view->with('questionnaireState', SubjectState::$OUTGOING_QUESTIONNAIRE);
+        $view->with('completedState', SubjectState::$COMPLETED);
         $view->with('postUrl', URL::to(SessionController::getUpdateRoute()));
     }
 }

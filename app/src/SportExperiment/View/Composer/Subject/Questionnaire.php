@@ -2,7 +2,7 @@
 
 
 use Illuminate\Support\Facades\URL;
-use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Subject\Questionnaire as QuestionnaireController;
 

@@ -1,7 +1,7 @@
 <?php namespace SportExperiment\Controller\Researcher;
 
 use SportExperiment\Controller\BaseController;
-use SportExperiment\Repository\ResearcherRepositoryInterface;
+use SportExperiment\Model\ResearcherRepositoryInterface;
 use SportExperiment\View\Composer\Researcher\Dashboard as DashboardComposer;
 use \Illuminate\Support\Facades\View;
 
