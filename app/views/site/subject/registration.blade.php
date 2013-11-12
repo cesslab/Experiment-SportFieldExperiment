@@ -5,26 +5,40 @@
     {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
     <fieldset>
         <legend>Demographic Information</legend>
-        {{ Form::label('first_name', 'First Name') }}
-        {{ Form::text('first_name', '') }}
+        <div>
+            {{ Form::label('first_name', 'First Name') }}
+            {{ Form::text('first_name', '') }}
+        </div>
 
-        {{ Form::label('last_name', 'Last Name') }}
-        {{ Form::text('last_name', '') }}
+        <div>
+            {{ Form::label('last_name', 'Last Name') }}
+            {{ Form::text('last_name', '') }}
+        </div>
 
-        {{ Form::label('profession', 'Profession') }}
-        {{ Form::text('profession', '') }}
+        <div>
+            {{ Form::label('profession', 'Profession') }}
+            {{ Form::text('profession', '') }}
+        </div>
 
-        {{ Form::label('education', 'Education') }}
-        {{ Form::text('education', '') }}
+        <div>
+            {{ Form::label('education', 'Education') }}
+            {{ Form::text('education', '') }}
+        </div>
 
-        {{ Form::label('gender', 'Gender') }}
-        {{ Form::text('gender', '') }}
+        <div>
+            {{ Form::label('gender', 'Gender') }}
+            {{ Form::text('gender', '') }}
+        </div>
 
-        {{ Form::label('ethnicity', 'Ethnicity') }}
-        {{ Form::text('ethnicity', '') }}
+        <div>
+            {{ Form::label('ethnicity', 'Ethnicity') }}
+            {{ Form::text('ethnicity', '') }}
+        </div>
 
-        {{ Form::label('age', 'Age') }}
-        {{ Form::text('age', '') }}
+        <div>
+            {{ Form::label('age', 'Age') }}
+            {{ Form::text('age', '') }}
+        </div>
 
         {{ Form::submit('Submit Demographic Info') }}
     </fieldset>
