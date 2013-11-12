@@ -1,6 +1,8 @@
 @extends('site.layouts.generic')
 
 @section('content')
+<meta http-equiv="Refresh" content="20">
+
 <a href="{{ $sessionUrl }}">Add New Session</a>
     <table border="1">
         <tr>
@@ -73,6 +75,10 @@
                 <td>Payoff</td>
             @elseif ($subject->getState() == $questionnaireState)
                 <td>Questionnaire</td>
+            @elseif ($subject->getState() == $completedState)
+                <td>Completed</td>
+            @else
+                <td>Undeclared</td>
             @endif
         </tr>
         @endforeach
