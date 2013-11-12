@@ -13,6 +13,8 @@ use SportExperiment\Controller\Subject\Experiment;
 use SportExperiment\Controller\Subject\PreGameHold;
 use SportExperiment\Filter\SubjectRouteFilter;
 use SportExperiment\Controller\Subject\Payoff;
+use SportExperiment\Controller\Subject\Questionnaire;
+use SportExperiment\Controller\Subject\Completed;
 
 Route::get('/', function(){});
 
@@ -60,6 +62,14 @@ Route::group(array('before'=>array(SubjectAuthFilter::getName(), SubjectRouteFil
 
     // Payoff
     Route::get(Payoff::getRoute(), Payoff::getNamespace() . '@getPayoff');
+    Route::post(Payoff::getRoute(), Payoff::getNamespace() . '@postPayoff');
+
+    // Questionnaire
+    Route::get(Questionnaire::getRoute(), Questionnaire::getNamespace() . '@getQuestionnaire');
+    Route::post(Questionnaire::getRoute(), Questionnaire::getNamespace() . '@postQuestionnaire');
+
+    // Completion Display
+    Route::get(Completed::getRoute(), Completed::getNamespace() . '@getCompleted');
 });
 
 /*
