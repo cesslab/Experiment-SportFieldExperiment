@@ -1,11 +1,15 @@
 @extends('site.layouts.generic')
 
 @section('content')
-    {{ Form::open(array('url'=>URL::to('subject/login'), 'method'=>'post')) }}
+{{ Form::open(array('url'=>URL::to('subject/login'), 'method'=>'post')) }}
+<div>
     {{ Form::label('user_name', 'User Name') }}
     {{ Form::text('user_name', '') }}
+</div>
+<div>
     {{ Form::label('password', 'Password') }}
     {{ Form::password('password') }}
+</div>
     {{ Form::submit('login') }}
 
     {{ Session::get('error', '') }}
