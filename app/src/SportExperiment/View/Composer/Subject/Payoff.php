@@ -1,7 +1,9 @@
 <?php namespace SportExperiment\View\Composer\Subject;
 
 use Illuminate\Support\Facades\URL;
-use SportExperiment\Repository\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\RiskAversionTreatment;
+use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Subject\Payoff as PayoffController;
 
@@ -20,7 +22,9 @@ class Payoff extends BaseComposer
     {
         $riskAversionEntry = $this->subject->getRiskAversionPayoff();
         $willingnessPayEntry = $this->subject->getWillingnessPayPayoff();
+        $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
         $view->with('riskAversionPayoff', $riskAversionEntry->getPayoff());
+        $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
         $view->with('willingnessPayPayoff', $willingnessPayEntry->getPayoff());
         $view->with('itemPurchased', $willingnessPayEntry->getItemPurchased());
         $view->with('totalPayoff', $riskAversionEntry->getPayoff()+$willingnessPayEntry->getPayoff());
