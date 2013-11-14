@@ -52,9 +52,22 @@ class Session extends BaseEloquent
         return $this->hasOne(RiskAversionTreatment::getNamespace(), RiskAversionTreatment::$SESSION_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ultimatumTreatment()
+    {
+        return $this->hasOne(UltimatumTreatment::getNamespace(), UltimatumTreatment::$SESSION_ID_KEY);
+    }
+
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+    public function getUltimatumTreatment()
+    {
+        return $this->ultimatumTreatment;
+    }
 
     /**
      * @return WillingnessPayTreatment
