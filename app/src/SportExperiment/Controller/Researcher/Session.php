@@ -5,6 +5,7 @@ use \Illuminate\Support\Facades\Redirect;
 use \Illuminate\Support\Facades\Input;
 
 use SportExperiment\Model\Eloquent\SessionState;
+use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\ResearcherRepositoryInterface;
 use SportExperiment\View\Composer\Researcher\Session as SessionComposer;
 use SportExperiment\Model\ModelCollection;
@@ -39,6 +40,7 @@ class Session extends BaseController
         $modelCollection->addModel(new ExperimentSession(Input::all()));
         $modelCollection->addModel(new WillingnessPayTreatment(Input::all()));
         $modelCollection->addModel(new RiskAversionTreatment(Input::all()));
+        $modelCollection->addModel(new UltimatumTreatment(Input::all()));
 
         if ($modelCollection->validationFails())
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
