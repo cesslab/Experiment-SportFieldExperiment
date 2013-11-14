@@ -1,5 +1,6 @@
 <?php namespace SportExperiment\Model;
 
+use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\Eloquent\User;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\Session;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\Model\Eloquent\SessionState;
+use SportExperiment\Model\Eloquent\UltimatumRole;
 
 class ResearcherRepository implements ResearcherRepositoryInterface
 {
@@ -28,6 +30,7 @@ class ResearcherRepository implements ResearcherRepositoryInterface
 
     private function createSessionSubjects(Session $session)
     {
+        $ultimatumSubjects = [UltimatumRole::getProposerId()=>[], UltimatumRole::getReceiverId()=>[]];
         // Add Subjects
         $id = DB::table(Subject::$TABLE_KEY)->max(Subject::$ID_KEY) + 1;
         for ($i = 1; $i <= $session->getNumSubjects(); ++$i, ++$id) {
@@ -43,7 +46,31 @@ class ResearcherRepository implements ResearcherRepositoryInterface
             $subject->session()->associate($session);
             $subject->user()->associate($user);
             $subject->save();
+
+            // Select Proposers and Senders
+            $roleId = ($i % 2) ? UltimatumRole::getProposerId() : UltimatumRole::getReceiverId();
+            $ultimatumSubjects[$roleId][] = $subject;
+
+            // Assign Ultimatum Role
+            $ultimatumRole = new UltimatumRole();
+            $ultimatumRole->setRole($roleId);
+            $ultimatumRole->save();
+
+
+            $ultimatumRole->subject()->associate($subject);
+            $subject->save();
+
+            $ultimatumRole->save();
         }
+
+        $ultimatumTreatment = new UltimatumTreatment();
+        $ultimatumTreatment->matchSubjects(
+            $ultimatumSubjects[UltimatumRole::getProposerId()],
+            $ultimatumSubjects[UltimatumRole::getReceiverId()]);
+    }
+
+    private function matchUltimatumSubjects($subjects)
+    {
     }
 
     public function saveSession(ModelCollection $modelCollection)
@@ -59,6 +86,10 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         $willingnessPay = $modelCollection->getModel(WillingnessPayTreatment::getNamespace());
         $willingnessPay->session()->associate($session);
         $willingnessPay->save();
+
+        $ultimatum = $modelCollection->getModel(UltimatumTreatment::getNamespace());
+        $ultimatum->session()->associate($session);
+        $ultimatum->save();
 
         $this->createSessionSubjects($session);
     }
