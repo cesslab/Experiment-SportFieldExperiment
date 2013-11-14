@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Controller\BaseController;
+use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\UltimatumEntry;
 use SportExperiment\Model\SubjectRepositoryInterface;
 use SportExperiment\View\Composer\Subject\Experiment as ExperimentComposer;
 use Illuminate\Support\Facades\View;
@@ -17,10 +19,12 @@ class Experiment extends BaseController
     private static $URI = 'subject/experiment';
 
     private $subjectRepository;
+    private $subject;
 
-    public function __construct(SubjectRepositoryInterface $subjectRepository)
+    public function __construct(SubjectRepositoryInterface $subjectRepository, Subject $subject)
     {
         $this->subjectRepository = $subjectRepository;
+        $this->subject = $subject;
         View::composer(ExperimentComposer::$VIEW_PATH, ExperimentComposer::getNamespace());
         View::composer(GameHoldComposer::$VIEW_PATH, GameHoldComposer::getNamespace());
     }
@@ -34,13 +38,19 @@ class Experiment extends BaseController
     {
         $modelCollection = new ModelCollection();
 
-        $session = Auth::user()->subject->session;
+        $session = $this->subject->getSession();
 
-        if ($session->willingnessPay != null)
-            $modelCollection->addModel(new WillingnessPayEntry(Input::all(), $session->willingnessPay->getEndowment()));
+        if ($session->getWillingnessPayTreatment() != null)
+            $modelCollection->addModel(new WillingnessPayEntry(Input::all(), $session->getWillingnessPayTreatment()->getEndowment()));
 
-        if ($session->riskAversion != null)
+        if ($session->getRiskAversionTreatment() != null)
             $modelCollection->addModel(new RiskAversionEntry(Input::all()));
+
+        if ($session->getUltimatumTreatment() != null) {
+            $ultimatumEntry = new UltimatumEntry(Input::all());
+            $ultimatumEntry->setAmountMaxRule($this->subject->getUltimatumTreatment()->getTotalAmount());
+            $modelCollection->addModel($ultimatumEntry);
+        }
 
         if ($modelCollection->validationFails())
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
