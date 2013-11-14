@@ -44,6 +44,22 @@ class Subject extends BaseEloquent
      * ---------------------------------------------------------------------*/
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function ultimatumRole()
+    {
+        return $this->hasOne(UltimatumRole::getNamespace(), UltimatumRole::$SUBJECT_ID_KEY);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ultimatumEntries()
+    {
+        return $this->hasMany(UltimatumEntry::getNamespace(), UltimatumEntry::$SUBJECT_ID_KEY);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function riskAversionEntries()
@@ -97,6 +113,13 @@ class Subject extends BaseEloquent
             $willingnessPayEntry->setSelectedForPayoff(true);
             $willingnessPayEntry->save();
         }
+
+        $ultimatumTreatment = $this->getUltimatumTreatment();
+        if ($ultimatumTreatment !== null && count($this->getUltimatumEntries()) > 0) {
+            $ultimatumEntry = $ultimatumTreatment->calculatePayoff($this);
+            $ultimatumEntry->setSelectedForPayoff(true);
+            $ultimatumEntry->save();
+        }
     }
 
     /**
@@ -141,11 +164,26 @@ class Subject extends BaseEloquent
         return $entries[$randIndex];
     }
 
+    public function getRandomUltimatumEntry()
+    {
+        $entries = $this->getUltimatumEntries();
+        $randIndex = rand(0, count($entries)-1);
+        return $entries[$randIndex];
+    }
+
 
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
 
+
+    /**
+     * @return UltimatumRole
+     */
+    public function getUltimatumRole()
+    {
+        return $this->ultimatumRole;
+    }
 
     /**
      * @return RiskAversionEntry
@@ -172,6 +210,14 @@ class Subject extends BaseEloquent
     }
 
     /**
+     * @return \SportExperiment\Model\Eloquent\UltimatumTreatment
+     */
+    public function getUltimatumTreatment()
+    {
+        return $this->getSession()->getUltimatumTreatment();
+    }
+
+    /**
      * @return WillingnessPayTreatment
      */
     public function getWillingnessPayTreatment()
@@ -186,6 +232,15 @@ class Subject extends BaseEloquent
     {
         return $this->getSession()->getRiskAversionTreatment();
     }
+
+    /**
+     * @return UltimatumEntry[]
+     */
+    public function getUltimatumEntries()
+    {
+        return $this->ultimatumEntries;
+    }
+
 
     /**
      * @return RiskAversionEntry[]
