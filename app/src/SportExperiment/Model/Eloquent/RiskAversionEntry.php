@@ -1,8 +1,5 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
-use SportExperiment\Model\Eloquent\BaseEloquent;
-use SportExperiment\Model\Eloquent\Subject;
-
 class RiskAversionEntry extends BaseEloquent
 {
     public static $TABLE_KEY = 'risk_aversion_entries';
@@ -10,8 +7,8 @@ class RiskAversionEntry extends BaseEloquent
     public static $ID_KEY = 'id';
     public static $SUBJECT_ID_KEY = 'subject_id';
     public static $INDIFFERENCE_PROBABILITY_KEY = 'indifference_probability';
-    public static $PAYOFF_KEY = 'payoff';
     public static $SELECTED_FOR_PAYOFF = 'selected_for_payoff';
+    public static $PAYOFF_KEY = 'payoff';
 
     protected $rules;
     protected $table;
