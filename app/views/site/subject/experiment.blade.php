@@ -4,12 +4,20 @@
 @section('content')
 {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
 
-    @if ($displayWillingnessPay)
-    @include('site.subject.experiment.treatment.willingnessPay', array('endowment'=>$endowment))
+    @if ($displayRiskAversion)
+        @include('site.subject.experiment.treatment.riskAversion', array('taskId'=>$riskAversionTaskId, 'midPrize'=>$midPrize, 'lowPrize'=>$lowPrize, 'highPrize'=>$highPrize, 'probability'=>$gambleProb, 'indifferenceProbabilityKey'=>$indifferenceProbabilityKey))
     @endif
 
-    @if ($displayRiskAversion)
-    @include('site.subject.experiment.treatment.riskAversion', array('midPrize'=>$midPrize, 'lowPrize'=>$lowPrize, 'highPrize'=>$highPrize, 'probability'=>$gambleProb))
+    @if ($displayWillingnessPay)
+        @include('site.subject.experiment.treatment.willingnessPay', array('endowment'=>$endowment, 'taskId'=>$willingnessPayTaskId, 'willingPayKey'=>$willingPayKey))
+    @endif
+
+    @if ($displayUltimatum)
+        @if ($isProposer)
+            @include('site.subject.experiment.treatment.ultimatum_proposer', array('taskId'=>$ultimatumTaskId, 'totalAmount'=>$ultimatumTotalAmount, 'amountKey'=>$amountKey))
+        @else
+            @include('site.subject.experiment.treatment.ultimatum_receiver', array('taskId'=>$ultimatumTaskId, 'totalAmount'=>$ultimatumTotalAmount, 'amountKey'=>$amountKey))
+        @endif
     @endif
 
 {{ Form::submit('Save Choices') }}
