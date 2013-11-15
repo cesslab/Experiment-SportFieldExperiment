@@ -1,6 +1,7 @@
 <?php namespace SportExperiment\Model;
 
 use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\UltimatumEntry;
 use SportExperiment\Model\Eloquent\WillingnessPayEntry;
 use SportExperiment\Model\Eloquent\RiskAversionEntry;
 
@@ -13,18 +14,25 @@ class SubjectRepository implements SubjectRepositoryInterface
      */
     public function saveSubjectData(Subject $subject, ModelCollection $collection)
     {
-        /* @var $willingnessPay \SportExperiment\Model\Eloquent\WillingnessPayEntry */
-        $willingnessPay = $collection->getModel(WillingnessPayEntry::getNamespace());
-        if ($willingnessPay != null) {
-            $willingnessPay->subject()->associate($subject);
-            $willingnessPay->save();
+        /* @var $willingnessPayEntry \SportExperiment\Model\Eloquent\WillingnessPayEntry */
+        $willingnessPayEntry = $collection->getModel(WillingnessPayEntry::getNamespace());
+        if ($willingnessPayEntry != null) {
+            $willingnessPayEntry->subject()->associate($subject);
+            $willingnessPayEntry->save();
         }
 
-        /* @var $riskAversion \SportExperiment\Model\Eloquent\WillingnessPayEntry */
-        $riskAversion = $collection->getModel(RiskAversionEntry::getNamespace());
-        if ($riskAversion != null) {
-            $riskAversion->subject()->associate($subject);
-            $riskAversion->save();
+        /* @var $riskAversionEntry \SportExperiment\Model\Eloquent\WillingnessPayEntry */
+        $riskAversionEntry = $collection->getModel(RiskAversionEntry::getNamespace());
+        if ($riskAversionEntry != null) {
+            $riskAversionEntry->subject()->associate($subject);
+            $riskAversionEntry->save();
+        }
+
+        /* @var $ultimatumEntry \SportExperiment\Model\Eloquent\UltimatumEntry */
+        $ultimatumEntry = $collection->getModel(UltimatumEntry::getNamespace());
+        if ($ultimatumEntry != null) {
+            $ultimatumEntry->subject()->associate($subject);
+            $ultimatumEntry->save();
         }
     }
 }
