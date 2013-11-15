@@ -14,6 +14,9 @@ class RiskAversionEntry extends BaseEloquent
     protected $table;
     protected $fillable;
 
+    /**
+     * @param array $attributes
+     */
     public function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
@@ -30,6 +33,9 @@ class RiskAversionEntry extends BaseEloquent
      * Model Relationships
      * ---------------------------------------------------------------------*/
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function subject()
     {
         return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
@@ -39,26 +45,41 @@ class RiskAversionEntry extends BaseEloquent
      * Getters and Setters
      * ---------------------------------------------------------------------*/
 
+    /**
+     * @param $isSelected
+     */
     public function setSelectedForPayoff($isSelected)
     {
         $this->setAttribute(self::$SELECTED_FOR_PAYOFF, $isSelected);
     }
 
+    /**
+     * @param $payoff
+     */
     public function setPayoff($payoff)
     {
         $this->setAttribute(self::$PAYOFF_KEY, $payoff);
     }
 
+    /**
+     * @return mixed
+     */
     public function getIndifferenceProbability()
     {
         return $this->getAttribute(self::$INDIFFERENCE_PROBABILITY_KEY);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPayoff()
     {
         return $this->getAttribute(self::$PAYOFF_KEY);
     }
 
+    /**
+     * @return mixed
+     */
     public function getSelectedForPayoff()
     {
         return $this->getAttribute(self::$SELECTED_FOR_PAYOFF);
