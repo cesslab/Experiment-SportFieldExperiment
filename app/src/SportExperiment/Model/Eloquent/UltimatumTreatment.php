@@ -53,9 +53,8 @@ class UltimatumTreatment extends BaseEloquent
     public function matchSubjects(array $proposers, array $receivers)
     {
         // There must be at least one of each role to perform matching appropriately
-        if (count($receivers) == 0 || count($proposers) == 0) {
+        if (count($receivers) == 0 || count($proposers) == 0)
             return;
-        }
 
         $this->matchProposersReceivers($proposers, $receivers);
     }
@@ -71,13 +70,10 @@ class UltimatumTreatment extends BaseEloquent
         shuffle($receivers);
         $i = 0; $j = 0;
         for ($k = 0; $k < $totalSubjects; ++$k) {
-            // Two pairs found
-            if (isset($proposers[$i]) && isset($receivers[$j])) {
-                $i = ( ! isset($proposers[$i])) ? 0 : $i;
-                $j = ( ! isset($proposers[$j])) ? 0 : $j;
-                $this->matchPairMember($proposers[$i], $receivers[$j]);
-                ++$i; ++$j;
-            }
+            $i = ( ! isset($proposers[$i])) ? 0 : $i;
+            $j = ( ! isset($receivers[$j])) ? 0 : $j;
+            $this->matchPairMember($proposers[$i], $receivers[$j]);
+            ++$i; ++$j;
         }
     }
 
@@ -99,14 +95,38 @@ class UltimatumTreatment extends BaseEloquent
     }
 
     /**
+     * Returns the subject's ultimatum payoff.
+     *
      * @param Subject $subject
      * @return UltimatumEntry
      */
     public function calculatePayoff(Subject $subject)
     {
-        $entry = $subject->getRandomUltimatumEntry();
+        $opponent = $subject->getUltimatumRole()->getPartner();
+        $opponentEntry = $opponent->getRandomUltimatumEntry();
 
-        // get a random
+        $playerEntry = $subject->getRandomUltimatumEntry();
+        $ultimatumTreatment = $subject->getUltimatumTreatment();
+        // Proposer Payoff
+        if ($subject->getUltimatumRole()->getRole() == UltimatumRole::getProposerId()) {
+            if ($playerEntry->getAmount() >= $opponentEntry->getAmount())
+                $playerEntry->setPayoff($ultimatumTreatment->getTotalAmount() - $playerEntry->getAmount());
+            else
+                $playerEntry->setPayoff(0);
+        }
+        // Receiver Payoff
+        else {
+            if ($opponentEntry->getAmount() <= $playerEntry->getAmount())
+                $playerEntry->setPayoff($opponentEntry->getAmount());
+            else
+                $playerEntry->setPayoff(0);
+        }
+
+        $playerEntry->setPartnerId($opponent->getId());
+        $playerEntry->setPartnerAmount($opponentEntry->getAmount());
+        $playerEntry->setPartnerEntryId($opponentEntry->getId());
+
+        return $playerEntry;
     }
 
     /* ---------------------------------------------------------------------
