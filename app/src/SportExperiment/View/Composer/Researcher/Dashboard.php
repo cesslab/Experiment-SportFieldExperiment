@@ -1,5 +1,6 @@
 <?php namespace SportExperiment\View\Composer\Researcher;
 
+use SportExperiment\Model\Eloquent\UltimatumRole;
 use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Researcher\Session as SessionController;
@@ -34,5 +35,7 @@ class Dashboard extends BaseComposer
         $view->with('questionnaireState', SubjectState::$OUTGOING_QUESTIONNAIRE);
         $view->with('completedState', SubjectState::$COMPLETED);
         $view->with('postUrl', URL::to(SessionController::getUpdateRoute()));
+        $view->with('ultimatumProposerRoleId', UltimatumRole::getProposerId());
+        $view->with('ultimatumReceiverRoleId', UltimatumRole::getReceiverId());
     }
 }
