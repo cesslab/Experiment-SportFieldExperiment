@@ -1,4 +1,4 @@
-<h2>Task 2</h2>
+<h2>Task {{$taskId}}</h2>
 <p>
     There are three money prizes of {{$lowPrize}}, {{$midPrize}}, and {{$highPrize}} dollars.
     You have a choice of getting {{$midPrize}} dollars for sure or a gamble; where you can get ${{$highPrize}} dollar
@@ -10,6 +10,6 @@
     {{$probability}}, and {{$lowPrize}} with probability 1 - {{$probability}}.
 </p>
 <div>
-    {{ Form::label('indifference_probability', "Your chosen probability") }}
-    {{ Form::text('indifference_probability', '') }}
+    {{ Form::label($indifferenceProbabilityKey, "Your chosen probability") }}
+    {{ Form::text($indifferenceProbabilityKey, Input::old($indifferenceProbabilityKey)) }}
 </div>
