@@ -11,7 +11,7 @@ class UltimatumRole extends BaseEloquent
 
     private static $PROPOSER = 1;
     private static $RECEIVER = 2;
-    public static $NO_PARTNER_ID = -1;
+    public static $NO_PARTNER_ID = 0;
 
     public $timestamps = false;
 
@@ -38,10 +38,18 @@ class UltimatumRole extends BaseEloquent
         return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
     }
 
-
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+    /**
+     * @return Subject
+     */
+    public function getPartner()
+    {
+        $partnerId = $this->getPartnerId();
+        return Subject::find($partnerId);
+    }
 
     /**
      * @return int
@@ -51,6 +59,9 @@ class UltimatumRole extends BaseEloquent
         return $this->getAttribute(self::$ROLE_KEY);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPartnerId()
     {
         return $this->getAttribute(self::$PARTNER_SUBJECT_ID_KEY);
