@@ -13,6 +13,7 @@
             <th>Mid Prize</th>
             <th>High Prize</th>
             <th>Gamble Probability</th>
+            <th>Ultimatum Amount</th>
             <th>Session State</th>
             <th>Manage Session</th>
         </tr>
@@ -25,6 +26,7 @@
                 <td>{{ $session->riskAversion->getMidPrize() }}</td>
                 <td>{{ $session->riskAversion->getHighPrize() }}</td>
                 <td>{{ $session->riskAversion->getGambleProbability() }}</td>
+                <td>{{ $session->getUltimatumTreatment()->getTotalAmount() }}</td>
                 <td>
                     @if ($session->getState() == $sessionStartState)
                         <span>Started</span>
@@ -59,6 +61,7 @@
             <th>Session ID</th>
             <th>User Name</th>
             <th>Game State</th>
+            <th>Ultimatum Role</th>
         </tr>
         @foreach($subjects as $subject)
         <tr>
@@ -79,6 +82,12 @@
                 <td>Completed</td>
             @else
                 <td>Undeclared</td>
+            @endif
+
+            @if ($subject->getUltimatumRole()->getRole() == $ultimatumProposerRoleId)
+                <td>Proposer</td>
+            @else
+                <td>Receiver</td>
             @endif
         </tr>
         @endforeach
