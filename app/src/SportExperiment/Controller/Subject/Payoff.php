@@ -13,6 +13,9 @@ class Payoff extends BaseController
 
     private $subject;
 
+    /**
+     * @param Subject $subject
+     */
     function __construct(Subject $subject)
     {
         $this->subject = $subject;
@@ -20,6 +23,9 @@ class Payoff extends BaseController
     }
 
 
+    /**
+     * @return mixed
+     */
     public function getPayoff()
     {
         if ( ! $this->subject->isPayoffSet())
@@ -28,6 +34,9 @@ class Payoff extends BaseController
         return View::make(PayoffComposer::$VIEW_PATH);
     }
 
+    /**
+     * @return mixed
+     */
     public function postPayoff()
     {
         if ($this->subject->getState() === SubjectState::$PAYOFF) {
@@ -38,6 +47,9 @@ class Payoff extends BaseController
         return Redirect::to(Questionnaire::getRoute());
     }
 
+    /**
+     * @return string
+     */
     public static function getRoute()
     {
         return self::$URI;
