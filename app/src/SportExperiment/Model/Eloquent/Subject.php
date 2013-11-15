@@ -202,6 +202,14 @@ class Subject extends BaseEloquent
     }
 
     /**
+     * @return UltimatumEntry
+     */
+    public function getUltimatumPayoff()
+    {
+        return $this->ultimatumEntries()->where(UltimatumEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
+    }
+
+    /**
      * @return Session
      */
     public function getSession()
