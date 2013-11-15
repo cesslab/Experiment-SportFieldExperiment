@@ -1,5 +1,5 @@
-<h2>Task 1</h2>
+<h2>Task {{$taskId}}</h2>
 <div>
-    {{ Form::label('willing_pay', "How much would you be willing to pay out of \$$endowment dollars?") }}
-    {{ Form::text('willing_pay', '') }}
+    {{ Form::label($willingPayKey, "How much would you be willing to pay out of \$$endowment dollars?") }}
+    {{ Form::text($willingPayKey, Input::old($willingPayKey)) }}
 </div>
