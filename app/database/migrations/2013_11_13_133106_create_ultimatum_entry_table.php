@@ -19,6 +19,9 @@ class CreateUltimatumEntryTable extends Migration {
             $table->integer(UltimatumEntry::$SUBJECT_ID_KEY)->unsigned();
             $table->double(UltimatumEntry::$AMOUNT_KEY);
             $table->double(UltimatumEntry::$PAYOFF_KEY)->default(0.0);
+            $table->double(UltimatumEntry::$PARTNER_AMOUNT_KEY)->default(0.0);
+            $table->integer(UltimatumEntry::$PARTNER_ID_KEY)->default(0);
+            $table->integer(UltimatumEntry::$PARTNER_ENTRY_KEY)->default(0);
             $table->boolean(UltimatumEntry::$SELECTED_FOR_PAYOFF)->default(false);
             $table->timestamps();
         });
