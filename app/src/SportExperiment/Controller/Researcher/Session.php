@@ -5,6 +5,7 @@ use \Illuminate\Support\Facades\Redirect;
 use \Illuminate\Support\Facades\Input;
 
 use SportExperiment\Model\Eloquent\SessionState;
+use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\ResearcherRepositoryInterface;
 use SportExperiment\View\Composer\Researcher\Session as SessionComposer;
@@ -41,6 +42,7 @@ class Session extends BaseController
         $modelCollection->addModel(new WillingnessPayTreatment(Input::all()));
         $modelCollection->addModel(new RiskAversionTreatment(Input::all()));
         $modelCollection->addModel(new UltimatumTreatment(Input::all()));
+        $modelCollection->addModel(new TrustTreatment(Input::all()));
 
         if ($modelCollection->validationFails())
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
@@ -49,6 +51,7 @@ class Session extends BaseController
         return Redirect::to(Dashboard::getRoute());
     }
 
+    // TODO:: Throw error if the researcher attempts to stop a session before at least one entry has been made by all players
     public function updateSession()
     {
         $idValidator = new IdValidator();
