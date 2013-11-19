@@ -11,6 +11,7 @@ class UltimatumRole extends BaseEloquent
 
     private static $PROPOSER = 1;
     private static $RECEIVER = 2;
+
     public static $NO_PARTNER_ID = 0;
 
     public $timestamps = false;

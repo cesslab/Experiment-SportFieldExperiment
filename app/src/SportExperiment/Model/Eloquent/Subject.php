@@ -51,6 +51,11 @@ class Subject extends BaseEloquent
         return $this->hasOne(UltimatumRole::getNamespace(), UltimatumRole::$SUBJECT_ID_KEY);
     }
 
+    public function trustGroup()
+    {
+        return $this->hasOne(TrustGroup::getNamespace(), TrustGroup::$SUBJECT_ID_KEY);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -73,6 +78,11 @@ class Subject extends BaseEloquent
     public function willingnessPayEntries()
     {
         return $this->hasMany(WillingnessPayEntry::getNamespace(), WillingnessPayEntry::$SUBJECT_ID_KEY);
+    }
+
+    public function trustEntries()
+    {
+        return $this->hasMany(TrustEntry::getNamespace(), TrustEntry::$SUBJECT_ID_KEY);
     }
 
     /**
@@ -164,6 +174,9 @@ class Subject extends BaseEloquent
         return $entries[$randIndex];
     }
 
+    /**
+     * @return UltimatumEntry
+     */
     public function getRandomUltimatumEntry()
     {
         $entries = $this->getUltimatumEntries();
@@ -183,6 +196,14 @@ class Subject extends BaseEloquent
     public function getUltimatumRole()
     {
         return $this->ultimatumRole;
+    }
+
+    /**
+     * @return TrustGroup
+     */
+    public function getTrustGroup()
+    {
+        return $this->trustGroup;
     }
 
     /**
@@ -239,6 +260,14 @@ class Subject extends BaseEloquent
     public function getRiskAversionTreatment()
     {
         return $this->getSession()->getRiskAversionTreatment();
+    }
+
+    /**
+     * @return TrustTreatment
+     */
+    public function getTrustTreatment()
+    {
+        return $this->getSession()->getTrustTreatment();
     }
 
     /**

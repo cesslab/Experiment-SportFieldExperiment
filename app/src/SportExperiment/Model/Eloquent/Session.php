@@ -60,10 +60,28 @@ class Session extends BaseEloquent
         return $this->hasOne(UltimatumTreatment::getNamespace(), UltimatumTreatment::$SESSION_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function trustTreatment()
+    {
+        return $this->hasOne(TrustTreatment::getNamespace(), TrustTreatment::$SESSION_ID_KEY);
+    }
+
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+    /**
+     * @return TrustTreatment
+     */
+    public function getTrustTreatment()
+    {
+        return $this->trustTreatment;
+    }
 
+    /**
+     * @return UltimatumTreatment
+     */
     public function getUltimatumTreatment()
     {
         return $this->ultimatumTreatment;
