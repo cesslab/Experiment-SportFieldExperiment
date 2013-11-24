@@ -20,7 +20,6 @@ class CreateTrustGroupsTable extends Migration {
             $table->integer(TrustGroup::$SUBJECT_ROLE_KEY)->unsigned();
             $table->integer(TrustGroup::$PARTNER_SUBJECT_ID_KEY)->unsigned();
             $table->integer(TrustGroup::$PARTNER_ROLE_KEY)->unsigned();
-            $table->timestamps();
         });
 	}
 
