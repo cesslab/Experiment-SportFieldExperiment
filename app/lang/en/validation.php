@@ -68,6 +68,10 @@ return array(
 	),
 	"unique"           => "The :attribute has already been taken.",
 	"url"              => "The :attribute format is invalid.",
+    "integer_values"    => "The :attribute must contain only integers.",
+    "integer_keys"    => "The :attribute must contain only integers keys.",
+    "has_key_values"    => "The :attribute key may only contain valid values.",
+    "has_values"    => "The :attribute may only contain valid values.",
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +84,8 @@ return array(
 	|
 	*/
 
-	'custom' => array(),
+	'custom' => array(
+    ),
 
 	/*
 	|--------------------------------------------------------------------------
