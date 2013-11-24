@@ -1,6 +1,6 @@
 <?php namespace SportExperiment\Filter;
 
-use SportExperiment\Model\Eloquent\Role;
+use SportExperiment\Model\Eloquent\UserRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use SportExperiment\Controller\Subject\Login;
@@ -14,7 +14,7 @@ class SubjectAuthFilter  extends BaseFilter
         if( ! Auth::check())
             return Redirect::to(Login::getRoute());
 
-        if (Auth::user()->role != Role::$SUBJECT || Auth::user()->subject == null) {
+        if (Auth::user()->role != UserRole::$SUBJECT || Auth::user()->subject == null) {
             Auth::logout();
             return Redirect::to(Login::getRoute());
         }

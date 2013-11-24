@@ -40,7 +40,7 @@ class User extends BaseEloquent implements UserInterface
         return $this->hasOne(Researcher::getNamespace(), Researcher::$USER_ID_KEY);
     }
 
-    public function isRole(Role $role)
+    public function isRole(UserRole $role)
     {
         $userModel = User::where(self::$USER_NAME_KEY, $this->getUserName())
             ->where(self::$ROLE_KEY, $role->getRole())

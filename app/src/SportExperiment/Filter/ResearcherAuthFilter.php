@@ -1,6 +1,6 @@
 <?php namespace SportExperiment\Filter;
 
-use SportExperiment\Model\Eloquent\Role;
+use SportExperiment\Model\Eloquent\UserRole;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -14,7 +14,7 @@ class ResearcherAuthFilter  extends BaseFilter
         if( ! Auth::check())
             return Redirect::to('researcher/login');
 
-        if (Auth::user()->role != Role::$RESEARCHER) {
+        if (Auth::user()->role != UserRole::$RESEARCHER) {
             Auth::logout();
             return Redirect::to('researcher/login');
         }

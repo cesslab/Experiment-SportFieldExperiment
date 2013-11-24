@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
-use SportExperiment\Model\Eloquent\Role;
+use SportExperiment\Model\Eloquent\UserRole;
 
 class Login extends BaseController
 {
@@ -35,7 +35,7 @@ class Login extends BaseController
             return Redirect::to(self::getRoute())->withErrors($user->getValidator());
 
         // Confirm researcher account exists and is active
-        if ( ! $user->isRole(new Role(Role::$RESEARCHER)))
+        if ( ! $user->isRole(new UserRole(UserRole::$RESEARCHER)))
             return Redirect::to(self::getRoute())->with('error', 'Account not found');
 
         // Attempt login using Auth
