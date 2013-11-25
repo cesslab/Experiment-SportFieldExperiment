@@ -22,7 +22,6 @@ class SubjectRouter {
             SubjectState::$PRE_GAME_HOLD_STATE=>PreGameHold::getRoute(),
             SubjectState::$GAME_PLAY=>Experiment::getRoute(),
             SubjectState::$COMPLETED=>Login::getRoute(),
-            // TODO: Add the remaining game states
             SubjectState::$PAYOFF=>Payoff::getRoute(),
             SubjectState::$OUTGOING_QUESTIONNAIRE=>Questionnaire::getRoute(),
             SubjectState::$COMPLETED=>Completed::getRoute()
