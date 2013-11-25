@@ -37,9 +37,21 @@
             </fieldset>
             <fieldset>
                 <legend>Task {{$ultimatumTaskId}}: Ultimatum</legend>
-                {{ Form::label($ultimatumTotalAmountKey, 'Total Amount') }}
-                {{ Form::text($ultimatumTotalAmountKey, Input::old($ultimatumTotalAmountKey)) }}
-
+                <div>
+                    {{ Form::label($ultimatumTotalAmountKey, 'Total Amount') }}
+                    {{ Form::text($ultimatumTotalAmountKey, Input::old($ultimatumTotalAmountKey)) }}
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Task {{$trustTaskId}}: Trust</legend>
+                <div>
+                    {{ Form::label($trustSenderMultiplierKey, 'Sender Multiplier') }}
+                    {{ Form::text($trustSenderMultiplierKey, Input::old($trustSenderMultiplierKey)) }}
+                </div>
+                <div>
+                    {{ Form::label($trustReceiverMultiplierKey, 'Receiver Multiplier') }}
+                    {{ Form::text($trustReceiverMultiplierKey, Input::old($trustReceiverMultiplierKey)) }}
+                </div>
             </fieldset>
             {{ Form::submit('Add New Session') }}
         </fieldset>
