@@ -1,5 +1,6 @@
 <?php namespace SportExperiment\View\Composer\Researcher;
 
+use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Researcher\Dashboard as DashboardController;
 use SportExperiment\Model\Eloquent\Session as SessionModel;
@@ -27,6 +28,8 @@ class Session extends BaseComposer
         $view->with('gambleProbKey', RiskAversionTreatment::$GAMBLE_PROBABILITY_KEY);
         $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
         $view->with('ultimatumTotalAmountKey', UltimatumTreatment::$TOTAL_AMOUNT_KEY);
+        $view->with('trustTaskId', TrustTreatment::getTaskId());
+        $view->with('trustSenderMultiplierKey', TrustTreatment::$PROPOSER_ALLOCATION_MULTIPLIER_KEY);
+        $view->with('trustReceiverMultiplierKey', TrustTreatment::$RECEIVER_ALLOCATION_MULTIPLIER_KEY);
     }
-
-} 
+}
