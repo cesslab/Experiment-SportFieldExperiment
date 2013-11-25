@@ -1,18 +1,13 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
 
-class TrustEntry extends BaseEloquent
+class TrustEntry extends TaskEntry
 {
     public static $TABLE_KEY = 'trust_entries';
 
-    public static $ID_KEY = 'id';
-    public static $SUBJECT_ID_KEY = 'subject_id';
-    public static $SELECTED_FOR_PAYOFF = 'selected_for_payoff';
-    public static $PAYOFF_KEY = 'payoff';
-
-    protected $rules;
     protected $table;
-    protected $fillable;
+    protected $rules = [];
+    protected $fillable = [];
 
     /**
      * @param array $attributes
@@ -20,64 +15,27 @@ class TrustEntry extends BaseEloquent
     public function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
-        $this->rules = [
-        ];
-
-        $this->fillable = [];
 
         parent::__construct($attributes);
     }
+
     /* ---------------------------------------------------------------------
      * Model Relationships
      * ---------------------------------------------------------------------*/
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function subject()
+    public function trustReceiverEntries()
     {
-        return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
-    }
-
-    public function trustAllocationEntries()
-    {
-        return $this->hasMany(TrustAllocationEntry::getNamespace(), TrustAllocationEntry::$TRUST_ENTRY_ID_KEY);
-    }
-
-
-    /* ---------------------------------------------------------------------
-     * Getters and Setters
-     * ---------------------------------------------------------------------*/
-    /**
-     * @param $isSelected
-     */
-    public function setSelectedForPayoff($isSelected)
-    {
-        $this->setAttribute(self::$SELECTED_FOR_PAYOFF, $isSelected);
+        return $this->hasMany(TrustReceiverEntry::getNamespace(), TrustReceiverEntry::$TRUST_ENTRY_ID_KEY);
     }
 
     /**
-     * @param $payoff
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function setPayoff($payoff)
+    public function trustProposerEntries()
     {
-        $this->setAttribute(self::$PAYOFF_KEY, $payoff);
+        return $this->hasMany(TrustProposerEntry::getNamespace(), TrustProposerEntry::$TRUST_ENTRY_ID_KEY);
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPayoff()
-    {
-        return $this->getAttribute(self::$PAYOFF_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSelectedForPayoff()
-    {
-        return $this->getAttribute(self::$SELECTED_FOR_PAYOFF);
-    }
-
-} 
+}
