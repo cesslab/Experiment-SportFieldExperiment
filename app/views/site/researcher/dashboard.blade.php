@@ -84,7 +84,7 @@
                 <td>Undeclared</td>
             @endif
 
-            @if ($subject->getUltimatumRole()->getRole() == $ultimatumProposerRoleId)
+            @if ($subject->getUltimatumGroup()->getSubjectRole() == $ultimatumProposerRoleId)
                 <td>Proposer</td>
             @else
                 <td>Receiver</td>
