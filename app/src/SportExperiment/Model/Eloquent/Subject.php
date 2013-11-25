@@ -46,11 +46,14 @@ class Subject extends BaseEloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function ultimatumRole()
+    public function ultimatumGroup()
     {
-        return $this->hasOne(UltimatumRole::getNamespace(), UltimatumRole::$SUBJECT_ID_KEY);
+        return $this->hasOne(UltimatumGroup::getNamespace(), UltimatumGroup::$SUBJECT_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function trustGroup()
     {
         return $this->hasOne(TrustGroup::getNamespace(), TrustGroup::$SUBJECT_ID_KEY);
@@ -80,6 +83,9 @@ class Subject extends BaseEloquent
         return $this->hasMany(WillingnessPayEntry::getNamespace(), WillingnessPayEntry::$SUBJECT_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function trustEntries()
     {
         return $this->hasMany(TrustEntry::getNamespace(), TrustEntry::$SUBJECT_ID_KEY);
@@ -129,6 +135,13 @@ class Subject extends BaseEloquent
             $ultimatumEntry = $ultimatumTreatment->calculatePayoff($this);
             $ultimatumEntry->setSelectedForPayoff(true);
             $ultimatumEntry->save();
+        }
+
+        $trustTreatment = $this->getTrustTreatment();
+        if ($trustTreatment !== null && count($this->getTrustEntries()) > 0) {
+            $trustEntry = $trustTreatment->calculatePayoff($this);
+            $trustEntry->setSelectedForPayoff(true);
+            $trustEntry->save();
         }
     }
 
@@ -184,6 +197,16 @@ class Subject extends BaseEloquent
         return $entries[$randIndex];
     }
 
+    /**
+     * @return TrustEntry
+     */
+    public function getRandomTrustEntry()
+    {
+        $entries = $this->getTrustEntries();
+        $randIndex = rand(0, count($entries)-1);
+        return $entries[$randIndex];
+    }
+
 
     /* ---------------------------------------------------------------------
      * Getters and Setters
@@ -191,11 +214,11 @@ class Subject extends BaseEloquent
 
 
     /**
-     * @return UltimatumRole
+     * @return UltimatumGroup
      */
-    public function getUltimatumRole()
+    public function getUltimatumGroup()
     {
-        return $this->ultimatumRole;
+        return $this->ultimatumGroup;
     }
 
     /**
@@ -229,6 +252,7 @@ class Subject extends BaseEloquent
     {
         return $this->ultimatumEntries()->where(UltimatumEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
     }
+
 
     /**
      * @return Session
@@ -278,6 +302,14 @@ class Subject extends BaseEloquent
         return $this->ultimatumEntries;
     }
 
+
+    /**
+     * @return TrustEntry[]
+     */
+    public function getTrustEntries()
+    {
+        return $this->trustEntries;
+    }
 
     /**
      * @return RiskAversionEntry[]
