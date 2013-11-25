@@ -7,44 +7,64 @@ class BaseEloquent extends Model
 {
     protected $rules = [];
 
-    /* @var \Illuminate\Support\Facades\Validator; $validator */
+    /* @var \Illuminate\Support\Facades\Validator $validator */
     protected $validator;
 
+    /**
+     * @param array $attributes
+     */
     public function __construct($attributes)
     {
-        $this->validator = Validator::make($attributes, $this->rules);
         parent::__construct($attributes);
     }
 
+    /**
+     * @return mixed
+     */
     public function validationFails()
     {
-        $this->updateValidatorData();
+        $this->updateValidator();
         return $this->validator->fails();
     }
 
+    /**
+     * @return mixed
+     */
     public function validationPasses()
     {
-        $this->updateValidatorData();
+        $this->updateValidator();
         return $this->validator->passes();
     }
 
+    /**
+     * @return Validator
+     */
     public function getValidator()
     {
         return $this->validator;
     }
 
+    /**
+     * @return mixed
+     */
     public function getErrorMessages()
     {
         return $this->validator->messages();
     }
 
+    /**
+     * @return string
+     */
     public static function getNamespace()
     {
         return get_called_class();
     }
 
-    private function updateValidatorData()
+    /**
+     * Resets the validator with the most current attributes and validation rules.
+     */
+    private function updateValidator()
     {
-        $this->validator->setData($this->getAttributes());
+        $this->validator = Validator::make($this->getAttributes(), $this->rules);
     }
 }
