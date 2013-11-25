@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Controller\BaseController;
 use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\TrustProposerEntry;
+use SportExperiment\Model\Eloquent\TrustEntry;
+use SportExperiment\Model\Eloquent\TrustReceiverEntry;
+use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumEntry;
 use SportExperiment\Model\SubjectRepositoryInterface;
 use SportExperiment\View\Composer\Subject\Experiment as ExperimentComposer;
@@ -40,16 +44,27 @@ class Experiment extends BaseController
 
         $session = $this->subject->getSession();
 
+        // Willingness to pay treatment
         if ($session->getWillingnessPayTreatment() != null)
-            $modelCollection->addModel(new WillingnessPayEntry(Input::all(), $session->getWillingnessPayTreatment()->getEndowment()));
+            $modelCollection->addModel(
+                new WillingnessPayEntry(Input::all(), $session->getWillingnessPayTreatment()->getEndowment()));
 
+        // Risk aversion treatment
         if ($session->getRiskAversionTreatment() != null)
             $modelCollection->addModel(new RiskAversionEntry(Input::all()));
 
+        // Ultimatum treatment
         if ($session->getUltimatumTreatment() != null) {
             $ultimatumEntry = new UltimatumEntry(Input::all());
-            $ultimatumEntry->setAmountMaxRule($this->subject->getUltimatumTreatment()->getTotalAmount());
+            $ultimatumEntry->setMaxAmountRule($this->subject->getUltimatumTreatment()->getTotalAmount());
             $modelCollection->addModel($ultimatumEntry);
+        }
+
+        // Trust treatment
+        if ($session->getTrustTreatment() != null) {
+            $trustEntry = ($this->subject->getTrustGroup()->isProposer()) ? new TrustProposerEntry(Input::all()) : new TrustReceiverEntry(Input::all());
+            $trustEntry->setValidationRules($this->subject->getTrustTreatment());
+            $modelCollection->addModel($trustEntry);
         }
 
         if ($modelCollection->validationFails())
