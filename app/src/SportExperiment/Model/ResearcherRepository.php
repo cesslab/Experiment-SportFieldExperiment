@@ -1,24 +1,24 @@
 <?php namespace SportExperiment\Model;
 
+use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\Eloquent\User;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\Session;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
-use SportExperiment\Model\Eloquent\Role;
+use SportExperiment\Model\Eloquent\UserRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\Model\Eloquent\SessionState;
-use SportExperiment\Model\Eloquent\UltimatumRole;
 
 class ResearcherRepository implements ResearcherRepositoryInterface
 {
     public function isResearcher(User $user)
     {
         $userModel = User::where('username', $user->getUserName())
-            ->where('role', Role::$RESEARCHER)
+            ->where('role', UserRole::$RESEARCHER)
             ->where('active', true)->first();
 
         // Researcher not found
@@ -30,47 +30,55 @@ class ResearcherRepository implements ResearcherRepositoryInterface
 
     private function createSessionSubjects(Session $session)
     {
-        $ultimatumSubjects = [UltimatumRole::getProposerId()=>[], UltimatumRole::getReceiverId()=>[]];
-        // Add Subjects
-        $id = DB::table(Subject::$TABLE_KEY)->max(Subject::$ID_KEY) + 1;
+        $subjects = [];
+        $id = $this->getNextUserId();
         for ($i = 1; $i <= $session->getNumSubjects(); ++$i, ++$id) {
-            $user = new User();
-            $user->setUserName("$id");
-            $user->setPassword(Hash::make("pass$id"));
-            $user->setRole(Role::$SUBJECT);
-            $user->setActive(true);
-            $user->save();
-
-            $subject = new Subject();
-            $subject->setState(SubjectState::$REGISTRATION);
-            $subject->session()->associate($session);
-            $subject->user()->associate($user);
-            $subject->save();
-
-            // Select Proposers and Senders
-            $roleId = ($i % 2) ? UltimatumRole::getProposerId() : UltimatumRole::getReceiverId();
-            $ultimatumSubjects[$roleId][] = $subject;
-
-            // Assign Ultimatum Role
-            $ultimatumRole = new UltimatumRole();
-            $ultimatumRole->setRole($roleId);
-            $ultimatumRole->save();
-
-
-            $ultimatumRole->subject()->associate($subject);
-            $subject->save();
-
-            $ultimatumRole->save();
+            $user = $this->createUserAccount($id);
+            $subjects[] = $this->createSubject($session, $user);
         }
 
+        $proposerRole = UltimatumTreatment::getProposerRoleId();
+        $receiverRole = UltimatumTreatment::getReceiverRoleId();
+
+        $ultimatumGroups = TwoPlayerMatcher::matchSubjects($subjects, $proposerRole, $receiverRole);
+
         $ultimatumTreatment = new UltimatumTreatment();
-        $ultimatumTreatment->matchSubjects(
-            $ultimatumSubjects[UltimatumRole::getProposerId()],
-            $ultimatumSubjects[UltimatumRole::getReceiverId()]);
+        $ultimatumTreatment->saveGroups($ultimatumGroups);
+
+        $trustGroups = TwoPlayerMatcher::matchSubjects($subjects, $proposerRole, $receiverRole);
+        $trustTreatment = new TrustTreatment();
+        $trustTreatment->saveGroups($trustGroups);
     }
 
-    private function matchUltimatumSubjects($subjects)
+    public function createSubject(Session $session, User $user)
     {
+        $subject = new Subject();
+
+        $subject->setState(SubjectState::$REGISTRATION);
+        $subject->session()->associate($session);
+        $subject->user()->associate($user);
+        $subject->save();
+        return $subject;
+    }
+
+    private function getNextUserId()
+    {
+        return DB::table(Subject::$TABLE_KEY)->max(Subject::$ID_KEY) + 1;
+    }
+
+    /**
+     * @param int $id
+     * @return User
+     */
+    public function createUserAccount($id)
+    {
+        $user = new User();
+        $user->setUserName("$id");
+        $user->setPassword(Hash::make("pass$id"));
+        $user->setRole(UserRole::$SUBJECT);
+        $user->setActive(true);
+        $user->save();
+        return $user;
     }
 
     public function saveSession(ModelCollection $modelCollection)
@@ -90,6 +98,10 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         $ultimatum = $modelCollection->getModel(UltimatumTreatment::getNamespace());
         $ultimatum->session()->associate($session);
         $ultimatum->save();
+
+        $trust = $modelCollection->getModel(TrustTreatment::getNamespace());
+        $trust->session()->associate($session);
+        $trust->save();
 
         $this->createSessionSubjects($session);
     }
