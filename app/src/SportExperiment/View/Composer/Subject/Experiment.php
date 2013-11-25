@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Auth;
 use SportExperiment\Model\Eloquent\RiskAversionEntry;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\TrustProposerEntry;
+use SportExperiment\Model\Eloquent\TrustGroup;
+use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumEntry;
-use SportExperiment\Model\Eloquent\UltimatumRole;
+use SportExperiment\Model\Eloquent\UltimatumGroup;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\Eloquent\WillingnessPayEntry;
 use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
@@ -49,10 +52,33 @@ class Experiment extends BaseComposer
         if ($ultimatumTreatment != null) {
             $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
             $view->with('ultimatumTotalAmount', $ultimatumTreatment->getTotalAmount());
-            $view->with('isProposer', $this->subject->getUltimatumRole()->getRole() == UltimatumRole::getProposerId());
+            $view->with('isUltimatumProposer', $this->subject->getUltimatumGroup()->getSubjectRole() == UltimatumTreatment::getProposerRoleId());
             $view->with('amountKey', UltimatumEntry::$AMOUNT_KEY);
         }
 
+        $trustTreatment = $this->subject->getTrustTreatment();
+        $view->with('displayTrust', $trustTreatment != null);
+        if ($trustTreatment != null) {
+            $proposerAllocations = $this->composeProposerAllocations(
+                array_merge(['dev'=>'--'], $trustTreatment->getProposerAllocationOptions()));
+            $view->with('trustTaskId', TrustTreatment::getTaskId());
+            $view->with('isTrustProposer', $this->subject->getTrustGroup()->getSubjectRole() == TrustTreatment::getProposerRoleId());
+            $view->with('proposerAllocationOptions', $proposerAllocations);
+            $view->with('receiverAllocationOptions', $trustTreatment->getReceiverAllocationOptions());
+            $view->with('numProposerAllocations', TrustTreatment::getNumProposerAllocations());
+            $view->with('numReceiverAllocations', TrustTreatment::getNumReceiverAllocations());
+            $view->with('allocationKey', TrustProposerEntry::$ALLOCATION_KEY);
+        }
+
         $view->with('postUrl', URL::to(ExperimentController::getRoute()));
+    }
+
+    private function composeProposerAllocations($allocations)
+    {
+        $proposerAllocations = [];
+        foreach ($allocations as $allocation) {
+            $proposerAllocations[$allocation] = $allocation;
+        }
+        return $proposerAllocations;
     }
 }
