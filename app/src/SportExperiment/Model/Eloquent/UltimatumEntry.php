@@ -1,17 +1,13 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
-class UltimatumEntry extends BaseEloquent
+class UltimatumEntry extends TaskEntry
 {
     public static $TABLE_KEY = 'ultimatum_entries';
 
-    public static $ID_KEY = 'id';
-    public static $SUBJECT_ID_KEY = 'subject_id';
     public static $AMOUNT_KEY = 'amount';
     public static $PARTNER_ID_KEY = 'partner_id';
     public static $PARTNER_ENTRY_KEY = 'partner_entry_id';
     public static $PARTNER_AMOUNT_KEY = 'partner_amount';
-    public static $SELECTED_FOR_PAYOFF = 'selected_for_payoff';
-    public static $PAYOFF_KEY = 'payoff';
 
     private static $MIN_KEY = 2;
     private static $MAX_KEY = 3;
@@ -34,68 +30,8 @@ class UltimatumEntry extends BaseEloquent
     }
 
     /* ---------------------------------------------------------------------
-     * Model Relationships
-     * ---------------------------------------------------------------------*/
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function subject()
-    {
-        return $this->belongsTo(Subject::getNamespace(), self::$SUBJECT_ID_KEY);
-    }
-
-    /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->getAttribute(self::$ID_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPayoff()
-    {
-        return $this->getAttribute(self::$PAYOFF_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPartnerId()
-    {
-        return $this->getAttribute(self::$PARTNER_ID_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPartnerEntryId()
-    {
-        return $this->getAttribute(self::$PARTNER_ENTRY_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPartnerAmount()
-    {
-        return $this->getAttribute(self::$PARTNER_AMOUNT_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSelectedForPayoff()
-    {
-        return $this->getAttribute(self::$SELECTED_FOR_PAYOFF);
-    }
 
     /**
      * @return mixed
@@ -130,27 +66,11 @@ class UltimatumEntry extends BaseEloquent
     }
 
     /**
-     * @param $payoff
-     */
-    public function setPayoff($payoff)
-    {
-        $this->setAttribute(self::$PAYOFF_KEY, $payoff);
-    }
-
-    /**
      * Sets the maximum value allowed for the amount value, enforced during validation.
      * @param int $size
      */
-    public function setAmountMaxRule($size)
+    public function setMaxAmountRule($size)
     {
         $this->rules[self::$AMOUNT_KEY][self::$MAX_KEY] = 'max:' . $size;
-    }
-
-    /**
-     * @param bool $isSelected
-     */
-    public function setSelectedForPayoff($isSelected)
-    {
-        $this->setAttribute(self::$SELECTED_FOR_PAYOFF, $isSelected);
     }
 }
