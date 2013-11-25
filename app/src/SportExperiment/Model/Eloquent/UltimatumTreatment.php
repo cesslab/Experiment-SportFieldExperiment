@@ -1,7 +1,8 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
+use SportExperiment\Model\GroupTreatmentInterface;
 
-class UltimatumTreatment extends BaseEloquent
+class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
 {
     public static $TABLE_KEY = 'ultimatum_treatments';
     private static $TASK_ID = 3;
@@ -9,6 +10,9 @@ class UltimatumTreatment extends BaseEloquent
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
     public static $TOTAL_AMOUNT_KEY = 'total_amount';
+
+    private static $PROPOSER_ROLE_ID = 1;
+    private static $RECEIVER_ROLE_ID = 2;
 
     public $timestamps = false;
 
@@ -19,7 +23,8 @@ class UltimatumTreatment extends BaseEloquent
     /**
      * @param array $attributes
      */
-    public function __construct($attributes = []){
+    public function __construct($attributes = [])
+    {
         $this->table = self::$TABLE_KEY;
 
         $this->fillable = [self::$TOTAL_AMOUNT_KEY];
@@ -47,51 +52,28 @@ class UltimatumTreatment extends BaseEloquent
      * ---------------------------------------------------------------------*/
 
     /**
-     * @param Subject[] $proposers
-     * @param Subject[] $receivers
+     * @param $groups \SportExperiment\Model\Group[]
      */
-    public function matchSubjects(array $proposers, array $receivers)
+    public function saveGroups($groups)
     {
-        // There must be at least one of each role to perform matching appropriately
-        if (count($receivers) == 0 || count($proposers) == 0)
-            return;
+        foreach ($groups as $group) {
+            $proposer = $group->getSubject(self::$PROPOSER_ROLE_ID);
+            $receiver = $group->getSubject(self::$RECEIVER_ROLE_ID);
 
-        $this->matchProposersReceivers($proposers, $receivers);
-    }
+            $proposerGroup = new UltimatumGroup();
+            $proposerGroup->setSubjectId($proposer->getId());
+            $proposerGroup->setSubjectRole(self::$PROPOSER_ROLE_ID);
+            $proposerGroup->setPartnerId($receiver->getId());
+            $proposerGroup->setPartnerRole(self::$RECEIVER_ROLE_ID);
+            $proposerGroup->save();
 
-    /**
-     * @param Subject[] $proposers
-     * @param Subject[] $receivers
-     */
-    private function matchProposersReceivers(array $proposers, array $receivers)
-    {
-        $totalSubjects = count($proposers) + count($receivers);
-        shuffle($proposers);
-        shuffle($receivers);
-        $i = 0; $j = 0;
-        for ($k = 0; $k < $totalSubjects; ++$k) {
-            $i = ( ! isset($proposers[$i])) ? 0 : $i;
-            $j = ( ! isset($receivers[$j])) ? 0 : $j;
-            $this->matchPairMember($proposers[$i], $receivers[$j]);
-            ++$i; ++$j;
+            $receiverGroup = new UltimatumGroup();
+            $receiverGroup->setSubjectId($receiver->getId());
+            $receiverGroup->setSubjectRole(self::$RECEIVER_ROLE_ID);
+            $receiverGroup->setPartnerId($proposer->getId());
+            $receiverGroup->setPartnerRole(self::$PROPOSER_ROLE_ID);
+            $receiverGroup->save();
         }
-    }
-
-    /**
-     * Matches to Ultimatum subjects of differing roles.
-     *
-     * @param Subject $proposer
-     * @param Subject $receiver
-     */
-    private function matchPairMember(Subject $proposer,Subject $receiver)
-    {
-        $proposerRole = $proposer->getUltimatumRole();
-        $proposerRole->setPartnerId($receiver->getId());
-        $proposerRole->save();
-
-        $receiverRole = $receiver->getUltimatumRole();
-        $receiverRole->setPartnerId($proposer->getId());
-        $receiverRole->save();
     }
 
     /**
@@ -102,13 +84,14 @@ class UltimatumTreatment extends BaseEloquent
      */
     public function calculatePayoff(Subject $subject)
     {
-        $opponent = $subject->getUltimatumRole()->getPartner();
+        $opponent = $subject->getUltimatumGroup()->getPartner();
         $opponentEntry = $opponent->getRandomUltimatumEntry();
 
         $playerEntry = $subject->getRandomUltimatumEntry();
         $ultimatumTreatment = $subject->getUltimatumTreatment();
+
         // Proposer Payoff
-        if ($subject->getUltimatumRole()->getRole() == UltimatumRole::getProposerId()) {
+        if ($subject->getUltimatumGroup()->isProposer()) {
             if ($playerEntry->getAmount() >= $opponentEntry->getAmount())
                 $playerEntry->setPayoff($ultimatumTreatment->getTotalAmount() - $playerEntry->getAmount());
             else
@@ -132,6 +115,21 @@ class UltimatumTreatment extends BaseEloquent
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+    /**
+     * @return int
+     */
+    public static function getProposerRoleId()
+    {
+        return self::$PROPOSER_ROLE_ID;
+    }
+
+    /**
+     * @return int
+     */
+    public static function getReceiverRoleId()
+    {
+        return self::$RECEIVER_ROLE_ID;
+    }
 
     /**
      * @return mixed
