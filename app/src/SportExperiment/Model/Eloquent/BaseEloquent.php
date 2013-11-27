@@ -5,10 +5,12 @@ use Illuminate\Support\Facades\Validator;
 
 class BaseEloquent extends Model
 {
-    protected $rules = [];
-
     /* @var \Illuminate\Support\Facades\Validator $validator */
     protected $validator;
+
+    /* @var $rules array */
+    protected $rules = [];
+
 
     /**
      * @param array $attributes
@@ -16,6 +18,22 @@ class BaseEloquent extends Model
     public function __construct($attributes)
     {
         parent::__construct($attributes);
+    }
+
+    /**
+     * Clears validation rules.
+     */
+    public function clearValidationRules()
+    {
+        $this->rules = [];
+    }
+
+    /**
+     * Resets the validator with the most current attributes and validation rules.
+     */
+    private function updateValidator()
+    {
+        $this->validator = Validator::make($this->getAttributes(), $this->rules);
     }
 
     /**
@@ -60,11 +78,4 @@ class BaseEloquent extends Model
         return get_called_class();
     }
 
-    /**
-     * Resets the validator with the most current attributes and validation rules.
-     */
-    private function updateValidator()
-    {
-        $this->validator = Validator::make($this->getAttributes(), $this->rules);
-    }
 }
