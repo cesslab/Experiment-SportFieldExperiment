@@ -253,6 +253,14 @@ class Subject extends BaseEloquent
         return $this->ultimatumEntries()->where(UltimatumEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
     }
 
+    /**
+     * @return TrustEntry
+     */
+    public function getTrustPayoff()
+    {
+        return $this->trustEntries()->where(TrustEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
+    }
+
 
     /**
      * @return Session
