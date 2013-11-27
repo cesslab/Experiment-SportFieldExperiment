@@ -5,7 +5,7 @@ class TrustProposerEntry extends BaseEloquent
     public static $TABLE_KEY = 'trust_proposer_entries';
 
     public static $ID_KEY = 'id';
-    public static $TRUST_ENTRY_ID_KEY = 'trust_entry_id';
+    public static $TRUST_ENTRY_ID_KEY = 'trust_entries_id';
     public static $ALLOCATION_KEY = 'allocation';
 
     private static $MAX_PROPOSER_ALLOCATIONS = 1;
@@ -71,14 +71,6 @@ class TrustProposerEntry extends BaseEloquent
      * @return mixed
      */
     public function getAllocation()
-    {
-        return $this->getAttribute(self::$ALLOCATION_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAllocationEntry()
     {
         return $this->getAttribute(self::$ALLOCATION_KEY);
     }
