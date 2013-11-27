@@ -1,10 +1,10 @@
 <?php namespace SportExperiment\Controller\Researcher;
 
+use Illuminate\Support\Facades\Lang;
 use \Illuminate\Support\Facades\View;
 use \Illuminate\Support\Facades\Redirect;
 use \Illuminate\Support\Facades\Input;
 
-use SportExperiment\Model\Eloquent\SessionState;
 use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\ResearcherRepositoryInterface;
@@ -14,8 +14,6 @@ use SportExperiment\Model\Eloquent\Session as ExperimentSession;
 use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\BaseController;
-use SportExperiment\Model\Eloquent\Session as SessionModel;
-use SportExperiment\Validation\IdValidator;
 
 class Session extends BaseController
 {
@@ -44,37 +42,54 @@ class Session extends BaseController
         $modelCollection->addModel(new UltimatumTreatment(Input::all()));
         $modelCollection->addModel(new TrustTreatment(Input::all()));
 
-        if ($modelCollection->validationFails())
+        if ($modelCollection->validationFails()) {
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
+        }
 
         $this->researcherRepository->saveSession($modelCollection);
         return Redirect::to(Dashboard::getRoute());
     }
 
-    // TODO:: Throw error if the researcher attempts to stop a session before at least one entry has been made by all players
     public function updateSession()
     {
-        $idValidator = new IdValidator();
+        $postedSession = new ExperimentSession();
+        $postedSession->clearValidationRules();
+        $postedSession->setIdValidationRule();
+        $postedSession->setStateValidationRule();
+        $postedSession->setId(Input::get(ExperimentSession::$ID_KEY));
+        $postedSession->setState(Input::get(ExperimentSession::$STATE_KEY));
 
-        // Validate ID
-        $idValidator->setId(Input::get(SessionModel::$ID_KEY));
-        if ($idValidator->validationFails()){
-            return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $idValidator->getErrorMessages());
+        // Validate Session ID and State
+        if ($postedSession->validationFails()){
+            return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $postedSession->getErrorMessages());
         }
 
-        $session = SessionModel::find($idValidator->getId());
-        if (is_null($session))
-            return Redirect::to(Dashboard::getRoute())->withInput()->with('error', 'Session not found.');
+        $session = $this->researcherRepository->getSession($postedSession->getId());
 
-        $sessionState = new SessionState();
-        $sessionState->setState(Input::get(SessionModel::$STATE_KEY));
+        // Start Experiment
+        if ($postedSession->isStarted() && $session->isStopped()) {
+            if ( ! $session->isStartable()) {
+                return Redirect::to(Dashboard::getRoute())->with('error', Lang::get('errors.registration_required'));
+            }
 
-        // Validate Session State
-        if ($sessionState->validationFails())
-            return Redirect::to(Dashboard::getRoute())->withInput()->with('errors', $sessionState->getErrorMessages());
+            // Save Session State
+            $session->setState($postedSession->getState());
+            $session->save();
+        }
+        // Stop Experiment
+        elseif ($postedSession->isStopped() && $session->isStarted()) {
+            if ( ! $session->isStoppable()) {
+                return Redirect::to(Dashboard::getRoute())->with('error', Lang::get('errors.subject_entry_required'));
+            }
 
-        $session->setState($sessionState->getState());
-        $session->save();
+            // Calculate Subject Payoffs
+            $session->calculatePayoffs();
+
+            // Save Session State
+            $session->setState($postedSession->getState());
+            $session->save();
+        }
+
         return Redirect::to(Dashboard::getRoute());
     }
 
