@@ -4,16 +4,11 @@
 <meta http-equiv="Refresh" content="20">
 
 <a href="{{ $sessionUrl }}">Add New Session</a>
+<h2>{{$error}}</h2>
     <table border="1">
         <tr>
             <th>Session ID</th>
             <th>Number of Subjects</th>
-            <th>Endowment</th>
-            <th>Low Prize</th>
-            <th>Mid Prize</th>
-            <th>High Prize</th>
-            <th>Gamble Probability</th>
-            <th>Ultimatum Amount</th>
             <th>Session State</th>
             <th>Manage Session</th>
         </tr>
@@ -21,12 +16,6 @@
             <tr>
                 <td>{{ $session->id }}</td>
                 <td>{{ $session->num_subjects }}</td>
-                <td>{{ $session->willingnessPay->getEndowment() }}</td>
-                <td>{{ $session->riskAversion->getLowPrize() }}</td>
-                <td>{{ $session->riskAversion->getMidPrize() }}</td>
-                <td>{{ $session->riskAversion->getHighPrize() }}</td>
-                <td>{{ $session->riskAversion->getGambleProbability() }}</td>
-                <td>{{ $session->getUltimatumTreatment()->getTotalAmount() }}</td>
                 <td>
                     @if ($session->getState() == $sessionStartState)
                         <span>Started</span>
