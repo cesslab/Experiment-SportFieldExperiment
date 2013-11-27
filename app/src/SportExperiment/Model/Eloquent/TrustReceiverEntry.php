@@ -7,6 +7,7 @@ class TrustReceiverEntry extends BaseEloquent
     public static $ID_KEY = 'id';
     public static $TRUST_ENTRY_ID_KEY = 'trust_entry_id';
     public static $PROPOSER_ALLOCATION_KEY = 'proposer_allocation';
+    public static $SELECTED_FOR_PAYOFF_KEY = 'selected_for_payoff';
     public static $ALLOCATION_KEY = 'allocation';
 
     private static $MAX_RECEIVER_ALLOCATIONS = 4;
@@ -53,9 +54,25 @@ class TrustReceiverEntry extends BaseEloquent
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function isSelectedForPayoff()
+    {
+        return $this->getAttribute(self::$SELECTED_FOR_PAYOFF_KEY);
+    }
+
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+
+    /**
+     * @param $selectedForPayoff
+     */
+    public function setSelectedForPayoff($selectedForPayoff)
+    {
+        $this->setAttribute(self::$SELECTED_FOR_PAYOFF_KEY, $selectedForPayoff);
+    }
     /**
      * @return int
      */
@@ -78,6 +95,14 @@ class TrustReceiverEntry extends BaseEloquent
     public function setProposerAllocation($allocation)
     {
         $this->setAttribute(self::$PROPOSER_ALLOCATION_KEY, $allocation);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProposerAllocation()
+    {
+        return $this->getAttribute(self::$PROPOSER_ALLOCATION_KEY);
     }
 
     /**
