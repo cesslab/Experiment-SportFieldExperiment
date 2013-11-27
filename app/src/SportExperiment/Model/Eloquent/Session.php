@@ -8,6 +8,9 @@ class Session extends BaseEloquent
     public static $NUM_SUBJECTS_KEY = 'num_subjects';
     public static $STATE_KEY = 'state';
 
+    public static $STARTED_STATE = 1;
+    public static $STOPPED_STATE = 2;
+
     protected $table;
     protected $fillable;
     protected $rules;
@@ -20,7 +23,7 @@ class Session extends BaseEloquent
         $this->fillable = [self::$NUM_SUBJECTS_KEY];
 
         $this->rules = [
-            self::$NUM_SUBJECTS_KEY=>'required|integer|min:1|max:1000'];
+            self::$NUM_SUBJECTS_KEY=>'required|integer|min:2|max:1000'];
 
         parent::__construct($attributes);
     }
@@ -69,8 +72,159 @@ class Session extends BaseEloquent
     }
 
     /* ---------------------------------------------------------------------
+     * Validation
+     * ---------------------------------------------------------------------*/
+
+    /**
+     * Sets the Session Id validation rules.
+     */
+    public function setIdValidationRule()
+    {
+        $this->rules[self::$ID_KEY] = ['required', 'integer', 'exists:experiment_sessions'];
+    }
+
+    /**
+     * Sets the Session State validation rules.
+     */
+    public function setStateValidationRule()
+    {
+        $inSessionState = sprintf("in:%s,%s", self::$STARTED_STATE, self::$STOPPED_STATE);
+        $this->rules[self::$STATE_KEY] = ['required', 'integer', $inSessionState];
+    }
+
+    /* ---------------------------------------------------------------------
+     * Business Logic
+     * ---------------------------------------------------------------------*/
+    public function allSubjectsInHoldState()
+    {
+        $subjects = $this->getSubjects();
+        foreach ($subjects as $subject) {
+            if ( ! SubjectState::isPreGameHoldState($subject->getState())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function isStartable()
+    {
+        return $this->allSubjectsInHoldState();
+    }
+
+    /**
+     * Returns true if the all of the subjects in this session have made an entry
+     * for each of their treatments.
+     *
+     * @return bool
+     */
+    public function isStoppable()
+    {
+        $riskAversionTreatment = $this->getRiskAversionTreatment();
+        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
+        $ultimatumTreatment = $this->getUltimatumTreatment();
+        $trustTreatment = $this->getTrustTreatment();
+
+        $subjects = $this->getSubjects();
+        foreach($subjects as $subject) {
+            if ($riskAversionTreatment !== null) {
+                if (count($subject->getRiskAversionEntries()) == 0)
+                    return false;
+            }
+
+            if ($willingnessPayTreatment !== null) {
+                if (count($subject->getWillingnessPayEntries()) == 0)
+                    return false;
+            }
+
+            if ($ultimatumTreatment !== null) {
+                if (count($subject->getUltimatumEntries()) == 0)
+                    return false;
+            }
+
+            if ($trustTreatment !== null) {
+                if (count($subject->getTrustEntries()) == 0)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function calculatePayoffs()
+    {
+        $riskAversionTreatment = $this->getRiskAversionTreatment();
+        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
+        $ultimatumTreatment = $this->getUltimatumTreatment();
+        $trustTreatment = $this->getTrustTreatment();
+
+        $subjects = $this->getSubjects();
+        foreach($subjects as $subject) {
+            // Risk Aversion Payoff
+            if ($riskAversionTreatment !== null) {
+                $riskAversionEntry = $riskAversionTreatment->calculatePayoff($subject);
+                $riskAversionEntry->setSelectedForPayoff(true);
+                $riskAversionEntry->save();
+            }
+
+            // Willingness Pay Payoff
+            if ($willingnessPayTreatment !== null) {
+                $willingnessPayEntry = $willingnessPayTreatment->calculatePayoff($subject);
+                $willingnessPayEntry->setSelectedForPayoff(true);
+                $willingnessPayEntry->save();
+            }
+        }
+
+        // Ultimatum Payoff
+        if ($ultimatumTreatment !== null) {
+            $ultimatumGroups = $ultimatumTreatment->getGroups($subjects);
+            foreach ($ultimatumGroups as $group) {
+                $proposer = $group->getSubject(UltimatumTreatment::getProposerRoleId());
+                $receiver = $group->getSubject(UltimatumTreatment::getReceiverRoleId());
+                $ultimatumTreatment->calculateGroupPayoff($proposer, $receiver);
+            }
+        }
+
+        // Trust Payoff
+        if ($trustTreatment !== null) {
+            $trustGroups = $trustTreatment->getGroups($subjects);
+            foreach ($trustGroups as $group) {
+                $proposer = $group->getSubject(TrustTreatment::getProposerRoleId());
+                $receiver = $group->getSubject(TrustTreatment::getReceiverRoleId());
+                $trustTreatment->calculateGroupPayoff($proposer, $receiver);
+            }
+        }
+    }
+
+    /**
+     * Returns true if the session is in the stared state.
+     *
+     * @return bool
+     */
+    public function isStarted()
+    {
+        return $this->getState() == self::$STARTED_STATE;
+    }
+
+    /**
+     * Returns true if the session is in the stopped state.
+     *
+     * @return bool
+     */
+    public function isStopped()
+    {
+        return $this->getState() == self::$STOPPED_STATE;
+    }
+
+    /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
+    /**
+     * @return Subject[]
+     */
+    public function getSubjects()
+    {
+        return $this->subjects;
+    }
     /**
      * @return TrustTreatment
      */
