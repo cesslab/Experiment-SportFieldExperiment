@@ -13,6 +13,8 @@
 
 <h3>Task {{$ultimatumTaskId}} Payoff: ${{$ultimatumPayoff}}</h3>
 
+<h3>Task {{$trustTaskId}} Payoff: ${{$trustPayoff}}</h3>
+
 <h2>Total Payoff: ${{$totalPayoff}}</h2>
 <h2>Total Items Purchased: {{$itemPurchased}}</h2>
 {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
