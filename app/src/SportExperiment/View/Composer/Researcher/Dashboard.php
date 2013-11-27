@@ -1,6 +1,5 @@
 <?php namespace SportExperiment\View\Composer\Researcher;
 
-use SportExperiment\Model\Eloquent\UltimatumGroup;
 use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\View\Composer\BaseComposer;
@@ -9,6 +8,7 @@ use SportExperiment\Model\ResearcherRepositoryInterface;
 use Illuminate\Support\Facades\URL;
 use SportExperiment\Model\Eloquent\SessionState;
 use SportExperiment\Model\Eloquent\Session;
+use Illuminate\Support\Facades\Session as IlluminateSession;
 
 class Dashboard extends BaseComposer
 {
@@ -38,5 +38,6 @@ class Dashboard extends BaseComposer
         $view->with('postUrl', URL::to(SessionController::getUpdateRoute()));
         $view->with('ultimatumProposerRoleId', UltimatumTreatment::getProposerRoleId());
         $view->with('ultimatumReceiverRoleId', UltimatumTreatment::getReceiverRoleId());
+        $view->with('error', IlluminateSession::get('error', ''));
     }
 }
