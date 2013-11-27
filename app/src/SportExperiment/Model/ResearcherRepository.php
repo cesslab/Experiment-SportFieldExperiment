@@ -106,6 +106,11 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         $this->createSessionSubjects($session);
     }
 
+    public function getSession($id)
+    {
+        return Session::find($id);
+    }
+
     public function getSessions()
     {
         return Session::all();
