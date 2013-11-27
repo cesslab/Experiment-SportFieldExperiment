@@ -1,5 +1,6 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
+use SportExperiment\Model\Group;
 use SportExperiment\Model\GroupTreatmentInterface;
 
 class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
@@ -77,39 +78,54 @@ class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
     }
 
     /**
-     * Returns the subject's ultimatum payoff.
-     *
-     * @param Subject $subject
-     * @return UltimatumEntry
+     * @param Subject[] $subjects
+     * @return \SportExperiment\Model\Group[]
      */
-    public function calculatePayoff(Subject $subject)
+    public function getGroups($subjects)
     {
-        $opponent = $subject->getUltimatumGroup()->getPartner();
-        $opponentEntry = $opponent->getRandomUltimatumEntry();
+        $groups = [];
+        // Set Proposers
+        foreach ($subjects as $subject) {
+            if ($subject->getUltimatumGroup()->isProposer()) {
+                $groupId = $subject->getUltimatumGroup()->getId();
+                $group = new Group();
+                $group->setSubject($subject, self::$PROPOSER_ROLE_ID);
+                $group->setSubject($subject->getUltimatumGroup()->getPartner(), self::$RECEIVER_ROLE_ID);
+                $groups[$groupId] = $group;
+            }
+        }
 
-        $playerEntry = $subject->getRandomUltimatumEntry();
-        $ultimatumTreatment = $subject->getUltimatumTreatment();
+        return $groups;
+    }
+
+    /**
+     * Calculates and saves the proposer and receiver payoffs.
+     *
+     * @param Subject $proposer
+     * @param Subject $receiver
+     */
+    public function calculateGroupPayoff(Subject $proposer, Subject $receiver)
+    {
+        $proposerEntry = $proposer->getRandomUltimatumEntry();
+        $proposerEntry->setSelectedForPayoff(true);
+
+        $receiverEntry = $receiver->getRandomUltimatumEntry();
+        $receiverEntry->setSelectedForPayoff(true);
 
         // Proposer Payoff
-        if ($subject->getUltimatumGroup()->isProposer()) {
-            if ($playerEntry->getAmount() >= $opponentEntry->getAmount())
-                $playerEntry->setPayoff($ultimatumTreatment->getTotalAmount() - $playerEntry->getAmount());
-            else
-                $playerEntry->setPayoff(0);
-        }
+        if ($proposerEntry->getAmount() >= $receiverEntry->getAmount())
+            $proposerEntry->setPayoff($this->getTotalAmount() - $proposerEntry->getAmount());
+        else
+            $receiverEntry->setPayoff(0);
+
         // Receiver Payoff
-        else {
-            if ($opponentEntry->getAmount() <= $playerEntry->getAmount())
-                $playerEntry->setPayoff($opponentEntry->getAmount());
-            else
-                $playerEntry->setPayoff(0);
-        }
+        if ($receiverEntry->getAmount() <= $proposerEntry->getAmount())
+            $receiverEntry->setPayoff($proposerEntry->getAmount());
+        else
+            $receiverEntry->setPayoff(0);
 
-        $playerEntry->setPartnerId($opponent->getId());
-        $playerEntry->setPartnerAmount($opponentEntry->getAmount());
-        $playerEntry->setPartnerEntryId($opponentEntry->getId());
-
-        return $playerEntry;
+        $proposerEntry->save();
+        $receiverEntry->save();
     }
 
     /* ---------------------------------------------------------------------
