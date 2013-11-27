@@ -81,6 +81,13 @@ class TreatmentGroup extends BaseEloquent
         return $this->getAttribute(self::$PARTNER_ROLE_KEY);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
+    }
 
     /**
      * @param int $subjectId
@@ -113,5 +120,6 @@ class TreatmentGroup extends BaseEloquent
     {
         $this->setAttribute(self::$PARTNER_SUBJECT_ID_KEY, $partnerId);
     }
+
 
 } 
