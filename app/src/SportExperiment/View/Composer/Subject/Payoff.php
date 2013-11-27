@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\URL;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use SportExperiment\View\Composer\BaseComposer;
@@ -24,13 +25,22 @@ class Payoff extends BaseComposer
         $riskAversionEntry = $this->subject->getRiskAversionPayoff();
         $willingnessPayEntry = $this->subject->getWillingnessPayPayoff();
         $ultimatumEntry = $this->subject->getUltimatumPayoff();
+        $trustEntry = $this->subject->getTrustPayoff();
         $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
         $view->with('riskAversionPayoff', $riskAversionEntry->getPayoff());
+
         $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
         $view->with('willingnessPayPayoff', $willingnessPayEntry->getPayoff());
         $view->with('itemPurchased', $willingnessPayEntry->getItemPurchased());
+
         $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
         $view->with('ultimatumPayoff', $ultimatumEntry->getPayoff());
+
+        $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
+        $view->with('ultimatumPayoff', $ultimatumEntry->getPayoff());
+
+        $view->with('trustTaskId', TrustTreatment::getTaskId());
+        $view->with('trustPayoff', $trustEntry->getPayoff());
 
         $view->with('totalPayoff', $riskAversionEntry->getPayoff()+$willingnessPayEntry->getPayoff());
         $view->with('postUrl', URL::to(PayoffController::getRoute()));
