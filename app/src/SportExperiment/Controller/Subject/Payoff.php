@@ -28,9 +28,6 @@ class Payoff extends BaseController
      */
     public function getPayoff()
     {
-        if ( ! $this->subject->isPayoffSet())
-            $this->subject->saveCalculatedPayoffs();
-
         return View::make(PayoffComposer::$VIEW_PATH);
     }
 
