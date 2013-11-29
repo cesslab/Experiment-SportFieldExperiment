@@ -99,6 +99,11 @@ class Subject extends BaseEloquent
         return $this->hasMany(TrustEntry::getNamespace(), TrustEntry::$SUBJECT_ID_KEY);
     }
 
+    public function dictatorEntries()
+    {
+        return $this->hasMany(DictatorEntry::getNamespace(), DictatorEntry::$SUBJECT_ID_KEY);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -215,6 +220,15 @@ class Subject extends BaseEloquent
         return $entries[$randIndex];
     }
 
+    /**
+     * @return DictatorEntry
+     */
+    public function getRandomDictatorEntry()
+    {
+        $entries = $this->getDictatorEntries();
+        $randIndex = rand(0, count($entries)-1);
+        return $entries[$randIndex];
+    }
 
     /* ---------------------------------------------------------------------
      * Getters and Setters
@@ -237,6 +251,9 @@ class Subject extends BaseEloquent
         return $this->trustGroup;
     }
 
+    /**
+     * @return DictatorGroup
+     */
     public function getDictatorGroup()
     {
         return $this->dictatorGroup;
@@ -272,6 +289,14 @@ class Subject extends BaseEloquent
     public function getTrustPayoff()
     {
         return $this->trustEntries()->where(TrustEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
+    }
+
+    /**
+     * @return DictatorEntry
+     */
+    public function getDictatorPayoff()
+    {
+        return $this->dictatorEntries()->where(DictatorEntry::$SELECTED_FOR_PAYOFF, '=', true)->first();
     }
 
 
@@ -329,6 +354,14 @@ class Subject extends BaseEloquent
     public function getUltimatumEntries()
     {
         return $this->ultimatumEntries;
+    }
+
+    /**
+     * @return DictatorEntry[]
+     */
+    public function getDictatorEntries()
+    {
+        return $this->dictatorEntries;
     }
 
 
