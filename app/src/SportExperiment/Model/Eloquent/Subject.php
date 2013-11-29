@@ -54,6 +54,14 @@ class Subject extends BaseEloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
+    public function dictatorGroup()
+    {
+        return $this->hasOne(DictatorGroup::getNamespace(), DictatorGroup::$SUBJECT_ID_KEY);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function trustGroup()
     {
         return $this->hasOne(TrustGroup::getNamespace(), TrustGroup::$SUBJECT_ID_KEY);
@@ -229,6 +237,11 @@ class Subject extends BaseEloquent
         return $this->trustGroup;
     }
 
+    public function getDictatorGroup()
+    {
+        return $this->dictatorGroup;
+    }
+
     /**
      * @return RiskAversionEntry
      */
@@ -300,6 +313,14 @@ class Subject extends BaseEloquent
     public function getTrustTreatment()
     {
         return $this->getSession()->getTrustTreatment();
+    }
+
+    /**
+     * @return DictatorTreatment
+     */
+    public function getDictatorTreatment()
+    {
+        return $this->getSession()->getDictatorTreatment();
     }
 
     /**
