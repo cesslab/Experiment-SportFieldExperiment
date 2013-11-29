@@ -5,7 +5,7 @@ class DictatorEntry extends TaskEntry
 {
     public static $TABLE_KEY = 'dictator_entries';
 
-    public static $ALLOCATION_KEY = 'allocation';
+    public static $DICTATOR_ALLOCATION_KEY = 'dictator_allocation';
 
     protected $rules;
     protected $table;
@@ -17,9 +17,9 @@ class DictatorEntry extends TaskEntry
     public function __construct($attributes = [])
     {
         $this->table = self::$TABLE_KEY;
-        $this->rules = [self::$ALLOCATION_KEY=>['required', 'numeric', 'min:0']];
+        $this->rules = [self::$DICTATOR_ALLOCATION_KEY=>['required', 'numeric', 'min:0']];
 
-        $this->fillable = [self::$ALLOCATION_KEY];
+        $this->fillable = [self::$DICTATOR_ALLOCATION_KEY];
 
         parent::__construct($attributes);
     }
@@ -31,9 +31,9 @@ class DictatorEntry extends TaskEntry
     /**
      * @return mixed
      */
-    public function getAllocation()
+    public function getDictatorAllocation()
     {
-        return $this->getAttribute(self::$ALLOCATION_KEY);
+        return $this->getAttribute(self::$DICTATOR_ALLOCATION_KEY);
     }
 
     /**
@@ -42,6 +42,6 @@ class DictatorEntry extends TaskEntry
      */
     public function setMaxAllocationRule($size)
     {
-        $this->rules[self::$ALLOCATION_KEY][] = 'max:' . $size;
+        $this->rules[self::$DICTATOR_ALLOCATION_KEY][] = 'max:' . $size;
     }
 }

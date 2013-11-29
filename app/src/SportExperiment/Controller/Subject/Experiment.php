@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Controller\BaseController;
+use SportExperiment\Model\Eloquent\DictatorEntry;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\TrustProposerEntry;
 use SportExperiment\Model\Eloquent\TrustEntry;
@@ -65,6 +66,13 @@ class Experiment extends BaseController
             $trustEntry = ($this->subject->getTrustGroup()->isProposer()) ? new TrustProposerEntry(Input::all()) : new TrustReceiverEntry(Input::all());
             $trustEntry->setValidationRules($this->subject->getTrustTreatment());
             $modelCollection->addModel($trustEntry);
+        }
+
+        // Dictator treatment
+        if ($session->getTrustTreatment() != null) {
+            $dictatorEntry = new DictatorEntry(Input::all());
+            $dictatorEntry->setMaxAllocationRule($session->getTrustTreatment()->getProposerEndowment());
+            $modelCollection->addModel($dictatorEntry);
         }
 
         if ($modelCollection->validationFails())
