@@ -1,22 +1,15 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: aruff
- * Date: 11/27/13
- * Time: 3:01 PM
- */
+<?php namespace SportExperiment\Model\Eloquent;
 
-namespace SportExperiment\Model\Eloquent;
-
+use SportExperiment\Model\Group;
+use SportExperiment\Model\GroupTreatmentInterface;
 
 class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
 {
-    public static $TABLE_KEY = 'trust_treatments';
+    public static $TABLE_KEY = 'dictator_treatments';
 
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
-    public static $PROPOSER_ALLOCATION_MULTIPLIER_KEY = 'sender_multiplier';
-    public static $RECEIVER_ALLOCATION_MULTIPLIER_KEY = 'receiver_multiplier';
+    public static $PROPOSER_ENDOWMENT_KEY = 'proposer_endowment';
 
     private static $TASK_ID = 5;
 
@@ -28,5 +21,131 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
     protected $table;
     protected $fillable;
     protected $rules;
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct($attributes = [])
+    {
+        $this->table = self::$TABLE_KEY;
+
+        $this->fillable = [self::$PROPOSER_ENDOWMENT_KEY];
+
+        $this->rules = [
+            self::$PROPOSER_ENDOWMENT_KEY=>'required|numeric|min:0|max:1000000',
+        ];
+
+        parent::__construct($attributes);
+    }
+
+    /* ---------------------------------------------------------------------
+     * Model Relationships
+     * ---------------------------------------------------------------------*/
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function session()
+    {
+        return $this->belongsTo(Session::getNamespace(), self::$SESSION_ID_KEY);
+    }
+
+    /* ---------------------------------------------------------------------
+     * Business Logic
+     * ---------------------------------------------------------------------*/
+
+    /**
+     * @param Subject[] $subjects
+     * @return \SportExperiment\Model\Group[]
+     */
+    public function getGroups($subjects)
+    {
+        $groups = [];
+        // Set Proposers
+        foreach ($subjects as $subject) {
+            if ($subject->getDictatorGroup()->isProposer()) {
+                $groupId = $subject->getDictatorGroup()->getId();
+                $group = new Group();
+                $group->setSubject($subject, self::$PROPOSER_ROLE_ID);
+                $group->setSubject($subject->getDictatorGroup()->getPartner(), self::$RECEIVER_ROLE_ID);
+                $groups[$groupId] = $group;
+            }
+        }
+        return $groups;
+    }
+
+    /**
+     * Calculates and saves the receiver and proposer payoffs.
+     *
+     * @param Subject $receiver
+     * @param Subject $proposer
+     */
+    public function calculateGroupPayoff(Subject $proposer, Subject $receiver)
+    {
+    }
+
+    /**
+     * Saves a group record for each group member.
+     *
+     * @param $groups \SportExperiment\Model\Group[]
+     */
+    public function saveGroups($groups)
+    {
+        foreach ($groups as $group) {
+            $proposer = $group->getSubject(self::$PROPOSER_ROLE_ID);
+            $receiver = $group->getSubject(self::$RECEIVER_ROLE_ID);
+
+            $proposerGroup = new DictatorGroup();
+            $proposerGroup->setSubjectId($proposer->getId());
+            $proposerGroup->setSubjectRole(self::$PROPOSER_ROLE_ID);
+            $proposerGroup->setPartnerId($receiver->getId());
+            $proposerGroup->setPartnerRole(self::$RECEIVER_ROLE_ID);
+            $proposerGroup->save();
+
+            $receiverGroup = new DictatorGroup();
+            $receiverGroup->setSubjectId($receiver->getId());
+            $receiverGroup->setSubjectRole(self::$RECEIVER_ROLE_ID);
+            $receiverGroup->setPartnerId($proposer->getId());
+            $receiverGroup->setPartnerRole(self::$PROPOSER_ROLE_ID);
+            $receiverGroup->save();
+        }
+    }
+
+    /* ---------------------------------------------------------------------
+     * Getters and Setters
+     * ---------------------------------------------------------------------*/
+
+    /**
+     * @return mixed
+     */
+    public function getProposerEndowment()
+    {
+        return $this->getAttribute(self::$PROPOSER_ENDOWMENT_KEY);
+    }
+
+    /**
+     * @return int
+     */
+    public static function getProposerRoleId()
+    {
+        return self::$PROPOSER_ROLE_ID;
+    }
+
+    /**
+     * @return int
+     */
+    public static function getReceiverRoleId()
+    {
+        return self::$RECEIVER_ROLE_ID;
+    }
+
+    /**
+     * Returns the Task ID.
+     *
+     * @return int
+     */
+    public static function getTaskId()
+    {
+        return self::$TASK_ID;
+    }
 
 } 
