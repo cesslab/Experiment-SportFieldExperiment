@@ -14,7 +14,7 @@ use SportExperiment\Model\Eloquent\Session as ExperimentSession;
 use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\BaseController;
-
+use SportExperiment\Model\Eloquent\DictatorTreatment;
 class Session extends BaseController
 {
     private static $URI = 'researcher/experiment/session';
@@ -41,6 +41,7 @@ class Session extends BaseController
         $modelCollection->addModel(new RiskAversionTreatment(Input::all()));
         $modelCollection->addModel(new UltimatumTreatment(Input::all()));
         $modelCollection->addModel(new TrustTreatment(Input::all()));
+        $modelCollection->addModel(new DictatorTreatment(Input::all()));
 
         if ($modelCollection->validationFails()) {
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
