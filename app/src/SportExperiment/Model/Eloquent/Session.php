@@ -164,6 +164,7 @@ class Session extends BaseEloquent
         $willingnessPayTreatment = $this->getWillingnessPayTreatment();
         $ultimatumTreatment = $this->getUltimatumTreatment();
         $trustTreatment = $this->getTrustTreatment();
+        $dictatorTreatment = $this->getDictatorTreatment();
 
         $subjects = $this->getSubjects();
         foreach($subjects as $subject) {
@@ -199,6 +200,16 @@ class Session extends BaseEloquent
                 $proposer = $group->getSubject(TrustTreatment::getProposerRoleId());
                 $receiver = $group->getSubject(TrustTreatment::getReceiverRoleId());
                 $trustTreatment->calculateGroupPayoff($proposer, $receiver);
+            }
+        }
+
+        // Dictator Payoff
+        if ($dictatorTreatment !== null) {
+            $dictatorGroups = $dictatorTreatment->getGroups($subjects);
+            foreach ($dictatorGroups as $group) {
+                $proposer = $group->getSubject(DictatorTreatment::getProposerRoleId());
+                $receiver = $group->getSubject(DictatorTreatment::getReceiverRoleId());
+                $dictatorTreatment->calculateGroupPayoff($proposer, $receiver);
             }
         }
     }
