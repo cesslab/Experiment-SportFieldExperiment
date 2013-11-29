@@ -107,6 +107,8 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     }
 
     /**
+     * Saves a group record for each group member.
+     *
      * @param $groups \SportExperiment\Model\Group[]
      */
     public function saveGroups($groups)
