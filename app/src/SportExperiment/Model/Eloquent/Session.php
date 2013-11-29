@@ -71,6 +71,14 @@ class Session extends BaseEloquent
         return $this->hasOne(TrustTreatment::getNamespace(), TrustTreatment::$SESSION_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function dictatorTreatment()
+    {
+        return $this->hasOne(DictatorTreatment::getNamespace(), DictatorTreatment::$SESSION_ID_KEY);
+    }
+
     /* ---------------------------------------------------------------------
      * Validation
      * ---------------------------------------------------------------------*/
@@ -255,6 +263,14 @@ class Session extends BaseEloquent
     public function getRiskAversionTreatment()
     {
         return $this->riskAversion;
+    }
+
+    /**
+     * @return DictatorTreatment
+     */
+    public function getDictatorTreatment()
+    {
+        return $this->dictatorTreatment;
     }
 
     /**
