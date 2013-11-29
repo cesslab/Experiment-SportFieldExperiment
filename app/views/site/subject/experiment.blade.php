@@ -29,7 +29,7 @@
     @endif
 
     @if ($displayDictator)
-        @include('site.subject.experiment.treatment.dictator', array('taskId'=>$dictatorTaskId, 'endowment'=>$dictatorEndowment, 'allocationKey'=>$dictatorAllocation))
+        @include('site.subject.experiment.treatment.dictator', array('taskId'=>$dictatorTaskId, 'endowment'=>$dictatorEndowment, 'allocationKey'=>$dictatorAllocationKey))
     @endif
 
 {{ Form::submit('Save Choices') }}
