@@ -32,8 +32,7 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
         $this->fillable = [self::$PROPOSER_ENDOWMENT_KEY];
 
         $this->rules = [
-            self::$PROPOSER_ENDOWMENT_KEY=>'required|numeric|min:0|max:1000000',
-        ];
+            self::$PROPOSER_ENDOWMENT_KEY=>['required', 'numeric', 'min:0']];
 
         parent::__construct($attributes);
     }
@@ -81,6 +80,18 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
      */
     public function calculateGroupPayoff(Subject $proposer, Subject $receiver)
     {
+        $treatment = $proposer->getDictatorTreatment();
+        $dictatorEntry = $proposer->getRandomDictatorEntry();
+        $dictatorEntry->setSelectedForPayoff(true);
+        $dictatorEntry->setPayoff($treatment->getProposerEndowment() - $dictatorEntry->getDictatorAllocation());
+
+        // Since the receiver's entries don't impact their payoff one entry is selected at random for storing the payoff.
+        $receiverEntry = $receiver->getRandomDictatorEntry();
+        $receiverEntry->setSelectedForPayoff(true);
+        $receiverEntry->setPayoff($dictatorEntry->getDictatorAllocation());
+
+        $dictatorEntry->save();
+        $receiverEntry->save();
     }
 
     /**
