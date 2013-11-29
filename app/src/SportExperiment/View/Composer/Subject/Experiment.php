@@ -1,6 +1,7 @@
 <?php namespace SportExperiment\View\Composer\Subject;
 
 use Illuminate\Support\Facades\Auth;
+use SportExperiment\Model\Eloquent\DictatorTreatment;
 use SportExperiment\Model\Eloquent\RiskAversionEntry;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\Subject;
@@ -68,6 +69,14 @@ class Experiment extends BaseComposer
             $view->with('numProposerAllocations', TrustTreatment::getNumProposerAllocations());
             $view->with('numReceiverAllocations', TrustTreatment::getNumReceiverAllocations());
             $view->with('allocationKey', TrustProposerEntry::$ALLOCATION_KEY);
+        }
+
+        $dictatorTreatment = $this->subject->getDictatorTreatment();
+        $view->with('displayDictator', $dictatorTreatment != null);
+        if ($dictatorTreatment != null) {
+            $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
+            $view->with('dictatorEndowment', $dictatorTreatment->getProposerEndowment());
+            $view->with('dictatorAllocationKey', DictatorTreatment::$PROPOSER_ENDOWMENT_KEY);
         }
 
         $view->with('postUrl', URL::to(ExperimentController::getRoute()));
