@@ -9,6 +9,7 @@ use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\Researcher\Session as SessionController;
 use Illuminate\Support\Facades\URL;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
+use SportExperiment\Model\Eloquent\DictatorTreatment;
 
 class Session extends BaseComposer
 {
@@ -31,5 +32,6 @@ class Session extends BaseComposer
         $view->with('trustTaskId', TrustTreatment::getTaskId());
         $view->with('trustSenderMultiplierKey', TrustTreatment::$PROPOSER_ALLOCATION_MULTIPLIER_KEY);
         $view->with('trustReceiverMultiplierKey', TrustTreatment::$RECEIVER_ALLOCATION_MULTIPLIER_KEY);
+        $view->with('dictatorEndowmentKey', DictatorTreatment::$PROPOSER_ENDOWMENT_KEY);
     }
 }
