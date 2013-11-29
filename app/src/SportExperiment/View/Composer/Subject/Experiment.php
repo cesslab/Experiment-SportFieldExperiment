@@ -1,21 +1,19 @@
 <?php namespace SportExperiment\View\Composer\Subject;
 
-use Illuminate\Support\Facades\Auth;
 use SportExperiment\Model\Eloquent\DictatorTreatment;
 use SportExperiment\Model\Eloquent\RiskAversionEntry;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\TrustProposerEntry;
-use SportExperiment\Model\Eloquent\TrustGroup;
 use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumEntry;
-use SportExperiment\Model\Eloquent\UltimatumGroup;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\Eloquent\WillingnessPayEntry;
 use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Subject\Experiment as ExperimentController;
 use Illuminate\Support\Facades\URL;
+use SportExperiment\Model\Eloquent\DictatorEntry;
 
 class Experiment extends BaseComposer
 {
@@ -76,7 +74,7 @@ class Experiment extends BaseComposer
         if ($dictatorTreatment != null) {
             $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
             $view->with('dictatorEndowment', $dictatorTreatment->getProposerEndowment());
-            $view->with('dictatorAllocationKey', DictatorTreatment::$PROPOSER_ENDOWMENT_KEY);
+            $view->with('dictatorAllocationKey', DictatorEntry::$DICTATOR_ALLOCATION_KEY);
         }
 
         $view->with('postUrl', URL::to(ExperimentController::getRoute()));
