@@ -15,8 +15,8 @@
 
 <h3>Task {{$trustTaskId}} Payoff: ${{$trustPayoff}}</h3>
 
-<h2>Total Payoff: ${{$totalPayoff}}</h2>
-<h2>Total Items Purchased: {{$itemPurchased}}</h2>
+<h3>Task {{$dictatorTaskId}} Payoff: ${{$dictatorPayoff}}</h3>
+
 {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
 {{ Form::submit('Next') }}
 {{ Form::close() }}
