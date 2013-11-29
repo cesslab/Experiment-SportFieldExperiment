@@ -53,6 +53,13 @@
                     {{ Form::text($trustReceiverMultiplierKey, Input::old($trustReceiverMultiplierKey)) }}
                 </div>
             </fieldset>
+            <fieldset>
+                <legend>Task {{$trustTaskId}}: Dictator</legend>
+                <div>
+                    {{ Form::label($dictatorEndowmentKey, 'Dictator Endowment') }}
+                    {{ Form::text($dictatorEndowmentKey, Input::old($dictatorEndowmentKey)) }}
+                </div>
+            </fieldset>
             {{ Form::submit('Add New Session') }}
         </fieldset>
     {{ Form::close() }}
