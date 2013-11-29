@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\Model\Eloquent\SessionState;
+use SportExperiment\Model\Eloquent\DictatorTreatment;
 
 class ResearcherRepository implements ResearcherRepositoryInterface
 {
@@ -37,16 +38,27 @@ class ResearcherRepository implements ResearcherRepositoryInterface
             $subjects[] = $this->createSubject($session, $user);
         }
 
-        $proposerRole = UltimatumTreatment::getProposerRoleId();
-        $receiverRole = UltimatumTreatment::getReceiverRoleId();
+        // TODO: refactor copy-paste code smell
+        $ultimatumProposerRole = UltimatumTreatment::getProposerRoleId();
+        $ultimatumReceiverRole = UltimatumTreatment::getReceiverRoleId();
 
-        $ultimatumGroups = TwoPlayerMatcher::matchSubjects($subjects, $proposerRole, $receiverRole);
+        $ultimatumGroups = TwoPlayerMatcher::matchSubjects($subjects, $ultimatumProposerRole, $ultimatumReceiverRole);
 
         $ultimatumTreatment = new UltimatumTreatment();
         $ultimatumTreatment->saveGroups($ultimatumGroups);
 
-        $trustGroups = TwoPlayerMatcher::matchSubjects($subjects, $proposerRole, $receiverRole);
+        $trustProposerRole = TrustTreatment::getProposerRoleId();
+        $trustReceiverRole = TrustTreatment::getReceiverRoleId();
+
+        $trustGroups = TwoPlayerMatcher::matchSubjects($subjects, $trustProposerRole, $trustReceiverRole);
         $trustTreatment = new TrustTreatment();
+        $trustTreatment->saveGroups($trustGroups);
+
+        $dictatorProposerRole = DictatorTreatment::getProposerRoleId();
+        $dictatorReceiverRole = DictatorTreatment::getReceiverRoleId();
+
+        $trustGroups = TwoPlayerMatcher::matchSubjects($subjects, $dictatorProposerRole, $dictatorReceiverRole);
+        $trustTreatment = new DictatorTreatment();
         $trustTreatment->saveGroups($trustGroups);
     }
 
@@ -102,6 +114,10 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         $trust = $modelCollection->getModel(TrustTreatment::getNamespace());
         $trust->session()->associate($session);
         $trust->save();
+
+        $dictator = $modelCollection->getModel(DictatorTreatment::getNamespace());
+        $dictator->session()->associate($session);
+        $dictator->save();
 
         $this->createSessionSubjects($session);
     }
