@@ -1,6 +1,7 @@
 <?php namespace SportExperiment\View\Composer\Subject;
 
 use Illuminate\Support\Facades\URL;
+use SportExperiment\Model\Eloquent\DictatorTreatment;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\TrustTreatment;
@@ -26,6 +27,8 @@ class Payoff extends BaseComposer
         $willingnessPayEntry = $this->subject->getWillingnessPayPayoff();
         $ultimatumEntry = $this->subject->getUltimatumPayoff();
         $trustEntry = $this->subject->getTrustPayoff();
+        $dictatorEntry = $this->subject->getDictatorPayoff();
+
         $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
         $view->with('riskAversionPayoff', $riskAversionEntry->getPayoff());
 
@@ -42,7 +45,9 @@ class Payoff extends BaseComposer
         $view->with('trustTaskId', TrustTreatment::getTaskId());
         $view->with('trustPayoff', $trustEntry->getPayoff());
 
-        $view->with('totalPayoff', $riskAversionEntry->getPayoff()+$willingnessPayEntry->getPayoff());
+        $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
+        $view->with('dictatorPayoff', $dictatorEntry->getPayoff());
+
         $view->with('postUrl', URL::to(PayoffController::getRoute()));
     }
 
