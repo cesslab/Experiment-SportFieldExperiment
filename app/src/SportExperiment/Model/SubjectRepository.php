@@ -1,11 +1,11 @@
 <?php namespace SportExperiment\Model;
 
+use SportExperiment\Model\Eloquent\DictatorEntry;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\TaskEntry;
 use SportExperiment\Model\Eloquent\TrustProposerEntry;
 use SportExperiment\Model\Eloquent\TrustEntry;
 use SportExperiment\Model\Eloquent\TrustReceiverEntry;
-use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumEntry;
 use SportExperiment\Model\Eloquent\WillingnessPayEntry;
 use SportExperiment\Model\Eloquent\RiskAversionEntry;
@@ -41,6 +41,10 @@ class SubjectRepository implements SubjectRepositoryInterface
                $this->saveTrustProposerEntry($collection->getModel(TrustProposerEntry::getNamespace()), $trustEntry);
             else
                 $this->saveTrustReceiverEntries($collection->getModel(TrustReceiverEntry::getNamespace()), $trustEntry);
+        }
+
+        if ($subject->getDictatorTreatment() != null) {
+            $this->saveEntry($collection->getModel(DictatorEntry::getNamespace()), $subject);
         }
     }
 
