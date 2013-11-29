@@ -28,6 +28,10 @@
         @endif
     @endif
 
+    @if ($displayDictator)
+        @include('site.subject.experiment.treatment.dictator', array('taskId'=>$dictatorTaskId, 'endowment'=>$dictatorEndowment, 'allocationKey'=>$dictatorAllocation))
+    @endif
+
 {{ Form::submit('Save Choices') }}
 
 {{ Session::get('error', '') }}
