@@ -71,7 +71,7 @@ class Experiment extends BaseController
         // Dictator treatment
         if ($session->getTrustTreatment() != null) {
             $dictatorEntry = new DictatorEntry(Input::all());
-            $dictatorEntry->setMaxAllocationRule($session->getTrustTreatment()->getProposerEndowment());
+            $dictatorEntry->setMaxAllocationRule($session->getDictatorTreatment()->getProposerEndowment());
             $modelCollection->addModel($dictatorEntry);
         }
 
