@@ -10,7 +10,7 @@
   "dependencies": {
       "bootstrap": "3.0.2",
       "font-awesome": "4.0.3",
-      "jquery.tablesorter": "2.14.2",
+      "jquery.tablesorter": "2.14.2"
   },
   "ignore": [
     "**/.*",
