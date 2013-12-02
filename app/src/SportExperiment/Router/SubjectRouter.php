@@ -1,12 +1,12 @@
 <?php namespace SportExperiment\Router;
 
+use Illuminate\Support\Facades\Request;
 use SportExperiment\Controller\Researcher\Login;
 use SportExperiment\Controller\Subject\Registration;
 use SportExperiment\Controller\Subject\PreGameHold;
 use SportExperiment\Controller\Subject\Experiment;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\SessionState;
-use Illuminate\Support\Facades\Route;
 use SportExperiment\Model\Eloquent\SubjectState;
 use SportExperiment\Controller\Subject\Payoff;
 use SportExperiment\Controller\Subject\Questionnaire;
@@ -35,8 +35,8 @@ class SubjectRouter {
 
     public function isCurrentRouteValid(Subject $subject)
     {
-        $currentRoute = Route::getCurrentRoute()->getPath();
-        $subjectStateRoute = '/' . $this->getRoute($subject);
+        $currentRoute = Request::path();
+        $subjectStateRoute = $this->getRoute($subject);
         return $subjectStateRoute === $currentRoute;
     }
 
