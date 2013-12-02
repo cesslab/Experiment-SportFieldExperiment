@@ -1,20 +1,23 @@
-@extends('site.layouts.generic')
+@extends('site.layouts.login')
 
 @section('content')
-    {{ Form::open(array('url'=>URL::to('researcher/login'), 'method'=>'post')) }}
-    {{ Form::label('user_name', 'User Name') }}
-    {{ Form::text('user_name', '') }}
-    {{ Form::label('password', 'Password') }}
-    {{ Form::password('password') }}
-    {{ Form::submit('login') }}
+<div class="container">
 
-    {{ Session::get('error', '') }}
+    {{ Form::open(array('url'=>URL::to('researcher/login'), 'method'=>'post', 'class'=>'form-signin')) }}
+        <h2 class="form-signin-heading">Researcher Login</h2>
+        {{ Form::label('user_name', 'User Name', ['class'=>'control-label']) }}
+        {{ Form::text('user_name', Input::old('user_name'), ['class'=>'form-control', 'placeholder'=>'User Name']) }}
+        {{ Form::label('password', 'Password', ['class'=>'control-label']) }}
+        {{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Password']) }}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    {{ Form::close() }}
 
     <ul class="errors">
         @foreach($errors->all() as $message)
-            <li>{{ $message }}</li>
+        <li>{{ $message }}</li>
         @endforeach
+        {{ Session::get('error', '') }}
     </ul>
+</div> <!-- /container -->
 
-    {{ Form::close() }}
 @stop
