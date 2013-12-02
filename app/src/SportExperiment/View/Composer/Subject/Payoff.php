@@ -23,30 +23,57 @@ class Payoff extends BaseComposer
 
     public function compose($view)
     {
-        $riskAversionEntry = $this->subject->getRiskAversionPayoff();
-        $willingnessPayEntry = $this->subject->getWillingnessPayPayoff();
-        $ultimatumEntry = $this->subject->getUltimatumPayoff();
-        $trustEntry = $this->subject->getTrustPayoff();
-        $dictatorEntry = $this->subject->getDictatorPayoff();
 
-        $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
-        $view->with('riskAversionPayoff', $riskAversionEntry->getPayoff());
+        if ($this->subject->getRiskAversionTreatment() !== null) {
+            $view->with('riskAversionActive', true);
+            $riskAversionEntry = $this->subject->getRiskAversionPayoff();
+            $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
+            $view->with('riskAversionPayoff', $riskAversionEntry->getPayoff());
+        }
+        else {
+            $view->with('riskAversionActive', false);
+        }
 
-        $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
-        $view->with('willingnessPayPayoff', $willingnessPayEntry->getPayoff());
-        $view->with('itemPurchased', $willingnessPayEntry->getItemPurchased());
+        if ($this->subject->getWillingnessPayTreatment() !== null) {
+            $view->with('willingnessPayActive', true);
+            $willingnessPayEntry = $this->subject->getWillingnessPayPayoff();
+            $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
+            $view->with('willingnessPayPayoff', $willingnessPayEntry->getPayoff());
+            $view->with('itemPurchased', $willingnessPayEntry->getItemPurchased());
+        }
+        else {
+            $view->with('willingnessPayActive', false);
+        }
 
-        $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
-        $view->with('ultimatumPayoff', $ultimatumEntry->getPayoff());
+        if ($this->subject->getUltimatumTreatment() !== null) {
+            $view->with('ultimatumActive', true);
+            $ultimatumEntry = $this->subject->getUltimatumPayoff();
+            $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
+            $view->with('ultimatumPayoff', $ultimatumEntry->getPayoff());
+        }
+        else {
+            $view->with('ultimatumActive', false);
+        }
 
-        $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
-        $view->with('ultimatumPayoff', $ultimatumEntry->getPayoff());
+        if ($this->subject->getTrustTreatment() !== null) {
+            $view->with('trustActive', true);
+            $trustEntry = $this->subject->getTrustPayoff();
+            $view->with('trustTaskId', TrustTreatment::getTaskId());
+            $view->with('trustPayoff', $trustEntry->getPayoff());
+        }
+        else {
+            $view->with('trustActive', false);
+        }
 
-        $view->with('trustTaskId', TrustTreatment::getTaskId());
-        $view->with('trustPayoff', $trustEntry->getPayoff());
-
-        $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
-        $view->with('dictatorPayoff', $dictatorEntry->getPayoff());
+        if ($this->subject->getDictatorTreatment() !== null) {
+            $view->with('dictatorActive', true);
+            $dictatorEntry = $this->subject->getDictatorPayoff();
+            $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
+            $view->with('dictatorPayoff', $dictatorEntry->getPayoff());
+        }
+        else {
+            $view->with('dictatorActive', false);
+        }
 
         $view->with('postUrl', URL::to(PayoffController::getRoute()));
     }

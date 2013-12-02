@@ -37,11 +37,32 @@ class Session extends BaseController
     {
         $modelCollection = new ModelCollection();
         $modelCollection->addModel(new ExperimentSession(Input::all()));
-        $modelCollection->addModel(new WillingnessPayTreatment(Input::all()));
-        $modelCollection->addModel(new RiskAversionTreatment(Input::all()));
-        $modelCollection->addModel(new UltimatumTreatment(Input::all()));
-        $modelCollection->addModel(new TrustTreatment(Input::all()));
-        $modelCollection->addModel(new DictatorTreatment(Input::all()));
+
+        $totalTasks = 0;
+        if (Input::get(WillingnessPayTreatment::$TREATMENT_ENABLED_KEY) !== null) {
+            $modelCollection->addModel(new WillingnessPayTreatment(Input::all()));
+            ++$totalTasks;
+        }
+        if (Input::get(RiskAversionTreatment::$TREATMENT_ENABLED_KEY) !== null) {
+            $modelCollection->addModel(new RiskAversionTreatment(Input::all()));
+            ++$totalTasks;
+        }
+        if (Input::get(UltimatumTreatment::$TREATMENT_ENABLED_KEY) !== null) {
+            $modelCollection->addModel(new UltimatumTreatment(Input::all()));
+            ++$totalTasks;
+        }
+        if (Input::get(TrustTreatment::$TREATMENT_ENABLED_KEY) !== null) {
+            $modelCollection->addModel(new TrustTreatment(Input::all()));
+            ++$totalTasks;
+        }
+        if (Input::get(DictatorTreatment::$TREATMENT_ENABLED_KEY) !== null) {
+            $modelCollection->addModel(new DictatorTreatment(Input::all()));
+            ++$totalTasks;
+        }
+
+        if ($totalTasks < ExperimentSession::$TASK_MINIMUM) {
+            return Redirect::to(self::getRoute())->with('error', Lang::get('errors.min_tasks_required'));
+        }
 
         if ($modelCollection->validationFails()) {
             return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
