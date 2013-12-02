@@ -32,7 +32,7 @@ class Registration extends BaseController
         $subject = Auth::user()->subject;
         $subject->fill(Input::all());
         if ($subject->validationFails())
-            return Redirect::to(self::getRoute())->with('errors', $subject->getErrorMessages());
+            return Redirect::to(self::getRoute())->withInput()->with('errors', $subject->getErrorMessages());
 
         $subject->setState(SubjectState::$PRE_GAME_HOLD_STATE);
         $subject->save();
