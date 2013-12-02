@@ -116,7 +116,8 @@ return array(
         'Illuminate\Remote\RemoteServiceProvider',
         /* Custom Providers */
         'SportExperiment\ServiceProvider\RepositoryServiceProvider',
-        'SportExperiment\ServiceProvider\SubjectProvider'
+        'SportExperiment\ServiceProvider\SubjectProvider',
+        'Rocketeer\RocketeerServiceProvider'
 	),
 
 	/*
@@ -182,6 +183,7 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'SSH'             => 'Illuminate\Support\Facades\SSH',
+        'Rocketeer' => 'Rocketeer\Facades\Rocketeer',
 	),
 
 );
