@@ -8,6 +8,8 @@ class WillingnessPayTreatment extends BaseEloquent
     public static $SESSION_ID_KEY = 'session_id';
     public static $ENDOWMENT_KEY = 'endowment';
 
+    public static $TREATMENT_ENABLED_KEY = 'willingnessPayEnabled';
+
     private static $TASK_ID = 2;
 
     public $timestamps = false;

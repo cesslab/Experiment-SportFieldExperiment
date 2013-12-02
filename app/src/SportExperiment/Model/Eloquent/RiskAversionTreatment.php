@@ -11,6 +11,8 @@ class RiskAversionTreatment extends BaseEloquent
     public static $HIGH_PRIZE_KEY = 'high_prize';
     public static $GAMBLE_PROBABILITY_KEY = 'gamble_probability';
 
+    public static $TREATMENT_ENABLED_KEY = 'riskAversionEnabled';
+
     private static $TASK_ID = 1;
 
     public $timestamps = false;

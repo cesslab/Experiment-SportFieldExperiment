@@ -12,6 +12,8 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     public static $PROPOSER_ALLOCATION_MULTIPLIER_KEY = 'sender_multiplier';
     public static $RECEIVER_ALLOCATION_MULTIPLIER_KEY = 'receiver_multiplier';
 
+    public static $TREATMENT_ENABLED_KEY = 'trustEnabled';
+
     private static $TASK_ID = 4;
 
     private static $NUM_PROPOSER_ALLOCATIONS = 5;

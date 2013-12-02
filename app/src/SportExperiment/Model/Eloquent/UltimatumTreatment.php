@@ -12,6 +12,8 @@ class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
     public static $SESSION_ID_KEY = 'session_id';
     public static $TOTAL_AMOUNT_KEY = 'total_amount';
 
+    public static $TREATMENT_ENABLED_KEY = 'ultimatumEnabled';
+
     private static $PROPOSER_ROLE_ID = 1;
     private static $RECEIVER_ROLE_ID = 2;
 

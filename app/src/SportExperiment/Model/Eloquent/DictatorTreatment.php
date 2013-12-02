@@ -11,6 +11,8 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
     public static $SESSION_ID_KEY = 'session_id';
     public static $PROPOSER_ENDOWMENT_KEY = 'proposer_endowment';
 
+    public static $TREATMENT_ENABLED_KEY = 'dictatorEnabled';
+
     private static $TASK_ID = 5;
 
     private static $PROPOSER_ROLE_ID = 1;
