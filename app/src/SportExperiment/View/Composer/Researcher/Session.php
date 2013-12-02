@@ -32,6 +32,7 @@ class Session extends BaseComposer
         $view->with('trustTaskId', TrustTreatment::getTaskId());
         $view->with('trustSenderMultiplierKey', TrustTreatment::$PROPOSER_ALLOCATION_MULTIPLIER_KEY);
         $view->with('trustReceiverMultiplierKey', TrustTreatment::$RECEIVER_ALLOCATION_MULTIPLIER_KEY);
+        $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
         $view->with('dictatorEndowmentKey', DictatorTreatment::$PROPOSER_ENDOWMENT_KEY);
     }
 }
