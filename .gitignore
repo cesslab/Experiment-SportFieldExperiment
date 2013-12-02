@@ -4,6 +4,12 @@ composer.phar
 composer.lock
 .DS_Store
 Thumbs.db
-/.idea
 .gitkeep
-.idea
+.idea/*
+public/assets/bootstrap/*
+public/assets/font-awesome/*
+public/assets/jquery.tablesorter/*
+public/assets/jquery/*
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/SportFieldExperiment.iml
