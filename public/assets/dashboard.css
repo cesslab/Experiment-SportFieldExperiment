@@ -1,0 +1,257 @@
+html {
+    font-family: 'Lato', sans-serif;
+}
+body {
+    font-family: 'Lato', sans-serif;
+    margin-top: 50px;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+#wrapper {
+    padding-left: 0;
+}
+
+#page-wrapper {
+    width: 100%;
+    padding: 5px 15px;
+}
+
+/* Nav Messages */
+
+.messages-dropdown .dropdown-menu .message-preview .avatar,
+.messages-dropdown .dropdown-menu .message-preview .name,
+.messages-dropdown .dropdown-menu .message-preview .message,
+.messages-dropdown .dropdown-menu .message-preview .time {
+    display: block;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .avatar {
+    float: left;
+    margin-right: 15px;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .name {
+    font-weight: bold;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .message {
+    font-size: 12px;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .time {
+    font-size: 12px;
+}
+
+
+/* Nav Announcements */
+
+.announcement-heading {
+    font-size: 50px;
+    margin: 0;
+}
+
+.announcement-text {
+    margin: 0;
+}
+
+/* Table Headers */
+
+table.tablesorter thead {
+    cursor: pointer;
+}
+
+table.tablesorter thead tr th:hover {
+    background-color: #f5f5f5;
+}
+
+/* Flot Chart Containers */
+
+.flot-chart {
+    display: block;
+    height: 400px;
+}
+
+.flot-chart-content {
+    width: 100%;
+    height: 100%;
+}
+
+/* Edit Below to Customize Widths > 768px */
+@media (min-width:768px) {
+
+    /* Wrappers */
+
+    #wrapper {
+        padding-left: 225px;
+    }
+
+    #page-wrapper {
+        padding: 15px 25px;
+    }
+
+    /* Side Nav */
+
+    .side-nav {
+        margin-left: -225px;
+        left: 225px;
+        width: 225px;
+        position: fixed;
+        top: 50px;
+        height: 100%;
+        border-radius: 0;
+        border: none;
+        background-color: #222222;
+        overflow-y: auto;
+    }
+
+    /* Bootstrap Default Overrides - Customized Dropdowns for the Side Nav */
+
+    .side-nav>li.dropdown>ul.dropdown-menu {
+        position: relative;
+        min-width: 225px;
+        margin: 0;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+    }
+
+    .side-nav>li.dropdown>ul.dropdown-menu>li>a {
+        color: #999999;
+        padding: 15px 15px 15px 25px;
+    }
+
+    .side-nav>li.dropdown>ul.dropdown-menu>li>a:hover,
+    .side-nav>li.dropdown>ul.dropdown-menu>li>a.active,
+    .side-nav>li.dropdown>ul.dropdown-menu>li>a:focus {
+        color: #fff;
+        background-color: #080808;
+    }
+
+    .side-nav>li>a {
+        width: 225px;
+    }
+
+    .navbar-inverse .navbar-nav>li>a:hover,
+    .navbar-inverse .navbar-nav>li>a:focus {
+        background-color: #080808;
+    }
+
+    /* Nav Messages */
+
+    .messages-dropdown .dropdown-menu {
+        min-width: 300px;
+    }
+
+    .messages-dropdown .dropdown-menu li a {
+        white-space: normal;
+    }
+}
+
+span.error {
+    color: #B94A48;
+    font-weight: 700;
+}
+
+/* ----------------------------
+ * Radio Button and Checkbox
+ * ----------------------------*/
+input[type=checkbox].hiddenChecker, input[type=radio].hiddenChecker {
+    opacity: 0;
+    position: absolute;
+    z-index: 12;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+input[type=checkbox].hiddenChecker:checked, input[type=radio].hiddenChecker:checked, input[type=checkbox].hiddenChecker:focus, input[type=radio].hiddenChecker:focus {
+    outline: none!important;
+}
+input[type=checkbox].hiddenChecker +.styledBox, input[type=radio].hiddenChecker +.styledBox {
+    position: relative;
+    z-index: 11;
+    display: inline-block;
+    margin: 0;
+    line-height: 20px;
+    min-height: 18px;
+    min-width: 18px;
+    font-weight: normal;
+}
+input[type=checkbox].hiddenChecker +.styledBox.padding-16::before, input[type=radio].hiddenChecker +.styledBox.padding-16::before {
+    margin-right: 16px;
+}
+input[type=checkbox].hiddenChecker +.styledBox.padding-12::before, input[type=radio].hiddenChecker +.styledBox.padding-12::before {
+    margin-right: 12px;
+}
+input[type=checkbox].hiddenChecker +.styledBox.padding-8::before, input[type=radio].hiddenChecker +.styledBox.padding-8::before {
+    margin-right: 8px;
+}
+input[type=checkbox].hiddenChecker +.styledBox.padding-4::before, input[type=radio].hiddenChecker +.styledBox.padding-4::before {
+    margin-right: 4px;
+}
+input[type=checkbox].hiddenChecker +.styledBox.padding-0::before, input[type=radio].hiddenChecker +.styledBox.padding-0::before {
+    margin-right: 0;
+}
+input[type=checkbox].hiddenChecker +.styledBox::before, input[type=radio].hiddenChecker +.styledBox::before {
+    font-family: fontAwesome;
+    font-weight: normal;
+    font-size: 12px;
+    color: #32a3ce;
+    content: "\a0";
+    background-color: #fafafa;
+    border: 1px solid #c8c8c8;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border-radius: 0;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    height: 16px;
+    line-height: 14px;
+    min-width: 16px;
+    margin-right: 1px;
+}
+input[type=checkbox].hiddenChecker:checked+.styledBox::before, input[type=radio].hiddenChecker:checked+.styledBox::before {
+    display: inline-block;
+    content: '\f00c';
+    background-color: #f5f8fc;
+    border-color: #adb8c0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+}
+input[type=checkbox].hiddenChecker:hover+.styledBox::before, input[type=radio].hiddenChecker:hover+.styledBox::before, input[type=checkbox].hiddenChecker +.styledBox:hover::before, input[type=radio].hiddenChecker +.styledBox:hover::before {
+    border-color: #ff893c;
+}
+input[type=checkbox].hiddenChecker:active+.styledBox::before, input[type=radio].hiddenChecker:active+.styledBox::before, input[type=checkbox].hiddenChecker:checked:active+.styledBox::before, input[type=radio].hiddenChecker:checked:active+.styledBox::before {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+input[type=checkbox].hiddenChecker.ace-checkbox-2+.styledBox::before, input[type=radio].hiddenChecker.ace-checkbox-2+.styledBox::before {
+    box-shadow: none;
+}
+input[type=checkbox].hiddenChecker.ace-checkbox-2:checked+.styledBox::before, input[type=radio].hiddenChecker.ace-checkbox-2:checked+.styledBox::before {
+    background-color: #f9a021;
+    border-color: #f9a021;
+    color: #FFF;
+}
+input[type=checkbox].hiddenChecker:disabled+.styledBox::before, input[type=radio].hiddenChecker:disabled+.styledBox::before, input[type=checkbox].hiddenChecker[disabled]+.styledBox::before, input[type=radio].hiddenChecker[disabled]+.styledBox::before, input[type=checkbox].hiddenChecker.disabled+.styledBox::before, input[type=radio].hiddenChecker.disabled+.styledBox::before {
+    background-color: #DDD!important;
+    border-color: #CCC!important;
+    box-shadow: none!important;
+    color: #BBB;
+}
+input[type=radio].hiddenChecker +.styledBox::before {
+    border-radius: 100%;
+    font-size: 11px;
+    font-family: FontAwesome;
+    text-shadow: 0 0 1px #32a3ce;
+    line-height: 15px;
+    height: 17px;
+    min-width: 17px;
+}
+input[type=radio].hiddenChecker:checked+.styledBox::before {
+    content: "\f111"
+}
