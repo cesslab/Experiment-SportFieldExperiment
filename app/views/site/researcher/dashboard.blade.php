@@ -1,84 +1,124 @@
-@extends('site.layouts.generic')
+@extends('site.layouts.dashboard-layout')
+
+@section('navbar')
+    <li class="active"><a href="{{URL::to('researcher/dashboard')}}"><i class="fa fa-dashboard fa-lg fa-fw"></i> Home</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users fa-lg fa-fw"></i> Session <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="{{$sessionUrl}}"><i class="fa fa-plus"></i> Add</a></li>
+        </ul>
+    </li>
+@stop
+
+@section('error-message')
+    @if ( ! empty($error) || ! empty($errors->all()) )
+        <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <span>{{(isset($error))? $error : ''}}</span>
+            <ol>
+                @foreach($errors->all() as $message)
+                <li>{{ $message }}</li>
+                @endforeach
+            </ol>
+        </div>
+    @endif
+@stop
 
 @section('content')
 <meta http-equiv="Refresh" content="20">
 
-<a href="{{ $sessionUrl }}">Add New Session</a>
-<h2>{{$error}}</h2>
-    <table border="1">
-        <tr>
-            <th>Session ID</th>
-            <th>Number of Subjects</th>
-            <th>Session State</th>
-            <th>Manage Session</th>
-        </tr>
-        @foreach($sessions as $session)
-            <tr>
-                <td>{{ $session->id }}</td>
-                <td>{{ $session->num_subjects }}</td>
-                <td>
-                    @if ($session->getState() == $sessionStartState)
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Sessions</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover tablesorter">
+                <thead>
+                <tr>
+                    <th>Session ID <i class="fa fa-sort"></i></th>
+                    <th>Number of Subjects <i class="fa fa-sort"></i></th>
+                    <th>Session State <i class="fa fa-sort"></i></th>
+                    <th>Manage Session <i class="fa fa-sort"></i></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($sessions as $session)
+                <tr>
+                    <td>{{ $session->id }}</td>
+                    <td>{{ $session->num_subjects }}</td>
+                    <td>
+                        @if ($session->getState() == $sessionStartState)
                         <span>Started</span>
-                    @else
+                        @else
                         <span>Stopped</span>
-                    @endif
-                </td>
-                <td>
-                    {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
+                        @endif
+                    </td>
+                    <td>
+                        {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
                         {{ Form::hidden($sessionIdKey, $session->getId()) }}
                         @if ($session->getState() == $sessionStartState)
-                            {{ Form::hidden($sessionStateKey, $sessionStopState) }}
-                            {{ Form::submit('Stop') }}
+                        {{ Form::hidden($sessionStateKey, $sessionStopState) }}
+                        {{ Form::submit('Stop') }}
                         @else
-                            {{ Form::hidden($sessionStateKey, $sessionStartState) }}
-                            {{ Form::submit('Start') }}
+                        {{ Form::hidden($sessionStateKey, $sessionStartState) }}
+                        {{ Form::submit('Start') }}
                         @endif
-                    {{ Form::close() }}
-                </td>
-            </tr>
-        @endforeach
-    </table>
-<ul class="errors">
-    @foreach($errors->all() as $message)
-    <li>{{ $message }}</li>
-    @endforeach
-</ul>
+                        {{ Form::close() }}
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div><!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <h2>Subjects</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover tablesorter">
+                <thead>
+                <tr>
+                    <th>Subject ID <i class="fa fa-sort"></i></th>
+                    <th>Session ID <i class="fa fa-sort"></i></th>
+                    <th>User Name <i class="fa fa-sort"></i></th>
+                    <th>Game State <i class="fa fa-sort"></i></th>
+                    <th>Ultimatum Role <i class="fa fa-sort"></i></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($subjects as $subject)
+                <tr>
+                    <td>{{ $subject->id }}</td>
+                    <td>{{ $subject->session_id }}</td>
+                    <td>{{ $subject->user->user_name }}</td>
+                    @if ($subject->getState() == $registrationState)
+                    <td>Registration</td>
+                    @elseif ($subject->getState() == $holdState)
+                    <td>Hold</td>
+                    @elseif ($subject->getState() == $gameState)
+                    <td>Game</td>
+                    @elseif ($subject->getState() == $payoffState)
+                    <td>Payoff</td>
+                    @elseif ($subject->getState() == $questionnaireState)
+                    <td>Questionnaire</td>
+                    @elseif ($subject->getState() == $completedState)
+                    <td>Completed</td>
+                    @else
+                    <td>Undeclared</td>
+                    @endif
 
-    <table border="1">
-        <tr>
-            <th>Subject ID</th>
-            <th>Session ID</th>
-            <th>User Name</th>
-            <th>Game State</th>
-            <th>Ultimatum Role</th>
-        </tr>
-        @foreach($subjects as $subject)
-        <tr>
-            <td>{{ $subject->id }}</td>
-            <td>{{ $subject->session_id }}</td>
-            <td>{{ $subject->user->user_name }}</td>
-            @if ($subject->getState() == $registrationState)
-                <td>Registration</td>
-            @elseif ($subject->getState() == $holdState)
-                <td>Hold</td>
-            @elseif ($subject->getState() == $gameState)
-                <td>Game</td>
-            @elseif ($subject->getState() == $payoffState)
-                <td>Payoff</td>
-            @elseif ($subject->getState() == $questionnaireState)
-                <td>Questionnaire</td>
-            @elseif ($subject->getState() == $completedState)
-                <td>Completed</td>
-            @else
-                <td>Undeclared</td>
-            @endif
+                    @if ($subject->getUltimatumGroup()->getSubjectRole() == $ultimatumProposerRoleId)
+                    <td>Proposer</td>
+                    @else
+                    <td>Receiver</td>
+                    @endif
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div><!-- /.row -->
 
-            @if ($subject->getUltimatumGroup()->getSubjectRole() == $ultimatumProposerRoleId)
-                <td>Proposer</td>
-            @else
-                <td>Receiver</td>
-            @endif
-        </tr>
-        @endforeach
-    </table>
 @stop
