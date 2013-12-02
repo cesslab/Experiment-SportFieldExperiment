@@ -1,5 +1,6 @@
-<h2>Task {{$taskId}}</h2>
-<div>
-    {{ Form::label($willingPayKey, "How much would you be willing to pay out of \$$endowment dollars?") }}
-    {{ Form::text($willingPayKey, Input::old($willingPayKey)) }}
+<div class="form-group {{ ($errors->has($allocationKey)) ? 'has-error' : '' }} ">
+    <h4>Task {{$taskId}}</h4>
+    <p>How much would you be willing to pay out of {{$endowment}} dollars?</p>
+    {{ Form::text($willingPayKey, Input::old($willingPayKey), ['class'=>'form-control', 'placeholder'=>'Amount Willing to Pay']) }}
+    <span class="error">{{ $errors->first($willingPayKey) }}</span>
 </div>
