@@ -8,6 +8,8 @@ class Session extends BaseEloquent
     public static $NUM_SUBJECTS_KEY = 'num_subjects';
     public static $STATE_KEY = 'state';
 
+    public static $TASK_MINIMUM = 3;
+
     public static $STARTED_STATE = 1;
     public static $STOPPED_STATE = 2;
 
