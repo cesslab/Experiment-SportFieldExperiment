@@ -1,0 +1,23 @@
+{
+  "name": "SportFieldExperiment",
+  "version": "0.9.0",
+  "homepage": "https://github.com/aaruff/SportFieldExperiment",
+  "authors": [
+    "Anwar A. Ruff <anwarruff@gmail.com>"
+  ],
+  "description": "Sport Field Experiment",
+  "license": "MIT",
+  "dependencies": {
+      "bootstrap": "3.0.2",
+      "font-awesome": "4.0.3",
+      "jquery.tablesorter": "2.14.2",
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/assets",
+    "test",
+    "tests"
+  ]
+}
