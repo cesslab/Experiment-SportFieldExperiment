@@ -11,15 +11,10 @@
 @stop
 
 @section('error-message')
-    @if ( ! empty($error) || ! empty($errors->all()) )
+    @if ( $error )
         <div class="alert alert-info alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <span>{{(isset($error))? $error : ''}}</span>
-            <ol>
-                @foreach($errors->all() as $message)
-                <li>{{ $message }}</li>
-                @endforeach
-            </ol>
         </div>
     @endif
 @stop
