@@ -14,10 +14,10 @@
 @stop
 
 @section('error')
-    @if ( ! empty(Session::get('error'))) )
+    @if ( Session::get('error', false) )
         <div class="alert alert-danger alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <span><strong>{{ Session::get('error', '') }}</strong></span>
+            <span><strong>{{ Session::get('error') }}</strong></span>
         </div>
     @endif
 @stop

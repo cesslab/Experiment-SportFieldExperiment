@@ -7,17 +7,12 @@
     <h2 class="form-signin-heading">Participant Login</h2>
     {{ Form::label('user_name', 'User Name', ['class'=>'control-label']) }}
     {{ Form::text('user_name', Input::old('user_name'), ['class'=>'form-control', 'placeholder'=>'User Name']) }}
+    <span class="error">{{ $errors->first('user_name') }}</span>
     {{ Form::label('password', 'Password', ['class'=>'control-label']) }}
     {{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Password']) }}
+    <span class="error">{{ $errors->first('password') }}</span>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     {{ Form::close() }}
-
-    <ul class="errors">
-        @foreach($errors->all() as $message)
-        <li>{{ $message }}</li>
-        @endforeach
-        {{ Session::get('error', '') }}
-    </ul>
 </div> <!-- /container -->
 
 @stop
