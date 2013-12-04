@@ -133,6 +133,7 @@ class Session extends BaseEloquent
         $willingnessPayTreatment = $this->getWillingnessPayTreatment();
         $ultimatumTreatment = $this->getUltimatumTreatment();
         $trustTreatment = $this->getTrustTreatment();
+        $dictatorTreatment = $this->getDictatorTreatment();
 
         $subjects = $this->getSubjects();
         foreach($subjects as $subject) {
@@ -155,10 +156,60 @@ class Session extends BaseEloquent
                 if (count($subject->getTrustEntries()) == 0)
                     return false;
             }
+
+            if ($dictatorTreatment !== null) {
+                if (count($subject->getDictatorEntries()) == 0)
+                    return false;
+            }
         }
 
         return true;
     }
+
+    /**
+     * Returns the active treatments for this session.
+     *
+     * @return array
+     */
+    private function getEnabledTreatments()
+    {
+        $riskAversionTreatment = $this->getRiskAversionTreatment();
+        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
+        $ultimatumTreatment = $this->getUltimatumTreatment();
+        $trustTreatment = $this->getTrustTreatment();
+        $dictatorTreatment = $this->getDictatorTreatment();
+
+        $treatments = [];
+        if ($riskAversionTreatment !== null)
+            $treatments[] = $riskAversionTreatment;
+
+        if ($willingnessPayTreatment !== null)
+            $treatments[] = $willingnessPayTreatment;
+
+        if ($ultimatumTreatment !== null)
+            $treatments[] = $ultimatumTreatment;
+
+        if ($trustTreatment !== null)
+            $treatments[] = $trustTreatment;
+
+        if ($dictatorTreatment !== null)
+            $treatments[] = $dictatorTreatment;
+
+        return $treatments;
+    }
+
+    /**
+     * Returns a randomly selected treatment for this session.
+     *
+     * @return mixed
+     */
+    private function getRandomTreatment()
+    {
+        $enabledTreatments = $this->getEnabledTreatments();
+        $randIndex = rand(0, count($enabledTreatments)-1);
+        return $enabledTreatments[$randIndex];
+    }
+
 
     public function calculatePayoffs()
     {
@@ -170,15 +221,17 @@ class Session extends BaseEloquent
 
         $subjects = $this->getSubjects();
         foreach($subjects as $subject) {
+            $randomTreatment = $this->getRandomTreatment();
+
             // Risk Aversion Payoff
-            if ($riskAversionTreatment !== null) {
+            if ($riskAversionTreatment !== null && $riskAversionTreatment instanceof $randomTreatment) {
                 $riskAversionEntry = $riskAversionTreatment->calculatePayoff($subject);
                 $riskAversionEntry->setSelectedForPayoff(true);
                 $riskAversionEntry->save();
             }
 
             // Willingness Pay Payoff
-            if ($willingnessPayTreatment !== null) {
+            if ($willingnessPayTreatment !== null && $willingnessPayTreatment instanceof $randomTreatment) {
                 $willingnessPayEntry = $willingnessPayTreatment->calculatePayoff($subject);
                 $willingnessPayEntry->setSelectedForPayoff(true);
                 $willingnessPayEntry->save();
@@ -186,7 +239,7 @@ class Session extends BaseEloquent
         }
 
         // Ultimatum Payoff
-        if ($ultimatumTreatment !== null) {
+        if ($ultimatumTreatment !== null && $ultimatumTreatment instanceof $randomTreatment) {
             $ultimatumGroups = $ultimatumTreatment->getGroups($subjects);
             foreach ($ultimatumGroups as $group) {
                 $proposer = $group->getSubject(UltimatumTreatment::getProposerRoleId());
@@ -196,7 +249,7 @@ class Session extends BaseEloquent
         }
 
         // Trust Payoff
-        if ($trustTreatment !== null) {
+        if ($trustTreatment !== null && $trustTreatment instanceof $randomTreatment) {
             $trustGroups = $trustTreatment->getGroups($subjects);
             foreach ($trustGroups as $group) {
                 $proposer = $group->getSubject(TrustTreatment::getProposerRoleId());
@@ -206,7 +259,7 @@ class Session extends BaseEloquent
         }
 
         // Dictator Payoff
-        if ($dictatorTreatment !== null) {
+        if ($dictatorTreatment !== null && $dictatorTreatment instanceof $randomTreatment) {
             $dictatorGroups = $dictatorTreatment->getGroups($subjects);
             foreach ($dictatorGroups as $group) {
                 $proposer = $group->getSubject(DictatorTreatment::getProposerRoleId());

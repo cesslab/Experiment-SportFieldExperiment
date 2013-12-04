@@ -25,51 +25,76 @@ class Payoff extends BaseComposer
     {
 
         if ($this->subject->getRiskAversionTreatment() !== null) {
-            $view->with('riskAversionActive', true);
             $riskAversionEntry = $this->subject->getRiskAversionPayoff();
-            $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
-            $view->with('riskAversionPayoff', $riskAversionEntry->getPayoff());
+            if ($riskAversionEntry !== null) {
+                $view->with('riskAversionActive', true);
+                $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
+                $view->with('riskAversionPayoff', number_format($riskAversionEntry->getPayoff(), 2));
+            }
+            else {
+                $view->with('riskAversionActive', false);
+            }
         }
         else {
             $view->with('riskAversionActive', false);
         }
 
         if ($this->subject->getWillingnessPayTreatment() !== null) {
-            $view->with('willingnessPayActive', true);
             $willingnessPayEntry = $this->subject->getWillingnessPayPayoff();
-            $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
-            $view->with('willingnessPayPayoff', $willingnessPayEntry->getPayoff());
-            $view->with('itemPurchased', $willingnessPayEntry->getItemPurchased());
+            if ($willingnessPayEntry !== null) {
+                $view->with('willingnessPayActive', true);
+                $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
+                $view->with('willingnessPayPayoff', number_format($willingnessPayEntry->getPayoff(), 2));
+                $view->with('itemPurchased', $willingnessPayEntry->getItemPurchased());
+            }
+            else {
+                $view->with('willingnessPayActive', false);
+            }
         }
         else {
             $view->with('willingnessPayActive', false);
         }
 
         if ($this->subject->getUltimatumTreatment() !== null) {
-            $view->with('ultimatumActive', true);
             $ultimatumEntry = $this->subject->getUltimatumPayoff();
-            $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
-            $view->with('ultimatumPayoff', $ultimatumEntry->getPayoff());
+            if ($ultimatumEntry !== null) {
+                $view->with('ultimatumActive', true);
+                $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
+                $view->with('ultimatumPayoff', number_format($ultimatumEntry->getPayoff(), 2));
+            }
+            else {
+                $view->with('ultimatumActive', false);
+            }
         }
         else {
             $view->with('ultimatumActive', false);
         }
 
         if ($this->subject->getTrustTreatment() !== null) {
-            $view->with('trustActive', true);
             $trustEntry = $this->subject->getTrustPayoff();
-            $view->with('trustTaskId', TrustTreatment::getTaskId());
-            $view->with('trustPayoff', $trustEntry->getPayoff());
+            if ($trustEntry !== null) {
+                $view->with('trustActive', true);
+                $view->with('trustTaskId', TrustTreatment::getTaskId());
+                $view->with('trustPayoff', number_format($trustEntry->getPayoff(), 2));
+            }
+            else {
+                $view->with('trustActive', false);
+            }
         }
         else {
             $view->with('trustActive', false);
         }
 
         if ($this->subject->getDictatorTreatment() !== null) {
-            $view->with('dictatorActive', true);
             $dictatorEntry = $this->subject->getDictatorPayoff();
-            $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
-            $view->with('dictatorPayoff', $dictatorEntry->getPayoff());
+            if ($dictatorEntry !== null) {
+                $view->with('dictatorActive', true);
+                $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
+                $view->with('dictatorPayoff', number_format($dictatorEntry->getPayoff(), 2));
+            }
+            else {
+                $view->with('dictatorActive', false);
+            }
         }
         else {
             $view->with('dictatorActive', false);

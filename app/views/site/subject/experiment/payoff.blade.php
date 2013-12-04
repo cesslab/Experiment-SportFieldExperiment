@@ -1,39 +1,52 @@
 @extends('site.layouts.generic')
 
 @section('content')
-<div class="jumbotron">
-    <h1>Your payoff is displayed below.</h1>
-    <p>
-    @if ($riskAversionActive)
-        <h4>Task {{$riskAversionTaskId}} Payoff: ${{$riskAversionPayoff}}</h4>
-    @endif
-
-    @if ($willingnessPayActive)
-        <h4>Task {{$willingnessPayTaskId}} Payoff: ${{$willingnessPayPayoff}}</h4>
-        @if ($itemPurchased)
-            <h4>Task {{$willingnessPayTaskId}} Item: Purchased</h4>
-        @else
-            <span>Task {{$willingnessPayTaskId}} item: Not Purchased</span>
+<div class="jumbotron" xmlns="http://www.w3.org/1999/html">
+    <h1>Your payoff is as follows:</h1>
+    <div>
+        <!-- Risk Aversion -->
+        @if ($riskAversionActive)
+            <h2>Task {{$riskAversionTaskId}} was randomly selected for payoff.</h2>
+            <p>From the entries you made for this task a random commercial break entry was randomly selected.
+                The payoff for this entry is <strong>${{$riskAversionPayoff}}</strong>.</p>
         @endif
-    @endif
 
-    @if ($ultimatumActive)
-        <h4>Task {{$ultimatumTaskId}} Payoff: ${{$ultimatumPayoff}}</h4>
-    @endif
+        <!-- Willingness to Pay -->
+        @if ($willingnessPayActive)
+            <h2>Task {{$willingnessPayTaskId}} was randomly selected for payoff.</h2>
+            <p>From the entries you made for this task a random commercial break entry was randomly selected.
+                The payoff for this entry is <strong>${{$willingnessPayPayoff}}</strong>,
+            @if ($itemPurchased)
+                and the item you purchased.</p>
+            @else
+               </strong>.</p>
+            @endif
+        @endif
 
-    @if ($trustActive)
-        <h4>Task {{$trustTaskId}} Payoff: ${{$trustPayoff}}</h4>
-    @endif
+        <!-- Ultimatum -->
+        @if ($ultimatumActive)
+            <h2>Task {{$ultimatumTaskId}} was randomly selected for payoff.</h2>
+            <p>From the entries you made for this task a random commercial break entry was randomly selected.
+                The payoff for this entry is <strong> ${{$ultimatumPayoff}}</strong>.</p>
+        @endif
 
-    @if ($dictatorActive)
-        <h4>Task {{$dictatorTaskId}} Payoff: ${{$dictatorPayoff}}</h4>
-    @endif
-    </p>
+        <!-- Trust -->
+        @if ($trustActive)
+        <h2>Task {{$trustTaskId}} was randomly selected for payoff.</h2>
+        <p>From the entries you made for this task a random commercial break entry was randomly selected.
+            The payoff for this entry is <strong> ${{$trustPayoff}}</strong>.</p>
+        @endif
 
-    {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
-    {{ Form::button('Next', ['type'=>'submit', 'class'=>'btn btn-primary btn-lg'] ) }}
-    {{ Form::close() }}
+        <!-- Dictator -->
+        @if ($dictatorActive)
+        <h2>Task {{$dictatorTaskId}} was randomly selected for payoff.</h2>
+        <p>From the entries you made for this task a random commercial break entry was randomly selected.
+            The payoff for this entry is <strong> ${{$dictatorPayoff}}</strong>.</p>
+        @endif
+
+        {{ Form::open(array('url'=>$postUrl, 'method'=>'post')) }}
+        {{ Form::button('Next', ['type'=>'submit', 'class'=>'btn btn-primary btn-lg'] ) }}
+        {{ Form::close() }}
+    </div>
 </div>
-
-
 @stop
