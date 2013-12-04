@@ -15,6 +15,7 @@ use SportExperiment\Model\Eloquent\WillingnessPayTreatment;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Controller\BaseController;
 use SportExperiment\Model\Eloquent\DictatorTreatment;
+
 class Session extends BaseController
 {
     private static $URI = 'researcher/experiment/session';
