@@ -2,8 +2,8 @@
 
 @section('navbar')
     <li class="active"><a href="{{URL::to('researcher/dashboard')}}"><i class="fa fa-dashboard fa-lg fa-fw"></i> Home</a></li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> <i class="fa fa-users fa-lg fa-fw"></i> Add Session</a>
+    <li>
+        <a href="{{$sessionUrl}}"><i class="fa fa-plus"></i> <i class="fa fa-users fa-lg fa-fw"></i> Add Session</a>
     </li>
 @stop
 

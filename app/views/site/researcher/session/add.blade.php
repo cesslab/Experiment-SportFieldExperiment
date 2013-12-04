@@ -4,12 +4,9 @@
 @stop
 
 @section('navbar')
-<li><a href="{{URL::to('researcher/dashboard')}}"><i class="fa fa-dashboard fa-lg fa-fw"></i> Home</a></li>
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users fa-lg fa-fw"></i> Session <b class="caret"></b></a>
-    <ul class="dropdown-menu">
-        <li class="active"><a href="#"><i class="fa fa-plus"></i> Add</a></li>
-    </ul>
+<li class=""><a href="{{URL::to('researcher/dashboard')}}"><i class="fa fa-dashboard fa-lg fa-fw"></i> Home</a></li>
+<li class="active">
+    <a href="#"><i class="fa fa-plus"></i> <i class="fa fa-users fa-lg fa-fw"></i> Add Session</a>
 </li>
 @stop
 
