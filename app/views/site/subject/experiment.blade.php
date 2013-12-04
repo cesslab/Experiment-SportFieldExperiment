@@ -11,7 +11,7 @@
                 {{ Form::open(array('url'=>$postUrl, 'method'=>'post', 'role'=>'form')) }}
 
                     @if ($displayRiskAversion)
-                        @include('site.subject.experiment.treatment.riskAversion', array('taskId'=>$riskAversionTaskId, 'midPrize'=>$midPrize, 'lowPrize'=>$lowPrize, 'highPrize'=>$highPrize, 'probability'=>$gambleProb, 'indifferenceProbabilityKey'=>$indifferenceProbabilityKey))
+                        @include('site.subject.experiment.treatment.riskAversion', array('taskId'=>$riskAversionTaskId, 'midPrize'=>$midPrize, 'lowPrize'=>$lowPrize, 'highPrize'=>$highPrize, 'indifferenceProbabilityKey'=>$indifferenceProbabilityKey))
                     @endif
 
                     @if ($displayWillingnessPay)

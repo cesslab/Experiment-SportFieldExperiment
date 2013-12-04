@@ -73,14 +73,6 @@
                             <span class="error">{{ $errors->first($highPrizeKey) }}</span>
                         </div>
                     </div>
-
-                    <div class="form-group {{ ($errors->has($gambleProbKey)) ? 'has-error' : '' }} ">
-                        {{ Form::label($gambleProbKey, 'Gamble Probability', ['class'=>'col-sm-3 control-label']) }}
-                        <div class="col-sm-6">
-                            {{ Form::text($gambleProbKey, Input::old($gambleProbKey), ['class'=>'form-control', 'placeholder'=>'Gamble Probability']) }}
-                            <span class="error">{{ $errors->first($gambleProbKey) }}</span>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Willingness to Pay -->
