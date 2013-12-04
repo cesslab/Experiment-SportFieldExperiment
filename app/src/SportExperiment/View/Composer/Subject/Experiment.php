@@ -42,7 +42,6 @@ class Experiment extends BaseComposer
             $view->with('lowPrize', $riskAversionTreatment->getLowPrize());
             $view->with('midPrize', $riskAversionTreatment->getMidPrize());
             $view->with('highPrize', $riskAversionTreatment->getHighPrize());
-            $view->with('gambleProb', $riskAversionTreatment->getGambleProbability());
             $view->with('indifferenceProbabilityKey', RiskAversionEntry::$INDIFFERENCE_PROBABILITY_KEY);
         }
 

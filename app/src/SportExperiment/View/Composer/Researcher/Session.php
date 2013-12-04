@@ -26,7 +26,6 @@ class Session extends BaseComposer
         $view->with('lowPrizeKey', RiskAversionTreatment::$LOW_PRIZE_KEY);
         $view->with('midPrizeKey', RiskAversionTreatment::$MID_PRIZE_KEY);
         $view->with('highPrizeKey', RiskAversionTreatment::$HIGH_PRIZE_KEY);
-        $view->with('gambleProbKey', RiskAversionTreatment::$GAMBLE_PROBABILITY_KEY);
         $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
         $view->with('ultimatumTotalAmountKey', UltimatumTreatment::$TOTAL_AMOUNT_KEY);
         $view->with('trustTaskId', TrustTreatment::getTaskId());

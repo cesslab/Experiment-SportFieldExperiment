@@ -9,7 +9,6 @@ class RiskAversionTreatment extends BaseEloquent
     public static $LOW_PRIZE_KEY = 'low_prize';
     public static $MID_PRIZE_KEY = 'mid_prize';
     public static $HIGH_PRIZE_KEY = 'high_prize';
-    public static $GAMBLE_PROBABILITY_KEY = 'gamble_probability';
 
     public static $TREATMENT_ENABLED_KEY = 'riskAversionEnabled';
 
@@ -29,13 +28,12 @@ class RiskAversionTreatment extends BaseEloquent
 
         $this->fillable = [
             self::$SESSION_ID_KEY, self::$LOW_PRIZE_KEY, self::$MID_PRIZE_KEY,
-            self::$HIGH_PRIZE_KEY, self::$GAMBLE_PROBABILITY_KEY];
+            self::$HIGH_PRIZE_KEY];
 
         $this->rules = [
             self::$LOW_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$MID_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$HIGH_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
-            self::$GAMBLE_PROBABILITY_KEY=>'required|numeric|min:0|max:1'
         ];
 
         parent::__construct($attributes);
@@ -124,22 +122,5 @@ class RiskAversionTreatment extends BaseEloquent
     public function getSessionId()
     {
         return $this->getAttribute(self::$SESSION_ID_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGambleProbability()
-    {
-        return $this->getAttribute(self::$GAMBLE_PROBABILITY_KEY);
-    }
-
-    /**
-     * @param $gambleProbability
-     */
-    public function setGambleProbability($gambleProbability)
-    {
-        $this->setAttribute(self::$GAMBLE_PROBABILITY_KEY, $gambleProbability);
-
     }
 }
