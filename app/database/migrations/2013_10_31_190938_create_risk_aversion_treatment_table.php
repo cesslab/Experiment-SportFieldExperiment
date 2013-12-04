@@ -20,7 +20,6 @@ class CreateRiskAversionTreatmentTable extends Migration {
             $table->double(RiskAversionTreatment::$LOW_PRIZE_KEY);
             $table->double(RiskAversionTreatment::$MID_PRIZE_KEY);
             $table->double(RiskAversionTreatment::$HIGH_PRIZE_KEY);
-            $table->double(RiskAversionTreatment::$GAMBLE_PROBABILITY_KEY);
 		});
 	}
 
