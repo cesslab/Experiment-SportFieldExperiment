@@ -3,10 +3,7 @@
 @section('navbar')
     <li class="active"><a href="{{URL::to('researcher/dashboard')}}"><i class="fa fa-dashboard fa-lg fa-fw"></i> Home</a></li>
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-users fa-lg fa-fw"></i> Session <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li><a href="{{$sessionUrl}}"><i class="fa fa-plus"></i> Add</a></li>
-        </ul>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> <i class="fa fa-users fa-lg fa-fw"></i> Add Session</a>
     </li>
 @stop
 
@@ -53,10 +50,10 @@
                         {{ Form::hidden($sessionIdKey, $session->getId()) }}
                         @if ($session->getState() == $sessionStartState)
                         {{ Form::hidden($sessionStateKey, $sessionStopState) }}
-                        {{ Form::submit('Stop') }}
+                        {{ Form::button('Stop', ['type'=>'submit', 'class'=>'btn btn-danger']) }}
                         @else
                         {{ Form::hidden($sessionStateKey, $sessionStartState) }}
-                        {{ Form::submit('Start') }}
+                        {{ Form::button('Start', ['type'=>'submit', 'class'=>'btn btn-success']) }}
                         @endif
                         {{ Form::close() }}
                     </td>
