@@ -36,7 +36,7 @@ class Payoff extends BaseController
      */
     public function postPayoff()
     {
-        if ($this->subject->getState() === SubjectState::$PAYOFF) {
+        if ($this->subject->getState() == SubjectState::$PAYOFF) {
             $this->subject->setState(SubjectState::$OUTGOING_QUESTIONNAIRE);
             $this->subject->save();
         }

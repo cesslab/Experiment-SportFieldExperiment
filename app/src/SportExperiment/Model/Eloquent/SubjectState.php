@@ -34,31 +34,31 @@ class SubjectState
 
     public static function isRegistrationState($state)
     {
-        return $state === self::$REGISTRATION;
+        return $state == self::$REGISTRATION;
     }
 
     public static function isPreGameHoldState($state)
     {
-        return $state === self::$PRE_GAME_HOLD_STATE;
+        return $state == self::$PRE_GAME_HOLD_STATE;
     }
 
     public static function isGamePlayState($state)
     {
-        return $state === self::$GAME_PLAY;
+        return $state == self::$GAME_PLAY;
     }
 
     public static function isOutgoingQuestionnaireState($state)
     {
-        return $state === self::$OUTGOING_QUESTIONNAIRE;
+        return $state == self::$OUTGOING_QUESTIONNAIRE;
     }
 
     public static function isPayoffState($state)
     {
-        return $state === self::$PAYOFF;
+        return $state == self::$PAYOFF;
     }
 
     public static function isComplete($state)
     {
-        return $state === self::$COMPLETED;
+        return $state == self::$COMPLETED;
     }
 }

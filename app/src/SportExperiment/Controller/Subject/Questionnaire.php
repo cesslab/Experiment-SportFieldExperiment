@@ -27,7 +27,7 @@ class Questionnaire extends BaseController
     public function postQuestionnaire()
     {
         // TODO: Add questionnaire processing
-        if ($this->subject->getState() === SubjectState::$OUTGOING_QUESTIONNAIRE) {
+        if ($this->subject->getState() == SubjectState::$OUTGOING_QUESTIONNAIRE) {
             $this->subject->setState(SubjectState::$COMPLETED);
             $this->subject->save();
         }

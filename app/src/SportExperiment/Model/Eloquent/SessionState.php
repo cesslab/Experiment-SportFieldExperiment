@@ -36,11 +36,11 @@ class SessionState extends BaseValidator
 
     public static function isStoppedState($state)
     {
-        return $state === self::$STOPPED;
+        return $state == self::$STOPPED;
     }
 
     public static function isStartedState($state)
     {
-        return $state === self::$STARTED;
+        return $state == self::$STARTED;
     }
 }

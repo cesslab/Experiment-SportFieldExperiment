@@ -5,7 +5,7 @@ class ArrayValidation
     public function integerValues($field, $values, $params)
     {
         foreach ($values as $value) {
-            if (filter_var($value, FILTER_VALIDATE_INT) === false)
+            if (filter_var($value, FILTER_VALIDATE_INT) == false)
                return false;
         }
         return true;
@@ -14,7 +14,7 @@ class ArrayValidation
     public function integerKeys($fields, $values, $params)
     {
         foreach ($values as $key=>$value) {
-            if ( filter_var($key, FILTER_VALIDATE_INT) === false)
+            if ( filter_var($key, FILTER_VALIDATE_INT) == false)
                 return false;
         }
         return true;

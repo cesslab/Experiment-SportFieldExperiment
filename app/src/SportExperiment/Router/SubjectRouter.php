@@ -37,7 +37,7 @@ class SubjectRouter {
     {
         $currentRoute = Request::path();
         $subjectStateRoute = $this->getRoute($subject);
-        return $subjectStateRoute === $currentRoute;
+        return $subjectStateRoute == $currentRoute;
     }
 
     public function getRoute(Subject $subject)
