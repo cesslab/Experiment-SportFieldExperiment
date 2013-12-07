@@ -38,6 +38,6 @@ class Dashboard extends BaseComposer
         $view->with('postUrl', URL::to(SessionController::getUpdateRoute()));
         $view->with('ultimatumProposerRoleId', UltimatumTreatment::getProposerRoleId());
         $view->with('ultimatumReceiverRoleId', UltimatumTreatment::getReceiverRoleId());
-        $view->with('error', IlluminateSession::get('error', false));
+        $view->with('error', IlluminateSession::get('error'));
     }
 }
