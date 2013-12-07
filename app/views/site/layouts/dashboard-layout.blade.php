@@ -68,6 +68,7 @@
 {{ HTML::script(URL::asset('assets/jquery/jquery.min.js')) }}
 {{ HTML::script(URL::asset('assets/bootstrap/dist/js/bootstrap.min.js')) }}
 {{ HTML::script(URL::asset('assets/jquery.tablesorter/js/jquery.tablesorter.min.js')) }}
+{{ HTML::script(URL::asset('assets/js/dashboard.js')) }}
 @section('scripts')
 @show
 </body>
