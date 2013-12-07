@@ -4,7 +4,7 @@
     @for($i = 0; $i < count($receiverAllocationOptions); ++$i)
         <div>
            <label>If Proposer Sent: {{$receiverAllocationOptions[$i]}}</label>
-            {{ Form::text($allocationKey."[".$receiverAllocationOptions[$i]."]", Input::old($allocationKey."[".$receiverAllocationOptions[$i]."]"), ['class'=>'form-control', 'placeholder'=>'']) }}
+            {{ Form::text($allocationKey."[".$receiverAllocationOptions[$i]."]", Input::old($allocationKey."[".$receiverAllocationOptions[$i]."]"), ['class'=>'form-control', 'type'=>'number', 'placeholder'=>'']) }}
             <span class="error">{{ $errors->first($allocationKey.".".$receiverAllocationOptions[$i]) }}</span>
         </div>
     @endfor

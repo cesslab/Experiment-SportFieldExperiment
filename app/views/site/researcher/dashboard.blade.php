@@ -7,9 +7,9 @@
     </li>
 @stop
 
-@section('error-message')
-    @if ( $error )
-        <div class="alert alert-info alert-dismissable">
+@section('error')
+    @if ( $error != null )
+        <div class="alert alert-danger alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <span>{{(isset($error))? $error : ''}}</span>
         </div>
@@ -24,7 +24,7 @@
     <div class="col-lg-12">
         <h2>Sessions</h2>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover tablesorter">
+            <table id = "sessionTable" class="table table-bordered table-hover tablesorter">
                 <thead>
                 <tr>
                     <th>Session ID <i class="fa fa-sort"></i></th>
@@ -68,7 +68,7 @@
     <div class="col-lg-12">
         <h2>Subjects</h2>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover tablesorter">
+            <table id="subjectTable" class="table table-bordered table-hover tablesorter">
                 <thead>
                 <tr>
                     <th>Subject ID <i class="fa fa-sort"></i></th>
