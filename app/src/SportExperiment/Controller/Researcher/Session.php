@@ -92,7 +92,7 @@ class Session extends BaseController
         // Start Experiment
         if ($postedSession->isStarted() && $session->isStopped()) {
             if ( ! $session->isStartable()) {
-                return Redirect::to(Dashboard::getRoute())->with('error', Lang::get('errors.registration_required'));
+                return Redirect::to(Dashboard::getRoute())->withInput()->with('error', Lang::get('errors.registration_required'));
             }
 
             // Save Session State
@@ -102,7 +102,7 @@ class Session extends BaseController
         // Stop Experiment
         elseif ($postedSession->isStopped() && $session->isStarted()) {
             if ( ! $session->isStoppable()) {
-                return Redirect::to(Dashboard::getRoute())->with('error', Lang::get('errors.subject_entry_required'));
+                return Redirect::to(Dashboard::getRoute())->withInput()->with('error', Lang::get('errors.subject_entry_required'));
             }
 
             // Calculate Subject Payoffs
