@@ -1,12 +1,15 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
-class WillingnessPayTreatment extends BaseEloquent
+use SportExperiment\Model\TreatmentInterface;
+
+class WillingnessPayTreatment extends BaseEloquent implements TreatmentInterface
 {
     public static $TABLE_KEY = 'willingness_to_pay_treatments';
 
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
     public static $ENDOWMENT_KEY = 'endowment';
+    public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'willingnessPayEnabled';
 
@@ -46,7 +49,6 @@ class WillingnessPayTreatment extends BaseEloquent
 
     /**
      * @param Subject $subject
-     * @return WillingnessPayEntry
      */
     public function calculatePayoff(Subject $subject)
     {
@@ -58,13 +60,15 @@ class WillingnessPayTreatment extends BaseEloquent
         if ($randomGoodPrice <= $entry->getWillingnessPay()) {
             $entry->setPayoff($endowment - $randomGoodPrice);
             $entry->setItemPurchased(true);
-            return $entry;
+        }
+        // Subject Didn't Win Item
+        else {
+            $entry->setPayoff($endowment);
+            $entry->setItemPurchased(false);
         }
 
-        // Subject Didn't Win Item
-        $entry->setPayoff($endowment);
-        $entry->setItemPurchased(false);
-        return $entry;
+        $entry->setSelectedForPayoff(true);
+        $entry->save();
     }
 
     /* ---------------------------------------------------------------------
@@ -83,6 +87,14 @@ class WillingnessPayTreatment extends BaseEloquent
     /**
      * @return mixed
      */
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getEndowment()
     {
         return $this->getAttribute(self::$ENDOWMENT_KEY);
@@ -94,6 +106,22 @@ class WillingnessPayTreatment extends BaseEloquent
     public function getSessionId()
     {
         return $this->getAttribute(self::$SESSION_ID_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTreatmentTaskId()
+    {
+        return $this->getAttribute(self::$TASK_ID_KEY);
+    }
+
+    /**
+     * @param $taskId
+     */
+    public function setTreatmentTaskId($taskId)
+    {
+        $this->setAttribute(self::$TASK_ID_KEY, $taskId);
     }
 
 }
