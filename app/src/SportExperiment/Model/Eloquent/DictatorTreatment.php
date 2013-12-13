@@ -2,14 +2,16 @@
 
 use SportExperiment\Model\Group;
 use SportExperiment\Model\GroupTreatmentInterface;
+use SportExperiment\Model\TreatmentInterface;
 
-class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
+class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface, TreatmentInterface
 {
     public static $TABLE_KEY = 'dictator_treatments';
 
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
     public static $PROPOSER_ENDOWMENT_KEY = 'proposer_endowment';
+    public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'dictatorEnabled';
 
@@ -97,6 +99,40 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
     }
 
     /**
+     * Calculates the subject's Dictator Payoffs.
+     *
+     * @param Subject $subject
+     */
+    public function calculatePayoff(Subject $subject)
+    {
+        if ($subject->getDictatorGroup()->isProposer()) {
+            $proposer = $subject;
+            $receiver = $subject->getDictatorGroup()->getPartner();
+        }
+        else {
+            $proposer = $subject->getDictatorGroup()->getPartner();
+            $receiver = $subject;
+        }
+
+        $treatment = $proposer->getDictatorTreatment();
+        $dictatorEntry = $proposer->getRandomDictatorEntry();
+        $dictatorEntry->setPayoff($treatment->getProposerEndowment() - $dictatorEntry->getDictatorAllocation());
+
+        // Since the receiver's entries don't impact their payoff one entry is selected at random for storing the payoff.
+        $receiverEntry = $receiver->getRandomDictatorEntry();
+        $receiverEntry->setPayoff($dictatorEntry->getDictatorAllocation());
+
+        if ($subject->getDictatorGroup()->isProposer()) {
+            $dictatorEntry->setSelectedForPayoff(true);
+            $dictatorEntry->save();
+        }
+        else {
+            $receiverEntry->save();
+            $receiverEntry->setSelectedForPayoff(true);
+        }
+    }
+
+    /**
      * Saves a group record for each group member.
      *
      * @param $groups \SportExperiment\Model\Group[]
@@ -123,6 +159,23 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
         }
     }
 
+    /**
+     * Sets and saves group records for each subject.
+     *
+     * @param \SportExperiment\Model\Eloquent\Subject[] $subjects
+     */
+    public function setSubjectGroups($subjects)
+    {
+        foreach ($subjects as $subject) {
+            $group = new DictatorGroup();
+            $group->setSubjectId($subject->getId());
+            $group->setSubjectRole(self::$PROPOSER_ROLE_ID);
+            $group->setPartnerId($subject->getId());
+            $group->setPartnerRole(self::$PROPOSER_ROLE_ID);
+            $group->save();
+        }
+    }
+
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
@@ -133,6 +186,21 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
     public function getProposerEndowment()
     {
         return $this->getAttribute(self::$PROPOSER_ENDOWMENT_KEY);
+    }
+
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
+    }
+
+    public function setTreatmentTaskId($taskId)
+    {
+        $this->setAttribute(self::$TASK_ID_KEY, $taskId);
+    }
+
+    public function getTreatmentTaskId()
+    {
+        return $this->getAttribute(self::$TASK_ID_KEY);
     }
 
     /**
@@ -161,4 +229,4 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface
         return self::$TASK_ID;
     }
 
-} 
+}
