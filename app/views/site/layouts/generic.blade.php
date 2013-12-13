@@ -33,7 +33,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{URL::to('researcher/dashboard')}}">Sport Exp</a>
+            <a class="navbar-brand" href="{{URL::to('researcher/dashboard')}}"></a>
         </div>
     </nav>
 
