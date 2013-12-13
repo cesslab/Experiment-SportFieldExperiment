@@ -1,5 +1,6 @@
 <?php namespace SportExperiment\Model;
 
+use SportExperiment\Model\Eloquent\SubjectEntryState;
 use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumTreatment;
 use SportExperiment\Model\Eloquent\User;
@@ -33,9 +34,13 @@ class ResearcherRepository implements ResearcherRepositoryInterface
     {
         $subjects = [];
         $id = $this->getNextUserId();
-        for ($i = 1; $i <= $session->getNumSubjects(); ++$i, ++$id) {
+        for ($i = 0; $i < $session->getNumSubjects(); ++$i, ++$id) {
             $user = $this->createUserAccount($id);
-            $subjects[] = $this->createSubject($session, $user);
+            $subjects[$i] = $this->createSubject($session, $user);
+
+            $subjectEntryState = new SubjectEntryState();
+            $subjectEntryState->subject()->associate($subjects[$i]);
+            $subjectEntryState->save();
         }
 
         if ($session->getUltimatumTreatment() !== null) {
@@ -59,12 +64,8 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         }
 
         if ($session->getDictatorTreatment() !== null) {
-            $dictatorProposerRole = DictatorTreatment::getProposerRoleId();
-            $dictatorReceiverRole = DictatorTreatment::getReceiverRoleId();
-
-            $trustGroups = TwoPlayerMatcher::matchSubjects($subjects, $dictatorProposerRole, $dictatorReceiverRole);
             $trustTreatment = new DictatorTreatment();
-            $trustTreatment->saveGroups($trustGroups);
+            $trustTreatment->setSubjectGroups($subjects);
         }
     }
 
@@ -105,32 +106,42 @@ class ResearcherRepository implements ResearcherRepositoryInterface
         $session->setState(SessionState::$STOPPED);
         $session->save();
 
+        /* @var \SportExperiment\Model\Eloquent\RiskAversionTreatment $riskAversion */
         $riskAversion = $modelCollection->getModel(RiskAversionTreatment::getNamespace());
         if ($riskAversion !== null) {
             $riskAversion->session()->associate($session);
+            $riskAversion->setTreatmentTaskId(RiskAversionTreatment::getTaskId());
             $riskAversion->save();
         }
 
+        /* @var \SportExperiment\Model\Eloquent\WillingnessPayTreatment $willingnessPay */
         $willingnessPay = $modelCollection->getModel(WillingnessPayTreatment::getNamespace());
         if ($willingnessPay !== null) {
             $willingnessPay->session()->associate($session);
+            $willingnessPay->setTreatmentTaskId(WillingnessPayTreatment::getTaskId());
             $willingnessPay->save();
         }
 
+        /* @var \SportExperiment\Model\Eloquent\UltimatumTreatment $ultimatum */
         $ultimatum = $modelCollection->getModel(UltimatumTreatment::getNamespace());
         if ($ultimatum !== null) {
             $ultimatum->session()->associate($session);
+            $ultimatum->setTreatmentTaskId(UltimatumTreatment::getTaskId());
             $ultimatum->save();
         }
 
+        /* @var \SportExperiment\Model\Eloquent\TrustTreatment $trust */
         $trust = $modelCollection->getModel(TrustTreatment::getNamespace());
         if ($trust !== null) {
+            $trust->setTreatmentTaskId(TrustTreatment::getTaskId());
             $trust->session()->associate($session);
             $trust->save();
         }
 
+        /* @var \SportExperiment\Model\Eloquent\DictatorTreatment $dictator */
         $dictator = $modelCollection->getModel(DictatorTreatment::getNamespace());
         if ($dictator !== null) {
+            $dictator->setTreatmentTaskId(DictatorTreatment::getTaskId());
             $dictator->session()->associate($session);
             $dictator->save();
         }
