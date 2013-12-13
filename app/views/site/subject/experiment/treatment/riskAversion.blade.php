@@ -1,14 +1,32 @@
-<div class="form-group {{ ($errors->has($indifferenceProbabilityKey)) ? 'has-error' : '' }} ">
-    <h4>Task {{$taskId}}</h4>
-    <p>
-        There are three money prizes of <strong>{{$lowPrize}}</strong>, <strong>{{$midPrize}}</strong>, and <strong>{{$highPrize}}</strong> dollars.
-        You have a choice of getting <strong>{{$midPrize}}</strong> dollars for sure or a gamble; where you can get <strong>${{$highPrize}}</strong> dollar
-        with a probability of <strong>your entered probability</strong>, or <strong>${{$lowPrize}}</strong> dollars with a probability of <strong>1 - your entered probability</strong>.
-    </p>
-    <p>
-        Enter the probability that makes you indifferent between <strong>{{$midPrize}}</strong>, for sure, <strong>{{$highPrize}}</strong> with probability
-        <strong>P (your entered probability)</strong>, and <strong>{{$lowPrize}}</strong> with probability of <strong>1 - your entered probability</strong>.
-    </p>
-    {{ Form::text($indifferenceProbabilityKey, Input::old($indifferenceProbabilityKey), ['class'=>'form-control', 'type'=>'number', 'placeholder'=>'Your chosen probability']) }}
-    <span class="error">{{ $errors->first($indifferenceProbabilityKey) }}</span>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Commercial Break Entry: Task {{$taskId}}</h3>
+            </div>
+            <div class="panel-body">
+
+                {{ Form::open(array('url'=>$postUrl, 'method'=>'post', 'role'=>'form')) }}
+                <div class="form-group {{ ($errors->has($gamblePayment)) ? 'has-error' : '' }} ">
+                    <p>Individuals sometimes change their mind about what they are willing to pay for a risky gamble.</p>
+                    <p>
+                        Right now, how much are you be willing to pay for the risky gamble that pays ${{$lowPrize}}
+                        with {{ (1-$gambleProbability) * 100}}% probability and ${{$highPrize}} with {{ $gambleProbability * 100}}% probability?
+                        (Please choose an amount between $0 and ${{$endowment}}).
+                    </p>
+                    <p>
+                        Remember, you will not pay the amount you enter. Instead, you will receive ${{$endowment}} and pay a
+                        randomly chosen price if that price is below the amount you enter.
+                        As explained at the beginning of the game, it is in your best interest to write down
+                        exactly the most you would be willing to pay for the risky gamble
+                        (and not more or less than the most you would be willing to pay) each time you are asked.
+                    </p>
+                    {{ Form::text($gamblePayment, Input::old($gamblePayment), ['class'=>'form-control', 'type'=>'number', 'placeholder'=>'Amount Willing to Pay']) }}
+                    <span class="error">{{ $errors->first($gamblePayment) }}</span>
+                </div>
+                {{ Form::button('Submit', ['type'=>'submit', 'class'=>'btn btn-primary']) }}
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
 </div>
