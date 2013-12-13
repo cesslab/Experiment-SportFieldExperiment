@@ -1,14 +1,18 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
-class RiskAversionTreatment extends BaseEloquent
+use SportExperiment\Model\TreatmentInterface;
+
+class RiskAversionTreatment extends BaseEloquent implements TreatmentInterface
 {
     public static $TABLE_KEY = 'risk_aversion_treatments';
 
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
+    public static $ENDOWMENT_KEY = 'endowment';
     public static $LOW_PRIZE_KEY = 'low_prize';
-    public static $MID_PRIZE_KEY = 'mid_prize';
     public static $HIGH_PRIZE_KEY = 'high_prize';
+    public static $PRIZE_PROBABILITY_KEY = 'prize_probability';
+    public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'riskAversionEnabled';
 
@@ -27,13 +31,14 @@ class RiskAversionTreatment extends BaseEloquent
         $this->table = self::$TABLE_KEY;
 
         $this->fillable = [
-            self::$SESSION_ID_KEY, self::$LOW_PRIZE_KEY, self::$MID_PRIZE_KEY,
-            self::$HIGH_PRIZE_KEY];
+            self::$SESSION_ID_KEY, self::$LOW_PRIZE_KEY, self::$PRIZE_PROBABILITY_KEY,
+            self::$HIGH_PRIZE_KEY, self::$ENDOWMENT_KEY];
 
         $this->rules = [
+            self::$ENDOWMENT_KEY=>'required|numeric|min:0|max:1000000',
             self::$LOW_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
-            self::$MID_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
             self::$HIGH_PRIZE_KEY=>'required|numeric|min:0|max:1000000',
+            self::$PRIZE_PROBABILITY_KEY=>'required|numeric|min:0|max:1',
         ];
 
         parent::__construct($attributes);
@@ -56,26 +61,31 @@ class RiskAversionTreatment extends BaseEloquent
      * ---------------------------------------------------------------------*/
 
     /**
+     * Calculates and saves the specified subjects Risk Aversion Payoff.
+     *
      * @param Subject $subject
-     * @return RiskAversionEntry
      */
     public function calculatePayoff(Subject $subject)
     {
         $entry = $subject->getRandomRiskAversionEntry();
-        $prizeDraw = lcg_value();
-        if ($prizeDraw < $entry->getIndifferenceProbability()) {
-            $entry->setPayoff($this->getMidPrize());
-            return $entry;
+
+        $prizeDraw = lcg_value()*$this->getEndowment();
+        if ($prizeDraw > $entry->getGamblePayment()) {
+            $payoff = $this->getEndowment();
+        }
+        else {
+            $gambleDraw = lcg_value();
+            if ($gambleDraw <= $this->getPrizeProbability()) {
+                $payoff = $this->getEndowment() - $entry->getGamblePayment() + $this->getHighPrize();
+            }
+            else {
+                $payoff = $this->getEndowment() - $entry->getGamblePayment() + $this->getLowPrize();
+            }
         }
 
-        $gambleDraw = lcg_value();
-        if ($gambleDraw < $entry->getIndifferenceProbability()) {
-            $entry->setPayoff($this->getHighPrize());
-            return $entry;
-        }
-
-        $entry->setPayoff($this->getLowPrize());
-        return $entry;
+        $entry->setPayoff($payoff);
+        $entry->setSelectedForPayoff(true);
+        $entry->save();
     }
 
     /* ---------------------------------------------------------------------
@@ -90,6 +100,13 @@ class RiskAversionTreatment extends BaseEloquent
     public static function getTaskId()
     {
         return self::$TASK_ID;
+    }
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
     }
 
     /**
@@ -111,9 +128,9 @@ class RiskAversionTreatment extends BaseEloquent
     /**
      * @return mixed
      */
-    public function getMidPrize()
+    public function getPrizeProbability()
     {
-        return $this->getAttribute(self::$MID_PRIZE_KEY);
+        return $this->getAttribute(self::$PRIZE_PROBABILITY_KEY);
     }
 
     /**
@@ -123,4 +140,30 @@ class RiskAversionTreatment extends BaseEloquent
     {
         return $this->getAttribute(self::$SESSION_ID_KEY);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEndowment()
+    {
+        return $this->getAttribute(self::$ENDOWMENT_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTreatmentTaskId()
+    {
+        return $this->getAttribute(self::$TASK_ID_KEY);
+    }
+
+    /**
+     * @param $taskId
+     */
+    public function setTreatmentTaskId($taskId)
+    {
+        $this->setAttribute(self::$TASK_ID_KEY, $taskId);
+    }
+
+
 }
