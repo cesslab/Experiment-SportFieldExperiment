@@ -14,6 +14,7 @@ use SportExperiment\View\Composer\BaseComposer;
 use SportExperiment\Controller\Subject\Experiment as ExperimentController;
 use Illuminate\Support\Facades\URL;
 use SportExperiment\Model\Eloquent\DictatorEntry;
+use SportExperiment\Model\Eloquent\GameQuestionnaire as GameQuestionnaireModel;
 
 class Experiment extends BaseComposer
 {
@@ -26,54 +27,94 @@ class Experiment extends BaseComposer
 
     public function compose($view)
     {
-        $willingnessPayTreatment = $this->subject->getWillingnessPayTreatment();
-        $view->with('displayWillingnessPay', $willingnessPayTreatment != null);
-        if ($willingnessPayTreatment != null) {
-            $view->with('endowment', $willingnessPayTreatment->getEndowment());
-            $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
-            $view->with('willingPayKey', WillingnessPayEntry::$WILLING_PAY_KEY);
+        $entryState = $this->subject->getSubjectEntryState();
+
+        // Treatment Phase
+        if ( ! $entryState->getTreatmentCompleted()) {
+            $view->with('displayTask', true);
+
+            if ($entryState->isTreatmentSet()) {
+                $nextTreatment = $this->subject->getTreatment($entryState->getCurrentTaskId());
+            }
+            else {
+                $nextTreatment = $this->subject->getFirstTreatment();
+            }
+
+            // Willingness Pay
+            $willingnessPayTreatment = $this->subject->getWillingnessPayTreatment();
+            if ($willingnessPayTreatment instanceof $nextTreatment) {
+                $view->with('taskId', WillingnessPayTreatment::getTaskId());
+                $view->with('endowment', $willingnessPayTreatment->getEndowment());
+                $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
+                $view->with('willingPayKey', WillingnessPayEntry::$WILLING_PAY_KEY);
+            }
+            $view->with('displayWillingnessPay', $willingnessPayTreatment instanceof $nextTreatment);
+
+            // Risk Aversion
+            /* @var \SportExperiment\Model\Eloquent\RiskAversionTreatment $riskAversionTreatment */
+            $riskAversionTreatment = $this->subject->getRiskAversionTreatment();
+            if ($riskAversionTreatment instanceof $nextTreatment) {
+                $view->with('taskId', RiskAversionTreatment::getTaskId());
+                $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
+                $view->with('lowPrize', $riskAversionTreatment->getLowPrize());
+                $view->with('highPrize', $riskAversionTreatment->getHighPrize());
+                $view->with('endowment', $riskAversionTreatment->getEndowment());
+                $view->with('gambleProbability', $riskAversionTreatment->getPrizeProbability());
+                $view->with('gamblePayment', RiskAversionEntry::$GAMBLE_PAYMENT_KEY);
+            }
+            $view->with('displayRiskAversion', $riskAversionTreatment instanceof $nextTreatment);
+
+            // Ultimatum Treatment
+            $ultimatumTreatment = $this->subject->getUltimatumTreatment();
+            if ($ultimatumTreatment instanceof $nextTreatment) {
+                $view->with('taskId', UltimatumTreatment::getTaskId());
+                $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
+                $view->with('ultimatumTotalAmount', $ultimatumTreatment->getTotalAmount());
+                $view->with('isUltimatumProposer', $this->subject->getUltimatumGroup()->getSubjectRole() == UltimatumTreatment::getProposerRoleId());
+                $view->with('amountKey', UltimatumEntry::$AMOUNT_KEY);
+            }
+            $view->with('displayUltimatum', $ultimatumTreatment instanceof $nextTreatment);
+
+            // Trust Treatment
+            $trustTreatment = $this->subject->getTrustTreatment();
+            if ($trustTreatment instanceof $nextTreatment) {
+                $proposerAllocations = $this->composeProposerAllocations(
+                    array_merge(['dev'=>'--'], $trustTreatment->getProposerAllocationOptions()));
+                $view->with('taskId', TrustTreatment::getTaskId());
+                $view->with('trustTaskId', TrustTreatment::getTaskId());
+                $view->with('isTrustProposer', $this->subject->getTrustGroup()->getSubjectRole() == TrustTreatment::getProposerRoleId());
+                $view->with('proposerAllocationOptions', $proposerAllocations);
+                $view->with('receiverAllocationOptions', $trustTreatment->getReceiverAllocationOptions());
+                $view->with('numProposerAllocations', TrustTreatment::getNumProposerAllocations());
+                $view->with('numReceiverAllocations', TrustTreatment::getNumReceiverAllocations());
+                $view->with('allocationKey', TrustProposerEntry::$ALLOCATION_KEY);
+            }
+            $view->with('displayTrust', $trustTreatment instanceof $nextTreatment);
+
+            // Dictator Treatment
+            $dictatorTreatment = $this->subject->getDictatorTreatment();
+            if ($dictatorTreatment instanceof $nextTreatment) {
+                $view->with('taskId', DictatorTreatment::getTaskId());
+                $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
+                $view->with('dictatorEndowment', $dictatorTreatment->getProposerEndowment());
+                $view->with('dictatorAllocationKey', DictatorEntry::$DICTATOR_ALLOCATION_KEY);
+            }
+            $view->with('displayDictator', $dictatorTreatment instanceof $nextTreatment);
         }
+        // Question Phase
+        else {
+            $view->with('displayTask', false);
+            $view->with('surpriseLevel', GameQuestionnaireModel::$LEVEL_SURPRISE_KEY);
+            $view->with('surpriseLevelOptions', array_merge(['default'=>'Select A Number Between 1 - 7'], GameQuestionnaireModel::getOptionRange()));
 
+            $view->with('excitationLevel', GameQuestionnaireModel::$LEVEL_EXCITATION_KEY);
+            $view->with('excitationLevelOptions', array_merge(['default'=>'Select A Number Between 1 - 7'], GameQuestionnaireModel::getOptionRange()));
 
-        $riskAversionTreatment = $this->subject->getRiskAversionTreatment();
-        $view->with('displayRiskAversion', $riskAversionTreatment != null);
-        if ($riskAversionTreatment != null) {
-            $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
-            $view->with('lowPrize', $riskAversionTreatment->getLowPrize());
-            $view->with('midPrize', $riskAversionTreatment->getMidPrize());
-            $view->with('highPrize', $riskAversionTreatment->getHighPrize());
-            $view->with('indifferenceProbabilityKey', RiskAversionEntry::$INDIFFERENCE_PROBABILITY_KEY);
-        }
+            $view->with('happinessLevel', GameQuestionnaireModel::$LEVEL_HAPPINESS_KEY);
+            $view->with('happinessLevelOptions', array_merge(['default'=>'Select A Number Between 1 - 7'], GameQuestionnaireModel::getOptionRange()));
 
-        $ultimatumTreatment = $this->subject->getUltimatumTreatment();
-        $view->with('displayUltimatum', $ultimatumTreatment != null);
-        if ($ultimatumTreatment != null) {
-            $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
-            $view->with('ultimatumTotalAmount', $ultimatumTreatment->getTotalAmount());
-            $view->with('isUltimatumProposer', $this->subject->getUltimatumGroup()->getSubjectRole() == UltimatumTreatment::getProposerRoleId());
-            $view->with('amountKey', UltimatumEntry::$AMOUNT_KEY);
-        }
-
-        $trustTreatment = $this->subject->getTrustTreatment();
-        $view->with('displayTrust', $trustTreatment != null);
-        if ($trustTreatment != null) {
-            $proposerAllocations = $this->composeProposerAllocations(
-                array_merge(['dev'=>'--'], $trustTreatment->getProposerAllocationOptions()));
-            $view->with('trustTaskId', TrustTreatment::getTaskId());
-            $view->with('isTrustProposer', $this->subject->getTrustGroup()->getSubjectRole() == TrustTreatment::getProposerRoleId());
-            $view->with('proposerAllocationOptions', $proposerAllocations);
-            $view->with('receiverAllocationOptions', $trustTreatment->getReceiverAllocationOptions());
-            $view->with('numProposerAllocations', TrustTreatment::getNumProposerAllocations());
-            $view->with('numReceiverAllocations', TrustTreatment::getNumReceiverAllocations());
-            $view->with('allocationKey', TrustProposerEntry::$ALLOCATION_KEY);
-        }
-
-        $dictatorTreatment = $this->subject->getDictatorTreatment();
-        $view->with('displayDictator', $dictatorTreatment != null);
-        if ($dictatorTreatment != null) {
-            $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
-            $view->with('dictatorEndowment', $dictatorTreatment->getProposerEndowment());
-            $view->with('dictatorAllocationKey', DictatorEntry::$DICTATOR_ALLOCATION_KEY);
+            $view->with('likelinessWinningLevel', GameQuestionnaireModel::$LIKELINESS_WINNING_KEY);
+            $view->with('likelinessWinningLevelOptions', array_merge(['default'=>'Select A Number Between 1 - 7'], GameQuestionnaireModel::getOptionRange()));
         }
 
         $view->with('postUrl', URL::to(ExperimentController::getRoute()));
