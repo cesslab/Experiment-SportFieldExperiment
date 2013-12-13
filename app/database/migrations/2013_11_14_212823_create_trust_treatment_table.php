@@ -16,6 +16,7 @@ class CreateTrustTreatmentTable extends Migration {
         Schema::create(TrustTreatment::$TABLE_KEY, function($table)
         {
             $table->increments(TrustTreatment::$ID_KEY);
+            $table->integer(TrustTreatment::$TASK_ID_KEY)->unsigned();
             $table->integer(TrustTreatment::$SESSION_ID_KEY)->unsigned();
             $table->double(TrustTreatment::$PROPOSER_ALLOCATION_MULTIPLIER_KEY);
             $table->double(TrustTreatment::$RECEIVER_ALLOCATION_MULTIPLIER_KEY);

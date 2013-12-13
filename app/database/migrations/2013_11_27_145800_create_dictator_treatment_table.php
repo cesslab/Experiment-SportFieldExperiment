@@ -16,6 +16,7 @@ class CreateDictatorTreatmentTable extends Migration {
         Schema::create(DictatorTreatment::$TABLE_KEY, function($table)
         {
             $table->increments(DictatorTreatment::$ID_KEY);
+            $table->integer(DictatorTreatment::$TASK_ID_KEY)->unsigned();
             $table->integer(DictatorTreatment::$SESSION_ID_KEY)->unsigned();
             $table->double(DictatorTreatment::$PROPOSER_ENDOWMENT_KEY);
             $table->timestamps();

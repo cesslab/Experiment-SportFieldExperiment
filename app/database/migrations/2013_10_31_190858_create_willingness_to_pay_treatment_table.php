@@ -17,6 +17,7 @@ class CreateWillingnessToPayTreatmentTable extends Migration {
 		Schema::create(WillingnessPayTreatment::$TABLE_KEY, function($table)
 		{
             $table->increments(WillingnessPayTreatment::$ID_KEY);
+            $table->integer(WillingnessPayTreatment::$TASK_ID_KEY)->unsigned();
 			$table->integer(WillingnessPayTreatment::$SESSION_ID_KEY)->unsigned();
             $table->double(WillingnessPayTreatment::$ENDOWMENT_KEY);
 		});

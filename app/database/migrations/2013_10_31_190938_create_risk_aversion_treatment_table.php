@@ -16,10 +16,12 @@ class CreateRiskAversionTreatmentTable extends Migration {
 		Schema::create(RiskAversionTreatment::$TABLE_KEY, function($table)
 		{
             $table->increments(RiskAversionTreatment::$ID_KEY);
+            $table->integer(RiskAversionTreatment::$TASK_ID_KEY)->unsigned();
 			$table->integer(RiskAversionTreatment::$SESSION_ID_KEY)->unsigned();
+            $table->double(RiskAversionTreatment::$ENDOWMENT_KEY);
             $table->double(RiskAversionTreatment::$LOW_PRIZE_KEY);
-            $table->double(RiskAversionTreatment::$MID_PRIZE_KEY);
             $table->double(RiskAversionTreatment::$HIGH_PRIZE_KEY);
+            $table->double(RiskAversionTreatment::$PRIZE_PROBABILITY_KEY);
 		});
 	}
 

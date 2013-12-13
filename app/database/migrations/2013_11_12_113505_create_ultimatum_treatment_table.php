@@ -16,6 +16,7 @@ class CreateUltimatumTreatmentTable extends Migration {
         Schema::create(UltimatumTreatment::$TABLE_KEY, function($table)
         {
             $table->increments(UltimatumTreatment::$ID_KEY);
+            $table->integer(UltimatumTreatment::$TASK_ID_KEY)->unsigned();
             $table->integer(UltimatumTreatment::$SESSION_ID_KEY)->unsigned();
             $table->double(UltimatumTreatment::$TOTAL_AMOUNT_KEY);
         });
