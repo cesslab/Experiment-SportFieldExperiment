@@ -2,8 +2,9 @@
 
 use SportExperiment\Model\Group;
 use SportExperiment\Model\GroupTreatmentInterface;
+use SportExperiment\Model\TreatmentInterface;
 
-class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
+class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface, TreatmentInterface
 {
     public static $TABLE_KEY = 'trust_treatments';
 
@@ -11,6 +12,7 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     public static $SESSION_ID_KEY = 'session_id';
     public static $PROPOSER_ALLOCATION_MULTIPLIER_KEY = 'sender_multiplier';
     public static $RECEIVER_ALLOCATION_MULTIPLIER_KEY = 'receiver_multiplier';
+    public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'trustEnabled';
 
@@ -109,6 +111,46 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     }
 
     /**
+     * Calculates the specified subject Trust Payoffs.
+     *
+     * @param Subject $subject
+     */
+    public function calculatePayoff(Subject $subject)
+    {
+        // Set the appropriate roles for this subject
+        if ($subject->getTrustGroup()->isProposer()) {
+            $proposer = $subject;
+            $receiver = $subject->getTrustGroup()->getPartner();
+        }
+        else {
+            $proposer = $subject->getTrustGroup()->getPartner();
+            $receiver = $subject;
+        }
+
+        $proposerEntry = $proposer->getRandomTrustEntry();
+
+        $proposerAllocationEntry = $proposerEntry->getProposerEntry();
+        $proposerAllocation = $proposerAllocationEntry->getAllocation();
+
+        $receiverEntry = $receiver->getRandomTrustEntry();
+        $trustTreatment = $proposer->getTrustTreatment();
+
+        $receiverAllocationEntry = $receiverEntry->getReceiverAllocationEntry($proposerAllocationEntry, $trustTreatment);
+        $receiverAllocation = $receiverAllocationEntry->getAllocation();
+
+
+        // Save only the subjects payoffs, not her partners.
+        if ($subject->getTrustGroup()->isProposer()) {
+            $proposerEntry->setPayoff($this->getProposerEndowment() - $proposerAllocation + $receiverAllocation);
+            $proposerEntry->save();
+        }
+        else {
+            $receiverEntry->setPayoff($proposerAllocation - $receiverAllocation);
+            $receiverEntry->save();
+        }
+    }
+
+    /**
      * Saves a group record for each group member.
      *
      * @param $groups \SportExperiment\Model\Group[]
@@ -198,6 +240,14 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     /**
      * @return mixed
      */
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProposerAllocationMultiplier()
     {
         return $this->getAttribute(self::$PROPOSER_ALLOCATION_MULTIPLIER_KEY);
@@ -209,6 +259,23 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     public function getReceiverAllocationMultiplier()
     {
         return $this->getAttribute(self::$RECEIVER_ALLOCATION_MULTIPLIER_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTreatmentTaskId()
+    {
+        return $this->getAttribute(self::$TASK_ID_KEY);
+    }
+
+    /**
+     * @param $taskId
+     */
+    public function setTreatmentTaskId($taskId)
+    {
+        $this->setAttribute(self::$TASK_ID_KEY, $taskId);
+
     }
 
     /**
@@ -236,5 +303,4 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface
     {
         return self::$RECEIVER_ROLE_ID;
     }
-
-} 
+}
