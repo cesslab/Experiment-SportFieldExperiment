@@ -10,7 +10,7 @@ class TestCase extends IlluminateTestCase {
 
 		$testEnvironment = 'testing';
 
-		return require __DIR__.'/../../bootstrap/start.php';
+		return require __DIR__.'/../../../../bootstrap/start.php';
 	}
 
 }
