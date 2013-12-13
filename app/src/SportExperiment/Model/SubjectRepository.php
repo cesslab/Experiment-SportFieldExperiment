@@ -19,21 +19,22 @@ class SubjectRepository implements SubjectRepositoryInterface
     /**
      * @param Subject $subject
      * @param ModelCollection $collection
+     * @param $nextTreatment
      * @return null
      */
-    public function saveSubjectData(Subject $subject, ModelCollection $collection)
+    public function saveSubjectData(Subject $subject, ModelCollection $collection, $nextTreatment)
     {
-        if ($subject->getWillingnessPayTreatment() != null)
+        if ($subject->getWillingnessPayTreatment() instanceof $nextTreatment)
             $this->saveEntry($collection->getModel(WillingnessPayEntry::getNamespace()), $subject);
 
-        if ($subject->getRiskAversionTreatment() != null)
+        if ($subject->getRiskAversionTreatment() instanceof $nextTreatment)
             $this->saveEntry($collection->getModel(RiskAversionEntry::getNamespace()), $subject);
 
-        if ($subject->getUltimatumTreatment() != null) {
+        if ($subject->getUltimatumTreatment() instanceof $nextTreatment) {
             $this->saveEntry($collection->getModel(UltimatumEntry::getNamespace()), $subject);
         }
 
-        if ($subject->getTrustTreatment() != null) {
+        if ($subject->getTrustTreatment() instanceof $nextTreatment) {
             $trustEntry = new TrustEntry();
             $this->saveEntry($trustEntry, $subject);
 
@@ -43,7 +44,7 @@ class SubjectRepository implements SubjectRepositoryInterface
                 $this->saveTrustReceiverEntries($collection->getModel(TrustReceiverEntry::getNamespace()), $trustEntry);
         }
 
-        if ($subject->getDictatorTreatment() != null) {
+        if ($subject->getDictatorTreatment() instanceof $nextTreatment) {
             $this->saveEntry($collection->getModel(DictatorEntry::getNamespace()), $subject);
         }
     }
