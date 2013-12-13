@@ -1,5 +1,7 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
+use SportExperiment\Model\TreatmentInterface;
+
 class Session extends BaseEloquent
 {
     public static $TABLE_KEY = 'experiment_sessions';
@@ -169,9 +171,9 @@ class Session extends BaseEloquent
     /**
      * Returns the active treatments for this session.
      *
-     * @return array
+     * @return \SportExperiment\Model\TreatmentInterface[]
      */
-    private function getEnabledTreatments()
+    public function getEnabledTreatments()
     {
         $riskAversionTreatment = $this->getRiskAversionTreatment();
         $willingnessPayTreatment = $this->getWillingnessPayTreatment();
@@ -199,15 +201,84 @@ class Session extends BaseEloquent
     }
 
     /**
+     * Returns the active treatments for this session.
+     *
+     * @param mixed $taskId
+     * @return \SportExperiment\Model\TreatmentInterface
+     */
+    public function getEnabledTreatment($taskId)
+    {
+        $riskAversionTreatment = $this->getRiskAversionTreatment();
+        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
+        $ultimatumTreatment = $this->getUltimatumTreatment();
+        $trustTreatment = $this->getTrustTreatment();
+        $dictatorTreatment = $this->getDictatorTreatment();
+
+        if ($riskAversionTreatment !== null)
+            if ($riskAversionTreatment->getTreatmentTaskId() == $taskId)
+                return $riskAversionTreatment;
+
+        if ($willingnessPayTreatment !== null)
+            if ($willingnessPayTreatment->getTreatmentTaskId() == $taskId)
+                return $willingnessPayTreatment;
+
+        if ($ultimatumTreatment !== null)
+            if ($ultimatumTreatment->getTreatmentTaskId() == $taskId)
+                return $ultimatumTreatment;
+
+        if ($trustTreatment !== null)
+            if ($trustTreatment->getTreatmentTaskId() == $taskId)
+                return $trustTreatment;
+
+        if ($dictatorTreatment !== null)
+            if ($dictatorTreatment->getTreatmentTaskId() == $taskId)
+                return $dictatorTreatment;
+    }
+
+    /**
+     * Returns the next treatment following the previous treatment ID.
+     *
+     * @return \SportExperiment\Model\TreatmentInterface
+     */
+    public function getFirstTreatment()
+    {
+        $treatments = $this->getEnabledTreatments();
+        foreach ($treatments as $treatment) {
+            if ($treatment->getTreatmentTaskId() > SubjectEntryState::$NO_TREATMENT_ID_SET) {
+                return $treatment;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param TreatmentInterface $currentTreatment
+     * @return null|\SportExperiment\Model\TreatmentInterface
+     */
+    public function getNextTreatment(TreatmentInterface $currentTreatment)
+    {
+        $treatments = $this->getEnabledTreatments();
+        foreach ($treatments as $treatment) {
+            if ($treatment->getTreatmentTaskId() > $currentTreatment->getTreatmentTaskId()) {
+                return $treatment;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
      * Returns a randomly selected treatment for this session.
      *
-     * @return mixed
+     * @return int
      */
-    private function getRandomTreatment()
+    private function getRandomTreatmentTaskId()
     {
         $enabledTreatments = $this->getEnabledTreatments();
         $randIndex = rand(0, count($enabledTreatments)-1);
-        return $enabledTreatments[$randIndex];
+        return $enabledTreatments[$randIndex]::getTaskId();
     }
 
 
@@ -221,50 +292,39 @@ class Session extends BaseEloquent
 
         $subjects = $this->getSubjects();
         foreach($subjects as $subject) {
-            $randomTreatment = $this->getRandomTreatment();
+            $taskId = $this->getRandomTreatmentTaskId();
+
+            /* -------------------
+             * Single Player
+             * ------------------- */
 
             // Risk Aversion Payoff
-            if ($riskAversionTreatment !== null && $riskAversionTreatment instanceof $randomTreatment) {
-                $riskAversionEntry = $riskAversionTreatment->calculatePayoff($subject);
-                $riskAversionEntry->setSelectedForPayoff(true);
-                $riskAversionEntry->save();
+            if ($riskAversionTreatment !== null && $riskAversionTreatment::getTaskId() == $taskId ) {
+                $riskAversionTreatment->calculatePayoff($subject);
             }
 
             // Willingness Pay Payoff
-            if ($willingnessPayTreatment !== null && $willingnessPayTreatment instanceof $randomTreatment) {
-                $willingnessPayEntry = $willingnessPayTreatment->calculatePayoff($subject);
-                $willingnessPayEntry->setSelectedForPayoff(true);
-                $willingnessPayEntry->save();
+            if ($willingnessPayTreatment !== null && $willingnessPayTreatment::getTaskId() == $taskId) {
+                $willingnessPayTreatment->calculatePayoff($subject);
             }
-        }
 
-        // Ultimatum Payoff
-        if ($ultimatumTreatment !== null && $ultimatumTreatment instanceof $randomTreatment) {
-            $ultimatumGroups = $ultimatumTreatment->getGroups($subjects);
-            foreach ($ultimatumGroups as $group) {
-                $proposer = $group->getSubject(UltimatumTreatment::getProposerRoleId());
-                $receiver = $group->getSubject(UltimatumTreatment::getReceiverRoleId());
-                $ultimatumTreatment->calculateGroupPayoff($proposer, $receiver);
+            /* -------------------
+             * Multi Player
+             * ------------------- */
+
+            // Ultimatum Payoff
+            if ($ultimatumTreatment !== null && $ultimatumTreatment::getTaskId() == $taskId) {
+                $ultimatumTreatment->calculatePayoff($subject);
             }
-        }
 
-        // Trust Payoff
-        if ($trustTreatment !== null && $trustTreatment instanceof $randomTreatment) {
-            $trustGroups = $trustTreatment->getGroups($subjects);
-            foreach ($trustGroups as $group) {
-                $proposer = $group->getSubject(TrustTreatment::getProposerRoleId());
-                $receiver = $group->getSubject(TrustTreatment::getReceiverRoleId());
-                $trustTreatment->calculateGroupPayoff($proposer, $receiver);
+            // Trust Payoff
+            if ($trustTreatment !== null && $trustTreatment::getTaskId() == $taskId) {
+                $trustTreatment->calculatePayoff($subject);
             }
-        }
 
-        // Dictator Payoff
-        if ($dictatorTreatment !== null && $dictatorTreatment instanceof $randomTreatment) {
-            $dictatorGroups = $dictatorTreatment->getGroups($subjects);
-            foreach ($dictatorGroups as $group) {
-                $proposer = $group->getSubject(DictatorTreatment::getProposerRoleId());
-                $receiver = $group->getSubject(DictatorTreatment::getReceiverRoleId());
-                $dictatorTreatment->calculateGroupPayoff($proposer, $receiver);
+            // Dictator Payoff
+            if ($dictatorTreatment !== null && $dictatorTreatment::getTaskId() == $taskId) {
+                $dictatorTreatment->calculatePayoff($subject);
             }
         }
     }
@@ -300,7 +360,7 @@ class Session extends BaseEloquent
         return $this->subjects;
     }
     /**
-     * @return TrustTreatment
+     * @return \SportExperiment\Model\Eloquent\TrustTreatment
      */
     public function getTrustTreatment()
     {
@@ -308,7 +368,7 @@ class Session extends BaseEloquent
     }
 
     /**
-     * @return UltimatumTreatment
+     * @return \SportExperiment\Model\Eloquent\UltimatumTreatment
      */
     public function getUltimatumTreatment()
     {
@@ -316,7 +376,7 @@ class Session extends BaseEloquent
     }
 
     /**
-     * @return WillingnessPayTreatment
+     * @return \SportExperiment\Model\Eloquent\WillingnessPayTreatment
      */
     public function getWillingnessPayTreatment()
     {
@@ -324,7 +384,7 @@ class Session extends BaseEloquent
     }
 
     /**
-     * @return RiskAversionTreatment
+     * @return \SportExperiment\Model\Eloquent\RiskAversionTreatment
      */
     public function getRiskAversionTreatment()
     {
@@ -332,7 +392,7 @@ class Session extends BaseEloquent
     }
 
     /**
-     * @return DictatorTreatment
+     * @return \SportExperiment\Model\Eloquent\DictatorTreatment
      */
     public function getDictatorTreatment()
     {
