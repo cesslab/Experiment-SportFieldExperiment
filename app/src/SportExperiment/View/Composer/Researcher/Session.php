@@ -22,10 +22,13 @@ class Session extends BaseComposer
         $view->with('numSubjectsKey', SessionModel::$NUM_SUBJECTS_KEY);
         $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
         $view->with('endowmentKey', WillingnessPayTreatment::$ENDOWMENT_KEY);
+
         $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
+        $view->with('endowment', RiskAversionTreatment::$ENDOWMENT_KEY);
         $view->with('lowPrizeKey', RiskAversionTreatment::$LOW_PRIZE_KEY);
-        $view->with('midPrizeKey', RiskAversionTreatment::$MID_PRIZE_KEY);
         $view->with('highPrizeKey', RiskAversionTreatment::$HIGH_PRIZE_KEY);
+        $view->with('gambleProbability', RiskAversionTreatment::$PRIZE_PROBABILITY_KEY);
+
         $view->with('ultimatumTaskId', UltimatumTreatment::getTaskId());
         $view->with('ultimatumTotalAmountKey', UltimatumTreatment::$TOTAL_AMOUNT_KEY);
         $view->with('trustTaskId', TrustTreatment::getTaskId());
