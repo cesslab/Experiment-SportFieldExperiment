@@ -1,5 +1,7 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
+use SportExperiment\Model\TreatmentInterface;
+
 class Subject extends BaseEloquent
 {
     public static $TABLE_KEY = 'subjects';
@@ -10,11 +12,21 @@ class Subject extends BaseEloquent
     public static $FIRST_NAME_KEY = 'first_name';
     public static $LAST_NAME_KEY = 'last_name';
     public static $SESSION_ID_KEY = 'session_id';
-    public static $PROFESSION_KEY = 'profession';
     public static $EDUCATION_KEY = 'education';
     public static $GENDER_KEY = 'gender';
     public static $AGE_KEY = 'age';
-    public static $ETHNICITY_KEY = 'ethnicity';
+    public static $WORK_STATUS_KEY = 'work_status';
+    public static $INCOME_KEY = 'income';
+
+    private static $workStatusOptions = [
+        'unemployed'=>'Unemployed', 'full'=>'Full Time','part'=>'Part Time', 'student'=>'Student'];
+
+    private static $incomeOptions = [
+        'low'=>'below $2500', 'low_mid'=>'$25,000 to $49,999', 'high_mid'=>'$50,000 to $99,999', 'high'=>'$100,000'];
+
+    private static $educationOptions = [
+        'no_hs'=>'Did Not Complete High School', 'hs_ged'=>'High School or GED', 'some_bs'=>'Some College',
+        'bs'=>'Bachelor\'s Degree', 'ms'=>'Master\'s Degree', 'phd'=>'Ph.D.'];
 
     protected $rules;
     protected $table;
@@ -24,17 +36,18 @@ class Subject extends BaseEloquent
     {
         $this->table = self::$TABLE_KEY;
         $this->rules = [
-            self::$FIRST_NAME_KEY=>'required|alpha|min:2|max:100',
-            self::$LAST_NAME_KEY=>'required|alpha|min:2|max:100',
-            self::$PROFESSION_KEY=>'required|alpha|min:2|max:250',
-            self::$EDUCATION_KEY=>'required|alpha|min:2|max:250',
-            self::$GENDER_KEY=>'required|alpha|in:male,female',
-            self::$AGE_KEY=>'required|integer|min:18|max:100',
-            self::$ETHNICITY_KEY=>'required|alpha|min:2|max:100'
+            self::$FIRST_NAME_KEY=>['required', 'alpha', 'min:2', 'max:100'],
+            self::$LAST_NAME_KEY=>['required', 'alpha', 'min:2', 'max:100'],
+            self::$EDUCATION_KEY=>['required', 'in:no_hs,hs_ged,some_bs,bs,ms,phd'],
+            self::$GENDER_KEY=>['required', 'in:male,female'],
+            self::$AGE_KEY=>['required','integer', 'in:'. implode(',', range(18, 100))],
+            self::$WORK_STATUS_KEY=>['required', 'in:full,part,unemployed,student'],
+            self::$INCOME_KEY=>['required', 'in:low,low_mid,high_mid,high']
         ];
 
-        $this->fillable = [self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY,
-            self::$PROFESSION_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY, self::$AGE_KEY, self::$ETHNICITY_KEY];
+        $this->fillable = [
+            self::$FIRST_NAME_KEY, self::$LAST_NAME_KEY, self::$EDUCATION_KEY, self::$GENDER_KEY,
+            self::$AGE_KEY, self::$WORK_STATUS_KEY, self::$INCOME_KEY];
 
         parent::__construct($attributes);
     }
@@ -42,6 +55,27 @@ class Subject extends BaseEloquent
     /* ---------------------------------------------------------------------
      * Model Relationships
      * ---------------------------------------------------------------------*/
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function subjectEntryState()
+    {
+        return $this->hasOne(SubjectEntryState::getNamespace(), SubjectEntryState::$SUBJECT_ID_KEY);
+    }
+
+    public function gameQuestionnaire()
+    {
+        return $this->hasOne(GameQuestionnaire::getNamespace(), GameQuestionnaire::$SUBJECT_ID_KEY);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function preGameQuestionnaire()
+    {
+        return $this->hasOne(PreGameQuestionnaire::getNamespace(), PreGameQuestionnaire::$SUBJECT_ID_KEY);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -99,6 +133,9 @@ class Subject extends BaseEloquent
         return $this->hasMany(TrustEntry::getNamespace(), TrustEntry::$SUBJECT_ID_KEY);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function dictatorEntries()
     {
         return $this->hasMany(DictatorEntry::getNamespace(), DictatorEntry::$SUBJECT_ID_KEY);
@@ -123,40 +160,6 @@ class Subject extends BaseEloquent
     /* ---------------------------------------------------------------------
      * Business Logic
      * ---------------------------------------------------------------------*/
-
-    /**
-     * Calculates and saves the subjects experiment payoffs.
-     */
-    public function saveCalculatedPayoffs()
-    {
-        $riskAversionTreatment = $this->getSession()->getRiskAversionTreatment();
-        if ($riskAversionTreatment !== null && count($this->getRiskAversionEntries()) > 0) {
-            $riskAversionEntry = $riskAversionTreatment->calculatePayoff($this);
-            $riskAversionEntry->setSelectedForPayoff(true);
-            $riskAversionEntry->save();
-        }
-
-        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
-        if ($willingnessPayTreatment !== null && count($this->getWillingnessPayEntries()) > 0) {
-            $willingnessPayEntry = $willingnessPayTreatment->calculatePayoff($this);
-            $willingnessPayEntry->setSelectedForPayoff(true);
-            $willingnessPayEntry->save();
-        }
-
-        $ultimatumTreatment = $this->getUltimatumTreatment();
-        if ($ultimatumTreatment !== null && count($this->getUltimatumEntries()) > 0) {
-            $ultimatumEntry = $ultimatumTreatment->calculatePayoff($this);
-            $ultimatumEntry->setSelectedForPayoff(true);
-            $ultimatumEntry->save();
-        }
-
-        $trustTreatment = $this->getTrustTreatment();
-        if ($trustTreatment !== null && count($this->getTrustEntries()) > 0) {
-            $trustEntry = $trustTreatment->calculatePayoff($this);
-            $trustEntry->setSelectedForPayoff(true);
-            $trustEntry->save();
-        }
-    }
 
     /**
      * @return bool
@@ -234,6 +237,43 @@ class Subject extends BaseEloquent
      * Getters and Setters
      * ---------------------------------------------------------------------*/
 
+    /**
+     * Returns the subject work status options.
+     *
+     * @return array
+     */
+    public static function getWorkStatusOptions()
+    {
+        return self::$workStatusOptions;
+    }
+
+    /**
+     * Returns the subject income options.
+     *
+     * @return array
+     */
+    public static function getIncomeOptions()
+    {
+        return self::$incomeOptions;
+    }
+
+    /**
+     * Returns the subjects education options.
+     *
+     * @return array
+     */
+    public static function getEducationOptions()
+    {
+        return self::$educationOptions;
+    }
+
+    /**
+     * @return SubjectEntryState
+     */
+    public function getSubjectEntryState()
+    {
+        return $this->subjectEntryState;
+    }
 
     /**
      * @return UltimatumGroup
@@ -306,6 +346,41 @@ class Subject extends BaseEloquent
     public function getSession()
     {
         return $this->session;
+    }
+
+    /**
+     * @return \SportExperiment\Model\TreatmentInterface[]
+     */
+    public function getTreatments()
+    {
+        return $this->getSession()->getEnabledTreatments();
+    }
+
+    /**
+     * @param $taskId
+     * @return \SportExperiment\Model\TreatmentInterface
+     */
+    public function getTreatment($taskId)
+    {
+        return $this->getSession()->getEnabledTreatment($taskId);
+    }
+
+    /**
+     * @return \SportExperiment\Model\TreatmentInterface
+     */
+    public function getFirstTreatment()
+    {
+        return $this->getSession()->getFirstTreatment();
+    }
+
+    /**
+     * @param TreatmentInterface $currentTreatment
+     *
+     * @return null|\SportExperiment\Model\TreatmentInterface
+     */
+    public function getNextTreatment(TreatmentInterface $currentTreatment)
+    {
+        return $this->getSession()->getNextTreatment($currentTreatment);
     }
 
     /**
@@ -438,14 +513,6 @@ class Subject extends BaseEloquent
     }
 
     /**
-     * @param mixed $ethnicity
-     */
-    public function setEthnicity($ethnicity)
-    {
-        $this->setAttribute(self::$ETHNICITY_KEY, $ethnicity);
-    }
-
-    /**
      * @param mixed $firstName
      */
     public function setFirstName($firstName)
@@ -467,14 +534,6 @@ class Subject extends BaseEloquent
     public function setLastName($lastName)
     {
         $this->setAttribute(self::$LAST_NAME_KEY, $lastName);
-    }
-
-    /**
-     * @param mixed $profession
-     */
-    public function setProfession($profession)
-    {
-        $this->setAttribute(self::$PROFESSION_KEY, $profession);
     }
 
     /**
@@ -512,14 +571,6 @@ class Subject extends BaseEloquent
     /**
      * @return mixed
      */
-    public function getEthnicity()
-    {
-        return $this->getAttribute(self::$ETHNICITY_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
     public function getFirstName()
     {
         return $this->getAttribute(self::$FIRST_NAME_KEY);
@@ -539,13 +590,5 @@ class Subject extends BaseEloquent
     public function getLastName()
     {
         return $this->getAttribute(self::$LAST_NAME_KEY);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProfession()
-    {
-        return $this->getAttribute(self::$PROFESSION_KEY);
     }
 }
