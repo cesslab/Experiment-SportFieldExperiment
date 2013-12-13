@@ -7,7 +7,7 @@ use SportExperiment\Filter\ResearcherAuthFilter;
 use Illuminate\Support\Facades\Route;
 
 use SportExperiment\Controller\Subject\Login as SubjectLogin;
-use SportExperiment\Controller\Subject\Registration;
+use SportExperiment\Controller\Subject\PreGame\Registration;
 use SportExperiment\Filter\SubjectAuthFilter;
 use SportExperiment\Controller\Subject\Experiment;
 use SportExperiment\Controller\Subject\PreGameHold;
@@ -15,6 +15,7 @@ use SportExperiment\Filter\SubjectRouteFilter;
 use SportExperiment\Controller\Subject\Payoff;
 use SportExperiment\Controller\Subject\Questionnaire;
 use SportExperiment\Controller\Subject\Completed;
+use SportExperiment\Controller\Subject\PreGame\Questionnaire as PreGameQuestionnaire;
 
 Route::get('/', function(){});
 
@@ -52,6 +53,10 @@ Route::group(array('before'=>array(SubjectAuthFilter::getName(), SubjectRouteFil
     // Registration
     Route::get(Registration::getRoute(), Registration::getNamespace() . '@getRegistration');
     Route::post(Registration::getRoute(), Registration::getNamespace() . '@postRegistration');
+
+    // Pre-Game Questionnaire
+    Route::get(PreGameQuestionnaire::getRoute(), PreGameQuestionnaire::getNamespace() . '@getQuestionnaire');
+    Route::post(PreGameQuestionnaire::getRoute(), PreGameQuestionnaire::getNamespace() . '@postQuestionnaire');
 
     // Pre-Game Hold Screen
     Route::get(PreGameHold::getRoute(), PreGameHold::getNamespace() . '@getHold');
