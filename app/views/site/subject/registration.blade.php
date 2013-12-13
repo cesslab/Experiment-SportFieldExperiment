@@ -10,6 +10,7 @@
             <div class="panel-body">
                 {{ Form::open(array('url'=>$postUrl, 'method'=>'post', 'class'=>'form-horizontal', 'role'=>'form')) }}
 
+                {{-- First Name --}}
                 <div class="form-group {{ ($errors->has($firstName)) ? 'has-error' : '' }} ">
                     {{ Form::label($firstName, 'First Name', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
@@ -18,6 +19,7 @@
                     </div>
                 </div>
 
+                {{-- Last Name --}}
                 <div class="form-group {{ ($errors->has($lastName)) ? 'has-error' : '' }} ">
                     {{ Form::label($lastName, 'Last Name', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
@@ -26,43 +28,49 @@
                     </div>
                 </div>
 
-                <div class="form-group {{ ($errors->has($profession)) ? 'has-error' : '' }} ">
-                    {{ Form::label($profession, 'Profession', ['class'=>'col-sm-3 control-label']) }}
+                {{-- Work Status --}}
+                <div class="form-group {{ ($errors->has($workStatus)) ? 'has-error' : '' }} ">
+                    {{ Form::label($workStatus, 'Work Status', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
-                        {{ Form::text($profession, Input::old($profession), ['class'=>'form-control', 'placeholder'=>'Profession']) }}
-                        <span class="error">{{ $errors->first($profession) }}</span>
+                        {{ Form::select($workStatus, $workStatusOptions, 'default', ['class'=>'form-control']) }}
+                        <span class="error">{{ $errors->first($workStatus) }}</span>
                     </div>
                 </div>
 
+                {{-- Education --}}
                 <div class="form-group {{ ($errors->has($education)) ? 'has-error' : '' }} ">
                     {{ Form::label($education, 'Education', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
-                        {{ Form::text($education, Input::old($education), ['class'=>'form-control', 'placeholder'=>'Education']) }}
+                        {{ Form::select($education, $educationOptions, 'default', ['class'=>'form-control']) }}
                         <span class="error">{{ $errors->first($education) }}</span>
                     </div>
                 </div>
 
+
+                {{-- Gender --}}
                 <div class="form-group {{ ($errors->has($gender)) ? 'has-error' : '' }} ">
                     {{ Form::label($gender, 'Gender', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
-                        {{ Form::text($gender, Input::old($gender), ['class'=>'form-control', 'placeholder'=>'Gender']) }}
+                        {{ Form::select($gender, $genderOptions, 'default', ['class'=>'form-control']) }}
                         <span class="error">{{ $errors->first($gender) }}</span>
                     </div>
                 </div>
 
-                <div class="form-group {{ ($errors->has($gender)) ? 'has-error' : '' }} ">
-                    {{ Form::label($ethnicity, 'Ethnicity', ['class'=>'col-sm-3 control-label']) }}
-                    <div class="col-sm-6">
-                        {{ Form::text($ethnicity, Input::old($ethnicity), ['class'=>'form-control', 'placeholder'=>'Ethnicity']) }}
-                        <span class="error">{{ $errors->first($ethnicity) }}</span>
-                    </div>
-                </div>
-
+                {{-- Age --}}
                 <div class="form-group {{ ($errors->has($age)) ? 'has-error' : '' }} ">
                     {{ Form::label($age, 'Age', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
-                        {{ Form::text($age, Input::old($age), ['class'=>'form-control', 'placeholder'=>'Age']) }}
+                        {{ Form::select($age, $ageOptions, 'default', ['class'=>'form-control']) }}
                         <span class="error">{{ $errors->first($age) }}</span>
+                    </div>
+                </div>
+
+                {{-- Income --}}
+                <div class="form-group {{ ($errors->has($income)) ? 'has-error' : '' }} ">
+                    {{ Form::label($income, 'Income', ['class'=>'col-sm-3 control-label']) }}
+                    <div class="col-sm-6">
+                        {{ Form::select($income, $incomeOptions, 'default', ['class'=>'form-control']) }}
+                        <span class="error">{{ $errors->first($income) }}</span>
                     </div>
                 </div>
 
