@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Controller\BaseController;
 use SportExperiment\Model\Eloquent\DictatorEntry;
+use SportExperiment\Model\Eloquent\GameQuestionnaire;
 use SportExperiment\Model\Eloquent\Subject;
+use SportExperiment\Model\Eloquent\SubjectEntryState;
 use SportExperiment\Model\Eloquent\TrustProposerEntry;
-use SportExperiment\Model\Eloquent\TrustEntry;
 use SportExperiment\Model\Eloquent\TrustReceiverEntry;
-use SportExperiment\Model\Eloquent\TrustTreatment;
 use SportExperiment\Model\Eloquent\UltimatumEntry;
 use SportExperiment\Model\SubjectRepositoryInterface;
 use SportExperiment\View\Composer\Subject\Experiment as ExperimentComposer;
@@ -41,45 +41,90 @@ class Experiment extends BaseController
 
     public function postExperiment()
     {
-        $modelCollection = new ModelCollection();
+        $entryState = $this->subject->getSubjectEntryState();
 
-        $session = $this->subject->getSession();
+        // Handle Treatment Submission
+        if ( ! $entryState->getTreatmentCompleted()) {
 
-        // Willingness to pay treatment
-        if ($session->getWillingnessPayTreatment() != null)
-            $modelCollection->addModel(
-                new WillingnessPayEntry(Input::all(), $session->getWillingnessPayTreatment()->getEndowment()));
+            if ( ! $entryState->isTreatmentSet()) {
+                $currentTreatment = $this->subject->getFirstTreatment();
+            }
+            else {
+                $currentTreatment = $this->subject->getTreatment($entryState->getCurrentTaskId());
+            }
 
-        // Risk aversion treatment
-        if ($session->getRiskAversionTreatment() != null)
-            $modelCollection->addModel(new RiskAversionEntry(Input::all()));
+            $modelCollection = new ModelCollection();
+            $session = $this->subject->getSession();
 
-        // Ultimatum treatment
-        if ($session->getUltimatumTreatment() != null) {
-            $ultimatumEntry = new UltimatumEntry(Input::all());
-            $ultimatumEntry->setMaxAmountRule($this->subject->getUltimatumTreatment()->getTotalAmount());
-            $modelCollection->addModel($ultimatumEntry);
+            // Willingness to pay treatment
+            if ($session->getWillingnessPayTreatment() instanceof $currentTreatment) {
+                $modelCollection->addModel(
+                    new WillingnessPayEntry(Input::all(), $session->getWillingnessPayTreatment()->getEndowment()));
+            }
+
+            // Risk aversion treatment
+            if ($session->getRiskAversionTreatment() instanceof $currentTreatment) {
+                $riskAversionEntry = new RiskAversionEntry(Input::all());
+                $riskAversionEntry->setMaxGamblePayment($session->getRiskAversionTreatment()->getEndowment());
+                $modelCollection->addModel($riskAversionEntry);
+            }
+
+            // Ultimatum treatment
+            if ($session->getUltimatumTreatment() instanceof $currentTreatment) {
+                $ultimatumEntry = new UltimatumEntry(Input::all());
+                $ultimatumEntry->setMaxAmountRule($this->subject->getUltimatumTreatment()->getTotalAmount());
+                $modelCollection->addModel($ultimatumEntry);
+            }
+
+            // Trust treatment
+            if ($session->getTrustTreatment() instanceof $currentTreatment) {
+                $trustEntry = ($this->subject->getTrustGroup()->isProposer()) ? new TrustProposerEntry(Input::all()) : new TrustReceiverEntry(Input::all());
+                $trustEntry->setValidationRules($this->subject->getTrustTreatment());
+                $modelCollection->addModel($trustEntry);
+            }
+
+            // Dictator treatment
+            if ($session->getDictatorTreatment() instanceof $currentTreatment) {
+                $dictatorEntry = new DictatorEntry(Input::all());
+                $dictatorEntry->setMaxAllocationRule($session->getDictatorTreatment()->getProposerEndowment());
+                $modelCollection->addModel($dictatorEntry);
+            }
+
+            if ($modelCollection->validationFails())
+                return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
+
+            // Save Treatment
+            $this->subjectRepository->saveSubjectData(Auth::user()->subject, $modelCollection, $currentTreatment);
+
+            // Update SubjectEntryState
+            $nextTreatment = $this->subject->getNextTreatment($currentTreatment);
+            if ($nextTreatment == null) {
+                $entryState->setCurrentTaskId(SubjectEntryState::$NO_TREATMENT_ID_SET);
+                $entryState->setTasksCompleted(true);
+            }
+            else {
+                $entryState->setCurrentTaskId($nextTreatment->getTreatmentTaskId());
+            }
+            $entryState->save();
+
+            return Redirect::to(self::getRoute());
+        }
+        // Handle Question Submission
+        else {
+            $gameQuestionnaire = new GameQuestionnaire(Input::all());
+            if ($gameQuestionnaire->validationFails())
+                return Redirect::to(self::getRoute())->withInput()->with('errors', $gameQuestionnaire->getErrorMessages());
+
+            $gameQuestionnaire->subject()->associate($this->subject);
+            $gameQuestionnaire->save();
+
+            // Update SubjectEntryState
+            $entryState->setTasksCompleted(false);
+            $entryState->save();
+
+            return View::make(GameHoldComposer::$VIEW_PATH);
         }
 
-        // Trust treatment
-        if ($session->getTrustTreatment() != null) {
-            $trustEntry = ($this->subject->getTrustGroup()->isProposer()) ? new TrustProposerEntry(Input::all()) : new TrustReceiverEntry(Input::all());
-            $trustEntry->setValidationRules($this->subject->getTrustTreatment());
-            $modelCollection->addModel($trustEntry);
-        }
-
-        // Dictator treatment
-        if ($session->getDictatorTreatment() != null) {
-            $dictatorEntry = new DictatorEntry(Input::all());
-            $dictatorEntry->setMaxAllocationRule($session->getDictatorTreatment()->getProposerEndowment());
-            $modelCollection->addModel($dictatorEntry);
-        }
-
-        if ($modelCollection->validationFails())
-            return Redirect::to(self::getRoute())->withInput()->with('errors', $modelCollection->getErrorMessages());
-
-        $this->subjectRepository->saveSubjectData(Auth::user()->subject, $modelCollection);
-        return View::make(GameHoldComposer::$VIEW_PATH);
     }
 
     public static function getRoute()
