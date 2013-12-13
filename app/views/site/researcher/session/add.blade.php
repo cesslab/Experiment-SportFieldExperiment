@@ -47,6 +47,14 @@
                     </div>
                 </div>
                 <div id="riskAversionGroup">
+                    <div class="form-group {{ ($errors->has($endowment)) ? 'has-error' : '' }} ">
+                        {{ Form::label($endowment, 'Endowment', ['class'=>'col-sm-3 control-label']) }}
+                        <div class="col-sm-6">
+                            {{ Form::text($endowment, Input::old($endowment), ['class'=>'form-control', 'placeholder'=>'Endowment Amount']) }}
+                            <span class="error">{{ $errors->first($endowment) }}</span>
+                        </div>
+                    </div>
+
                     <div class="form-group {{ ($errors->has($lowPrizeKey)) ? 'has-error' : '' }} ">
                         {{ Form::label($lowPrizeKey, 'Low Prize', ['class'=>'col-sm-3 control-label']) }}
                         <div class="col-sm-6">
@@ -55,19 +63,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group {{ ($errors->has($midPrizeKey)) ? 'has-error' : '' }} ">
-                        {{ Form::label($midPrizeKey, 'Mid Prize', ['class'=>'col-sm-3 control-label']) }}
-                        <div class="col-sm-6">
-                            {{ Form::text($midPrizeKey, Input::old($midPrizeKey), ['class'=>'form-control', 'placeholder'=>'Mid Prize']) }}
-                            <span class="error">{{ $errors->first($midPrizeKey) }}</span>
-                        </div>
-                    </div>
-
                     <div class="form-group {{ ($errors->has($highPrizeKey)) ? 'has-error' : '' }} ">
                         {{ Form::label($highPrizeKey, 'High Prize', ['class'=>'col-sm-3 control-label']) }}
                         <div class="col-sm-6">
                             {{ Form::text($highPrizeKey, Input::old($highPrizeKey), ['class'=>'form-control', 'placeholder'=>'High Prize']) }}
                             <span class="error">{{ $errors->first($highPrizeKey) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group {{ ($errors->has($gambleProbability)) ? 'has-error' : '' }} ">
+                        {{ Form::label($gambleProbability, 'Gamble Probability', ['class'=>'col-sm-3 control-label']) }}
+                        <div class="col-sm-6">
+                            {{ Form::text($gambleProbability, Input::old($gambleProbability), ['class'=>'form-control', 'placeholder'=>'Gamble Probability']) }}
+                            <span class="error">{{ $errors->first($gambleProbability) }}</span>
                         </div>
                     </div>
                 </div>
@@ -116,9 +124,9 @@
                 </div>
                 <div id="trustGroup">
                     <div class="form-group {{ ($errors->has($trustSenderMultiplierKey)) ? 'has-error' : '' }} ">
-                        {{ Form::label($trustSenderMultiplierKey, 'Sender Multiplier', ['class'=>'col-sm-3 control-label']) }}
+                        {{ Form::label($trustSenderMultiplierKey, 'Sender Increment', ['class'=>'col-sm-3 control-label']) }}
                         <div class="col-sm-6">
-                            {{ Form::text($trustSenderMultiplierKey, Input::old($trustSenderMultiplierKey), ['class'=>'form-control', 'placeholder'=>'Sender Multiplier']) }}
+                            {{ Form::text($trustSenderMultiplierKey, Input::old($trustSenderMultiplierKey), ['class'=>'form-control', 'placeholder'=>'Sender Increment']) }}
                             <span class="error">{{ $errors->first($trustSenderMultiplierKey) }}</span>
                         </div>
                     </div>
