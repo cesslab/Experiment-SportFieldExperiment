@@ -75,7 +75,6 @@
                     <th>Session ID <i class="fa fa-sort"></i></th>
                     <th>User Name <i class="fa fa-sort"></i></th>
                     <th>Game State <i class="fa fa-sort"></i></th>
-                    <th>Ultimatum Role <i class="fa fa-sort"></i></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -98,12 +97,6 @@
                     <td>Completed</td>
                     @else
                     <td>Undeclared</td>
-                    @endif
-
-                    @if ($subject->getUltimatumGroup()->getSubjectRole() == $ultimatumProposerRoleId)
-                    <td>Proposer</td>
-                    @else
-                    <td>Receiver</td>
                     @endif
                 </tr>
                 @endforeach
