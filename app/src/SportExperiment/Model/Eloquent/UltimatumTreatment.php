@@ -2,8 +2,9 @@
 
 use SportExperiment\Model\Group;
 use SportExperiment\Model\GroupTreatmentInterface;
+use SportExperiment\Model\TreatmentInterface;
 
-class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
+class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface, TreatmentInterface
 {
     public static $TABLE_KEY = 'ultimatum_treatments';
     private static $TASK_ID = 3;
@@ -11,6 +12,7 @@ class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';
     public static $TOTAL_AMOUNT_KEY = 'total_amount';
+    public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'ultimatumEnabled';
 
@@ -130,6 +132,54 @@ class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
         $receiverEntry->save();
     }
 
+
+    /**
+     * Calculates the Subject's Ultimatum Payoff.
+     *
+     * @param Subject $subject
+     */
+    public function calculatePayoff(Subject $subject)
+    {
+        // Set the appropriate roles for this subject
+        if ($subject->getUltimatumGroup()->isProposer()) {
+            $proposer = $subject;
+            $receiver = $subject->getUltimatumGroup()->getPartner();
+        }
+        else {
+            $proposer = $subject->getUltimatumGroup()->getPartner();
+            $receiver = $subject;
+        }
+
+        $proposerEntry = $proposer->getRandomUltimatumEntry();
+        $receiverEntry = $receiver->getRandomUltimatumEntry();
+
+        // Proposer Payoff
+        if ($proposerEntry->getAmount() >= $receiverEntry->getAmount()) {
+            $proposerEntry->setPayoff($this->getTotalAmount() - $proposerEntry->getAmount());
+        }
+        else {
+            $receiverEntry->setPayoff(0);
+        }
+
+        // Receiver Payoff
+        if ($receiverEntry->getAmount() <= $proposerEntry->getAmount()) {
+            $receiverEntry->setPayoff($proposerEntry->getAmount());
+        }
+        else {
+            $receiverEntry->setPayoff(0);
+        }
+
+        // Save only the subjects payoffs, not her partners.
+        if ($subject->getUltimatumGroup()->isProposer()) {
+            $proposerEntry->setSelectedForPayoff(true);
+            $proposerEntry->save();
+        }
+        else {
+            $receiverEntry->setSelectedForPayoff(true);
+            $receiverEntry->save();
+        }
+    }
+
     /* ---------------------------------------------------------------------
      * Getters and Setters
      * ---------------------------------------------------------------------*/
@@ -155,6 +205,30 @@ class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
     public function getTotalAmount()
     {
         return $this->getAttribute(self::$TOTAL_AMOUNT_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->getAttribute(self::$ID_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTreatmentTaskId()
+    {
+        return $this->getAttribute(self::$TASK_ID_KEY);
+    }
+
+    /**
+     * @param $taskId
+     */
+    public function setTreatmentTaskId($taskId)
+    {
+        $this->setAttribute(self::$TASK_ID_KEY, $taskId);
     }
 
     public static function getTaskId()
