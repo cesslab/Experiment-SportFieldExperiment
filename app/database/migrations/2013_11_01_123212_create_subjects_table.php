@@ -22,11 +22,11 @@ class CreateSubjectsTable extends Migration {
 
             $table->string(Subject::$FIRST_NAME_KEY)->nullable();
             $table->string(Subject::$LAST_NAME_KEY)->nullable();
-            $table->string(Subject::$PROFESSION_KEY)->nullable();
             $table->string(Subject::$EDUCATION_KEY)->nullable();
             $table->string(Subject::$GENDER_KEY)->nullable();
             $table->integer(Subject::$AGE_KEY)->nullable();
-            $table->string(Subject::$ETHNICITY_KEY)->nullable();
+            $table->string(Subject::$WORK_STATUS_KEY)->nullable();
+            $table->string(Subject::$INCOME_KEY)->nullable();
             $table->timestamps();
         });
 	}
