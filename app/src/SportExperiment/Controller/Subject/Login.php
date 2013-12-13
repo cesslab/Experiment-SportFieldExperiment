@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Model\Eloquent\UserRole;
+use SportExperiment\Controller\Subject\PreGame\Questionnaire;
 
 class Login extends BaseController
 {
@@ -34,7 +35,7 @@ class Login extends BaseController
         if ( ! Auth::attempt($user->getAuthInfo()))
             return Redirect::to(self::getRoute())->with('error', 'Unable to authorize');
 
-        return Redirect::to(Registration::getRoute());
+        return Redirect::to(Questionnaire::getRoute());
     }
 
     public static function getRoute()
