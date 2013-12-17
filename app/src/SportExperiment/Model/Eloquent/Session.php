@@ -139,27 +139,27 @@ class Session extends BaseEloquent
 
         $subjects = $this->getSubjects();
         foreach($subjects as $subject) {
-            if ($riskAversionTreatment !== null) {
+            if ($riskAversionTreatment != null) {
                 if (count($subject->getRiskAversionEntries()) == 0)
                     return false;
             }
 
-            if ($willingnessPayTreatment !== null) {
+            if ($willingnessPayTreatment != null) {
                 if (count($subject->getWillingnessPayEntries()) == 0)
                     return false;
             }
 
-            if ($ultimatumTreatment !== null) {
+            if ($ultimatumTreatment != null) {
                 if (count($subject->getUltimatumEntries()) == 0)
                     return false;
             }
 
-            if ($trustTreatment !== null) {
+            if ($trustTreatment != null) {
                 if (count($subject->getTrustEntries()) == 0)
                     return false;
             }
 
-            if ($dictatorTreatment !== null) {
+            if ($dictatorTreatment != null) {
                 if (count($subject->getDictatorEntries()) == 0)
                     return false;
             }
@@ -182,19 +182,19 @@ class Session extends BaseEloquent
         $dictatorTreatment = $this->getDictatorTreatment();
 
         $treatments = [];
-        if ($riskAversionTreatment !== null)
+        if ($riskAversionTreatment != null)
             $treatments[] = $riskAversionTreatment;
 
-        if ($willingnessPayTreatment !== null)
+        if ($willingnessPayTreatment != null)
             $treatments[] = $willingnessPayTreatment;
 
-        if ($ultimatumTreatment !== null)
+        if ($ultimatumTreatment != null)
             $treatments[] = $ultimatumTreatment;
 
-        if ($trustTreatment !== null)
+        if ($trustTreatment != null)
             $treatments[] = $trustTreatment;
 
-        if ($dictatorTreatment !== null)
+        if ($dictatorTreatment != null)
             $treatments[] = $dictatorTreatment;
 
         return $treatments;
@@ -214,23 +214,23 @@ class Session extends BaseEloquent
         $trustTreatment = $this->getTrustTreatment();
         $dictatorTreatment = $this->getDictatorTreatment();
 
-        if ($riskAversionTreatment !== null)
+        if ($riskAversionTreatment != null)
             if ($riskAversionTreatment->getTreatmentTaskId() == $taskId)
                 return $riskAversionTreatment;
 
-        if ($willingnessPayTreatment !== null)
+        if ($willingnessPayTreatment != null)
             if ($willingnessPayTreatment->getTreatmentTaskId() == $taskId)
                 return $willingnessPayTreatment;
 
-        if ($ultimatumTreatment !== null)
+        if ($ultimatumTreatment != null)
             if ($ultimatumTreatment->getTreatmentTaskId() == $taskId)
                 return $ultimatumTreatment;
 
-        if ($trustTreatment !== null)
+        if ($trustTreatment != null)
             if ($trustTreatment->getTreatmentTaskId() == $taskId)
                 return $trustTreatment;
 
-        if ($dictatorTreatment !== null)
+        if ($dictatorTreatment != null)
             if ($dictatorTreatment->getTreatmentTaskId() == $taskId)
                 return $dictatorTreatment;
     }
@@ -299,12 +299,12 @@ class Session extends BaseEloquent
              * ------------------- */
 
             // Risk Aversion Payoff
-            if ($riskAversionTreatment !== null && $riskAversionTreatment::getTaskId() == $taskId ) {
+            if ($riskAversionTreatment != null && $riskAversionTreatment::getTaskId() == $taskId ) {
                 $riskAversionTreatment->calculatePayoff($subject);
             }
 
             // Willingness Pay Payoff
-            if ($willingnessPayTreatment !== null && $willingnessPayTreatment::getTaskId() == $taskId) {
+            if ($willingnessPayTreatment != null && $willingnessPayTreatment::getTaskId() == $taskId) {
                 $willingnessPayTreatment->calculatePayoff($subject);
             }
 
@@ -313,17 +313,17 @@ class Session extends BaseEloquent
              * ------------------- */
 
             // Ultimatum Payoff
-            if ($ultimatumTreatment !== null && $ultimatumTreatment::getTaskId() == $taskId) {
+            if ($ultimatumTreatment != null && $ultimatumTreatment::getTaskId() == $taskId) {
                 $ultimatumTreatment->calculatePayoff($subject);
             }
 
             // Trust Payoff
-            if ($trustTreatment !== null && $trustTreatment::getTaskId() == $taskId) {
+            if ($trustTreatment != null && $trustTreatment::getTaskId() == $taskId) {
                 $trustTreatment->calculatePayoff($subject);
             }
 
             // Dictator Payoff
-            if ($dictatorTreatment !== null && $dictatorTreatment::getTaskId() == $taskId) {
+            if ($dictatorTreatment != null && $dictatorTreatment::getTaskId() == $taskId) {
                 $dictatorTreatment->calculatePayoff($subject);
             }
         }
