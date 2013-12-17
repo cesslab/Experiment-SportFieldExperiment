@@ -1,7 +1,5 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
-use SportExperiment\Model\NFLTeams;
-
 class GameQuestionnaire extends BaseEloquent
 {
     public static $TABLE_KEY = 'game_questionnaire';
@@ -61,5 +59,4 @@ class GameQuestionnaire extends BaseEloquent
     {
         return self::$OPTION_RANGE;
     }
-
 }
