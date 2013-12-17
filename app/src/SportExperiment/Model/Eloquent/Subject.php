@@ -22,7 +22,7 @@ class Subject extends BaseEloquent
         'unemployed'=>'Unemployed', 'full'=>'Full Time','part'=>'Part Time', 'student'=>'Student'];
 
     private static $incomeOptions = [
-        'low'=>'below $2500', 'low_mid'=>'$25,000 to $49,999', 'high_mid'=>'$50,000 to $99,999', 'high'=>'$100,000 and above'];
+        'low'=>'below $2500', 'low_mid'=>'$25,000 to $49,999', 'high_mid'=>'$50,000 to $99,999', 'high'=>'$100,000 and Above'];
 
     private static $educationOptions = [
         'no_hs'=>'Did Not Complete High School', 'hs_ged'=>'High School or GED', 'some_bs'=>'Some College',
