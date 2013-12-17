@@ -113,8 +113,10 @@ class Experiment extends BaseComposer
             $view->with('happinessLevel', GameQuestionnaireModel::$LEVEL_HAPPINESS_KEY);
             $view->with('happinessLevelOptions', array_merge(['default'=>'Select A Number Between 1 - 7'], GameQuestionnaireModel::getOptionRange()));
 
+            $likelinessRange = array_combine(range(0, 100), range(0,100));
+            $likelinessRange['default'] = 'Select A Chance Between 0 - 100';
             $view->with('likelinessWinningLevel', GameQuestionnaireModel::$LIKELINESS_WINNING_KEY);
-            $view->with('likelinessWinningLevelOptions', array_merge(['default'=>'Select A Number Between 1 - 7'], GameQuestionnaireModel::getOptionRange()));
+            $view->with('likelinessWinningLevelOptions', $likelinessRange);
         }
 
         $view->with('postUrl', URL::to(ExperimentController::getRoute()));
