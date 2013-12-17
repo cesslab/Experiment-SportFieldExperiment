@@ -14,6 +14,7 @@
                 {{-- Sport Fan --}}
                 <div class="col-sm-11 form-group {{ ($errors->has($sportFan)) ? 'has-error' : '' }} ">
                     {{ Form::label($sportFan, 'Do you like watching sports in general?', ['class'=>'']) }}
+                    <p>(1 Not very much, 7 more than all other types of entertainment)</p>
                     {{ Form::select($sportFan, $sportFanOptions, 'default', ['class'=>'form-control']) }}
                     <span class="error">{{ $errors->first($sportFan) }}</span>
                 </div>
@@ -21,6 +22,7 @@
                 {{-- Football Fan --}}
                 <div class="col-sm-11 form-group {{ ($errors->has($footballFan)) ? 'has-error' : '' }} ">
                     {{ Form::label($footballFan, 'Do you like watching football in particular?', ['class'=>'']) }}
+                    <p>(1 not very much, 7 football is my favorite sport to watch)</p>
                     {{ Form::select($footballFan, $footballFanOptions, 'default', ['class'=>'form-control']) }}
                     <span class="error">{{ $errors->first($footballFan) }}</span>
                 </div>
@@ -41,7 +43,8 @@
 
                 {{-- Measure Favorite Team --}}
                 <div class="col-sm-11 form-group {{ ($errors->has($measureFavoredTeam)) ? 'has-error' : '' }} ">
-                    {{ Form::label($measureFavoredTeam, 'Do you like watching football in particular?', ['class'=>'']) }}
+                    {{ Form::label($measureFavoredTeam, 'How strongly do you care for the team you are rooting for in the game today?', ['class'=>'']) }}
+                    <p>(1 not at all, 3 somewhat, 5 is a lot, 7 passionately)</p>
                     {{ Form::select($measureFavoredTeam, $measureFavoredTeamOptions, 'default', ['class'=>'form-control']) }}
                     <span class="error">{{ $errors->first($measureFavoredTeam) }}</span>
                 </div>
