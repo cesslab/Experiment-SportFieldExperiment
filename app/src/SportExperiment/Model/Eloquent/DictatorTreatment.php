@@ -6,6 +6,8 @@ use SportExperiment\Model\TreatmentInterface;
 
 class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface, TreatmentInterface
 {
+    private static $TASK_ID = 1;
+
     public static $TABLE_KEY = 'dictator_treatments';
 
     public static $ID_KEY = 'id';
@@ -14,8 +16,6 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface,
     public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'dictatorEnabled';
-
-    private static $TASK_ID = 5;
 
     private static $PROPOSER_ROLE_ID = 1;
     private static $RECEIVER_ROLE_ID = 2;

@@ -4,6 +4,8 @@ use SportExperiment\Model\TreatmentInterface;
 
 class WillingnessPayTreatment extends BaseEloquent implements TreatmentInterface
 {
+    private static $TASK_ID = 2;
+
     public static $TABLE_KEY = 'willingness_to_pay_treatments';
 
     public static $ID_KEY = 'id';
@@ -12,8 +14,6 @@ class WillingnessPayTreatment extends BaseEloquent implements TreatmentInterface
     public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'willingnessPayEnabled';
-
-    private static $TASK_ID = 2;
 
     public $timestamps = false;
 

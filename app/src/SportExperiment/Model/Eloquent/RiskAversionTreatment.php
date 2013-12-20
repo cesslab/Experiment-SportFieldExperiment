@@ -4,6 +4,8 @@ use SportExperiment\Model\TreatmentInterface;
 
 class RiskAversionTreatment extends BaseEloquent implements TreatmentInterface
 {
+    private static $TASK_ID = 3;
+
     public static $TABLE_KEY = 'risk_aversion_treatments';
 
     public static $ID_KEY = 'id';
@@ -15,8 +17,6 @@ class RiskAversionTreatment extends BaseEloquent implements TreatmentInterface
     public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'riskAversionEnabled';
-
-    private static $TASK_ID = 1;
 
     public $timestamps = false;
 

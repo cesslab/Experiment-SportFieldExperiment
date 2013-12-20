@@ -6,8 +6,9 @@ use SportExperiment\Model\TreatmentInterface;
 
 class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface, TreatmentInterface
 {
+    private static $TASK_ID = 5;
+
     public static $TABLE_KEY = 'ultimatum_treatments';
-    private static $TASK_ID = 3;
 
     public static $ID_KEY = 'id';
     public static $SESSION_ID_KEY = 'session_id';

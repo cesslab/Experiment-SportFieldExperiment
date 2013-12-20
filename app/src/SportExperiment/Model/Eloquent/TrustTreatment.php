@@ -6,6 +6,8 @@ use SportExperiment\Model\TreatmentInterface;
 
 class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface, TreatmentInterface
 {
+    private static $TASK_ID = 4;
+
     public static $TABLE_KEY = 'trust_treatments';
 
     public static $ID_KEY = 'id';
@@ -15,8 +17,6 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface, Tr
     public static $TASK_ID_KEY = 'task_id';
 
     public static $TREATMENT_ENABLED_KEY = 'trustEnabled';
-
-    private static $TASK_ID = 4;
 
     private static $NUM_PROPOSER_ALLOCATIONS = 5;
     private static $NUM_RECEIVER_ALLOCATIONS = 4;
