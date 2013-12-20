@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use SportExperiment\Controller\BaseController;
+use SportExperiment\Model\Eloquent\Charity;
 use SportExperiment\Model\Eloquent\DictatorEntry;
 use SportExperiment\Model\Eloquent\GameQuestionnaire;
+use SportExperiment\Model\Eloquent\Good;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\SubjectEntryState;
 use SportExperiment\Model\Eloquent\TrustProposerEntry;
@@ -44,20 +46,21 @@ class Experiment extends BaseController
         $entryState = $this->subject->getSubjectEntryState();
 
         // Handle Treatment Submission
-        if ( ! $entryState->getTreatmentCompleted()) {
+        if ( $entryState->getTaskEntryState() == SubjectEntryState::$TASK_ENTRIES_REQUIRED) {
 
-            if ( ! $entryState->isTreatmentSet()) {
-                $currentTreatment = $this->subject->getFirstTreatment();
-            }
-            else {
-                $currentTreatment = $this->subject->getTreatment($entryState->getCurrentTaskId());
-            }
+            $currentTreatment = $this->subject->getSession()->getTask($entryState->getOrderId());
 
             $modelCollection = new ModelCollection();
             $session = $this->subject->getSession();
 
             // Willingness to pay treatment
+            $chosenGood = null;
             if ($session->getWillingnessPayTreatment() instanceof $currentTreatment) {
+                $chosenGood = $this->subject->getGood();
+                if ($chosenGood == null) {
+                    $good = new Good(Input::all());
+                    $modelCollection->addModel($good);
+                }
                 $modelCollection->addModel(
                     new WillingnessPayEntry(Input::all(), $session->getWillingnessPayTreatment()->getEndowment()));
             }
@@ -84,7 +87,13 @@ class Experiment extends BaseController
             }
 
             // Dictator treatment
+            $chosenCharity = null;
             if ($session->getDictatorTreatment() instanceof $currentTreatment) {
+                $chosenCharity = $this->subject->getCharity();
+                if ($chosenCharity == null) {
+                    $charity = new Charity(Input::all());
+                    $modelCollection->addModel($charity);
+                }
                 $dictatorEntry = new DictatorEntry(Input::all());
                 $dictatorEntry->setMaxAllocationRule($session->getDictatorTreatment()->getProposerEndowment());
                 $modelCollection->addModel($dictatorEntry);
@@ -97,13 +106,17 @@ class Experiment extends BaseController
             $this->subjectRepository->saveSubjectData(Auth::user()->subject, $modelCollection, $currentTreatment);
 
             // Update SubjectEntryState
-            $nextTreatment = $this->subject->getNextTreatment($currentTreatment);
-            if ($nextTreatment == null) {
-                $entryState->setCurrentTaskId(SubjectEntryState::$NO_TREATMENT_ID_SET);
-                $entryState->setTasksCompleted(true);
+            $nextTask = $this->subject->getSession()->getNextTask($entryState);
+            if ($nextTask == null) {
+                $firstTask = $this->subject->getSession()->getFirstTask();
+                $entryState->setTaskId($firstTask->getTreatmentTaskId());
+                $entryState->setOrderId(SubjectEntryState::$FIRST_TASK);
+                $entryState->setTaskEntryState(SubjectEntryState::$TASK_ENTRIES_COMPLETE);
             }
             else {
-                $entryState->setCurrentTaskId($nextTreatment->getTreatmentTaskId());
+                $entryState->setTaskId($nextTask->getTreatmentTaskId());
+                $entryState->setOrderId($entryState->getNextOrderId());
+                $entryState->setTaskId($nextTask->getTreatmentTaskId());
             }
             $entryState->save();
 
@@ -119,7 +132,7 @@ class Experiment extends BaseController
             $gameQuestionnaire->save();
 
             // Update SubjectEntryState
-            $entryState->setTasksCompleted(false);
+            $entryState->setTaskEntryState(SubjectEntryState::$TASK_ENTRIES_REQUIRED);
             $entryState->save();
 
             return View::make(GameHoldComposer::$VIEW_PATH);
