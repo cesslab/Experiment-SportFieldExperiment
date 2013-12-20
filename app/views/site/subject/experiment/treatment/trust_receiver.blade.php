@@ -7,18 +7,24 @@
             <div class="panel-body">
                 {{ Form::open(array('url'=>$postUrl, 'method'=>'post', 'role'=>'form')) }}
 
+                @if( ! $isFirstEntry)
                 <p>
-                    Individuals sometimes change their mind about how they want to interact with others.
+                    Since any commercial break could be the one chosen for cash payment, at each break you should think
+                    about what you want to do at this moment in time.
                 </p>
-                Player B: Please choose how much you would like to transfer back to the randomly
-                selected, anonymous person in this room who is playing in the role of Player A.
-                Please choose a transfer back for each of the amounts of money that Player A might have transferred to you.
+                @endif
                 <p>
+                    At this moment, how much money would you like to transfer back to the randomly selected, anonymous
+                    person in this room who is playing in the role of Player A. Please choose a transfer (in dollars)
+                    back for each of the amounts of money that Player A might have transferred to you.
+                </p>
+                <p>
+                    You are Player A. Select one of the four possible dollar amounts to send to Player B.
+                </p>
                 <div class="form-group {{ ($errors->has($allocationKey)) ? 'has-error' : '' }} ">
-                    </p>
                     @for($i = 0; $i < count($receiverAllocationOptions); ++$i)
                     <div>
-                        <label>If Proposer Sent: {{$receiverAllocationOptions[$i]}}</label>
+                        <label>If Player A sent ${{$receiverAllocationOptions[$i] / $receiverMultiplier}} and you received ${{$receiverAllocationOptions[$i]}}</label>
                         {{ Form::text($allocationKey."[".$receiverAllocationOptions[$i]."]", Input::old($allocationKey."[".$receiverAllocationOptions[$i]."]"), ['class'=>'form-control', 'type'=>'number', 'placeholder'=>'']) }}
                         <span class="error">{{ $errors->first($allocationKey.".".$receiverAllocationOptions[$i]) }}</span>
                     </div>

@@ -7,19 +7,26 @@
             <div class="panel-body">
                 {{ Form::open(array('url'=>$postUrl, 'method'=>'post', 'role'=>'form')) }}
 
+                @if($getCharity)
+                    <p>
+                        Please choose one of the following three charities:
+                    </p>
+                    <div class="form-group {{ ($errors->has($charity)) ? 'has-error' : '' }} ">
+                        {{ Form::select($charity, $charityOptions, 'default', ['class'=>'form-control']) }}
+                        <span class="error">{{ $errors->first($charity) }}</span>
+                    </div>
+                @else
                 <p>
-                    Individuals sometimes change their mind about how much they want to donate to charity.
+                    Since any commercial break could be the one chosen for cash payment, at each break you should think
+                    about what you want to do at this moment in time.
                 </p>
+                @endif
                 <p>
-                    Right now, how much of your ${{$endowment}} do you want to donate to the charity you selected at the
-                    start of the game? (Please choose an amount between $0 and ${{$endowment}}).
-                </p>
-                <p>
-                    Remember, if this decision is randomly selected for payment, you will receive ${{$endowment}} minus
-                    the amount you decided to donate to the charity and the charity will receive the amount you decided to donate to the charity.
+                    At this moment, how much of your ${{$endowment}} do you want to donate to the charity you
+                    selected at the start of the game? (Please choose an amount between $0 and ${{$endowment}}.)"
                 </p>
 
-                    <div class="form-group {{ ($errors->has($allocationKey)) ? 'has-error' : '' }} ">
+                <div class="form-group {{ ($errors->has($allocationKey)) ? 'has-error' : '' }} ">
                     {{ Form::text($allocationKey, Input::old($allocationKey), ['class'=>'form-control', 'placeholder'=>'Charity Amount', 'type'=>'number']) }}
                     <span class="error">{{ $errors->first($allocationKey) }}</span>
                 </div>

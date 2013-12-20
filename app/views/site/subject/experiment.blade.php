@@ -4,9 +4,9 @@
 
 @if ($displayTask)
     @if ($displayRiskAversion)
-        @include('site.subject.experiment.treatment.riskAversion', array('endowment'=>$endowment, 'taskId'=>$riskAversionTaskId, 'gambleProbability'=>$gambleProbability, 'lowPrize'=>$lowPrize, 'highPrize'=>$highPrize, 'gamblePayment'=>$gamblePayment))
+        @include('site.subject.experiment.treatment.riskAversion', array('isFirstEntry'=>$isFirstEntry, 'endowment'=>$endowment, 'taskId'=>$riskAversionTaskId, 'gambleProbability'=>$gambleProbability, 'lowPrize'=>$lowPrize, 'highPrize'=>$highPrize, 'gamblePayment'=>$gamblePayment))
     @elseif ($displayWillingnessPay)
-        @include('site.subject.experiment.treatment.willingnessPay', array('endowment'=>$endowment, 'taskId'=>$willingnessPayTaskId, 'willingPayKey'=>$willingPayKey))
+        @include('site.subject.experiment.treatment.willingnessPay', array('getGood'=>$getGood, 'good'=>$good, 'goodOptions'=>$goodOptions, 'endowment'=>$endowment, 'taskId'=>$willingnessPayTaskId, 'willingPayKey'=>$willingPayKey))
     @elseif ($displayUltimatum)
         @if ($isUltimatumProposer)
             @include('site.subject.experiment.treatment.ultimatum_proposer', array('taskId'=>$ultimatumTaskId, 'totalAmount'=>$ultimatumTotalAmount, 'amountKey'=>$amountKey))
@@ -15,12 +15,12 @@
         @endif
     @elseif ($displayTrust)
         @if ($isTrustProposer)
-            @include('site.subject.experiment.treatment.trust_proposer', array('taskId'=>$trustTaskId, 'proposerAllocationOptions'=>$proposerAllocationOptions, 'numProposerAllocations'=>$numProposerAllocations, 'allocationKey'=>$allocationKey))
+            @include('site.subject.experiment.treatment.trust_proposer', array('isFirstEntry'=>$isFirstEntry,'taskId'=>$trustTaskId, 'proposerAllocationOptions'=>$proposerAllocationOptions, 'numProposerAllocations'=>$numProposerAllocations, 'allocationKey'=>$allocationKey))
         @else
-            @include('site.subject.experiment.treatment.trust_receiver', array('taskId'=>$trustTaskId, 'receiverAllocationOptions'=>$receiverAllocationOptions, 'numReceiverAllocations'=>$numReceiverAllocations, 'allocationKey'=>$allocationKey))
+            @include('site.subject.experiment.treatment.trust_receiver', array('isFirstEntry'=>$isFirstEntry,'taskId'=>$trustTaskId, 'receiverMultiplier'=>$receiverMultiplier, 'receiverAllocationOptions'=>$receiverAllocationOptions, 'numReceiverAllocations'=>$numReceiverAllocations, 'allocationKey'=>$allocationKey))
         @endif
     @elseif ($displayDictator)
-        @include('site.subject.experiment.treatment.dictator', array('taskId'=>$dictatorTaskId, 'endowment'=>$dictatorEndowment, 'allocationKey'=>$dictatorAllocationKey))
+        @include('site.subject.experiment.treatment.dictator', array('taskId'=>$dictatorTaskId, 'getCharity'=>$getCharity, 'charity'=>$charity, 'charityOptions'=>$charityOptions, 'endowment'=>$dictatorEndowment, 'allocationKey'=>$dictatorAllocationKey))
     @endif
 @else
 <div class="row">
@@ -35,7 +35,7 @@
 
                 {{-- Surprise Level --}}
                 <div class="col-sm-11 form-group {{ ($errors->has($surpriseLevel)) ? 'has-error' : '' }} ">
-                    {{ Form::label($surpriseLevel, 'How surprised are you about the recent events in the game?', ['class'=>'']) }}
+                    {{ Form::label($surpriseLevel, 'How surprised are you about the recent events in the game, i.e. events since the last commercial break entry?', ['class'=>'']) }}
                     <p>(1 not at all, 3 somewhat, 5 a lot, 7 incredibly)</p>
                     {{ Form::select($surpriseLevel, $surpriseLevelOptions, 'default', ['class'=>'form-control']) }}
                     <span class="error">{{ $errors->first($surpriseLevel) }}</span>

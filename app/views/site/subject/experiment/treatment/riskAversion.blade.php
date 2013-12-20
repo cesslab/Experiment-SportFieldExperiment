@@ -8,18 +8,21 @@
 
                 {{ Form::open(array('url'=>$postUrl, 'method'=>'post', 'role'=>'form')) }}
                 <div class="form-group {{ ($errors->has($gamblePayment)) ? 'has-error' : '' }} ">
-                    <p>Individuals sometimes change their mind about what they are willing to pay for a risky gamble.</p>
+                    @if( ! $isFirstEntry)
                     <p>
-                        Right now, how much are you be willing to pay for the risky gamble that pays ${{$lowPrize}}
-                        with {{ (1-$gambleProbability) * 100}}% probability and ${{$highPrize}} with {{ $gambleProbability * 100}}% probability?
-                        (Please choose an amount between $0 and ${{$endowment}}).
+                        Since any commercial break could be the one chosen for cash payment, at each break you should
+                        think about what you want to do at this moment in time.
+                    </p>
+                    @endif
+                    <p>
+                        At this moment, how much are you willing to pay for the risky gamble that pays ${{$lowPrize}}
+                        with {{ (1-$gambleProbability) * 100}}% probability and ${{$highPrize}}
+                        with {{ $gambleProbability * 100}} probability?
                     </p>
                     <p>
-                        Remember, you will not pay the amount you enter. Instead, you will receive ${{$endowment}} and pay a
-                        randomly chosen price if that price is below the amount you enter.
-                        As explained at the beginning of the game, it is in your best interest to write down
-                        exactly the most you would be willing to pay for the risky gamble
-                        (and not more or less than the most you would be willing to pay) each time you are asked.
+                        Remember, the price you pay is chosen in a way such that it is in your best interest to write
+                        down exactly the most you would be willing to pay for the risky gamble.
+                        (Please choose an amount between $0 and ${{$endowment}}).
                     </p>
                     {{ Form::text($gamblePayment, Input::old($gamblePayment), ['class'=>'form-control', 'type'=>'number', 'placeholder'=>'Amount Willing to Pay']) }}
                     <span class="error">{{ $errors->first($gamblePayment) }}</span>
