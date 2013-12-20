@@ -13,6 +13,8 @@ class PreGameQuestionnaire extends BaseEloquent
     public static $FAVORITE_TEAM_KEY = 'favorite_team';
     public static $FAVORED_TEAM_KEY = 'favored_team';
     public static $MEASURE_FAVORED_TEAM_KEY = 'measure_favored_team';
+    public static $DISLIKE_OPPONENT_TEAM_KEY = 'dislike_opponent_team';
+    public static $REASON_FOR_ROOTING_KEY = 'reason_for_rooting';
 
     public static $OPTION_RANGE = [1=>'1', 2=>'2', 3=>'3', 4=>'4', 5=>'5', 6=>'6', 7=>'7'];
 
@@ -34,12 +36,14 @@ class PreGameQuestionnaire extends BaseEloquent
             self::$FOOTBALL_FAN_KEY=>['required', 'in:0,1,2,3,4,5,6,7'],
             self::$FAVORITE_TEAM_KEY=>['required', 'integer', 'min:0', 'max:' . NFLTeams::numTeams()],
             self::$FAVORED_TEAM_KEY=>['required', 'integer', 'min:0', 'max:' . NFLTeams::numTeams()],
-            self::$MEASURE_FAVORED_TEAM_KEY=>['required', 'in:0,1,2,3,4,5,6,7']
+            self::$MEASURE_FAVORED_TEAM_KEY=>['required', 'in:0,1,2,3,4,5,6,7'],
+            self::$DISLIKE_OPPONENT_TEAM_KEY=>['required', 'in:0,1,2,3,4,5,6,7'],
+            self::$REASON_FOR_ROOTING_KEY=>['required', 'in:0,1,2,3,4'],
         ];
 
         $this->fillable = [
             self::$SPORT_FAN_KEY, self::$FOOTBALL_FAN_KEY, self::$FAVORITE_TEAM_KEY, self::$FAVORED_TEAM_KEY,
-            self::$MEASURE_FAVORED_TEAM_KEY
+            self::$MEASURE_FAVORED_TEAM_KEY, self::$DISLIKE_OPPONENT_TEAM_KEY, self::$REASON_FOR_ROOTING_KEY
         ];
 
         parent::__construct($attributes);
