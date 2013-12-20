@@ -55,6 +55,22 @@ class Subject extends BaseEloquent
     /* ---------------------------------------------------------------------
      * Model Relationships
      * ---------------------------------------------------------------------*/
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function charity()
+    {
+        return $this->hasOne(Charity::getNamespace(), Charity::$SUBJECT_ID_KEY);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function good()
+    {
+        return $this->hasOne(Good::getNamespace(), Good::$SUBJECT_ID_KEY);
+    }
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -300,6 +316,22 @@ class Subject extends BaseEloquent
     }
 
     /**
+     * @return Charity
+     */
+    public function getCharity()
+    {
+        return $this->charity;
+    }
+
+    /**
+     * @return Good
+     */
+    public function getGood()
+    {
+        return $this->good;
+    }
+
+    /**
      * @return RiskAversionEntry
      */
     public function getRiskAversionPayoff()
@@ -362,7 +394,7 @@ class Subject extends BaseEloquent
      */
     public function getTreatment($taskId)
     {
-        return $this->getSession()->getEnabledTreatment($taskId);
+        return $this->getSession()->getTask($taskId);
     }
 
     /**
@@ -370,17 +402,7 @@ class Subject extends BaseEloquent
      */
     public function getFirstTreatment()
     {
-        return $this->getSession()->getFirstTreatment();
-    }
-
-    /**
-     * @param TreatmentInterface $currentTreatment
-     *
-     * @return null|\SportExperiment\Model\TreatmentInterface
-     */
-    public function getNextTreatment(TreatmentInterface $currentTreatment)
-    {
-        return $this->getSession()->getNextTreatment($currentTreatment);
+        return $this->getSession()->getFirstTask();
     }
 
     /**
