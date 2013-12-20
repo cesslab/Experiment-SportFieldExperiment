@@ -38,7 +38,42 @@
                     </div>
                 </div>
 
-                <!-- Risk Aversion -->
+                {{-- TASK 1: Dictator --}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Enable Dictator Task {{$dictatorTaskId}}</label>
+                    <div class="col-sm-6">
+                        {{ Form::checkbox('dictatorEnabled', 'enabled', false, ['id'=>'dictatorCheckbox', 'class'=>'hiddenChecker']) }}
+                        <label class="styledBox"></label>
+                    </div>
+                </div>
+
+                <div id="dictatorGroup" class="form-group {{ ($errors->has($dictatorEndowmentKey)) ? 'has-error' : '' }} ">
+                    {{ Form::label($dictatorEndowmentKey, 'Dictator Endowment', ['class'=>'col-sm-3 control-label']) }}
+                    <div class="col-sm-6">
+                        {{ Form::text($dictatorEndowmentKey, Input::old($dictatorEndowmentKey), ['class'=>'form-control', 'placeholder'=>'Dictator Endowment']) }}
+                        <span class="error">{{ $errors->first($dictatorEndowmentKey) }}</span>
+                    </div>
+                </div>
+
+                {{-- TASK 2: Willingness Pay --}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Enable Willingness To Pay Task {{$willingnessPayTaskId}}</label>
+                    <div class="col-sm-6">
+                        {{ Form::checkbox('willingnessPayEnabled', 'enabled', false, ['id'=>'willingnessPayCheckbox', 'class'=>'hiddenChecker']) }}
+                        <label class="styledBox"></label>
+                    </div>
+                </div>
+                <div id="willingnessPayGroup">
+                    <div class="form-group {{ ($errors->has($endowmentKey)) ? 'has-error' : '' }} ">
+                        {{ Form::label($endowmentKey, 'Endowment', ['class'=>'col-sm-3 control-label']) }}
+                        <div class="col-sm-6">
+                            {{ Form::text($endowmentKey, Input::old($endowmentKey), ['class'=>'form-control', 'placeholder'=>'Endowment']) }}
+                            <span class="error">{{ $errors->first($endowmentKey) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- TASK 3: Risk Aversion --}}
                 <div class="form-group">
                     <label class="col-sm-3 control-label lbl">Enable Risk Aversion Task {{$riskAversionTaskId}}</label>
                     <div class="col-sm-6">
@@ -80,41 +115,7 @@
                     </div>
                 </div>
 
-                <!-- Willingness to Pay -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Enable Willingness To Pay Task {{$willingnessPayTaskId}}</label>
-                    <div class="col-sm-6">
-                        {{ Form::checkbox('willingnessPayEnabled', 'enabled', false, ['id'=>'willingnessPayCheckbox', 'class'=>'hiddenChecker']) }}
-                        <label class="styledBox"></label>
-                    </div>
-                </div>
-                <div id="willingnessPayGroup">
-                    <div class="form-group {{ ($errors->has($endowmentKey)) ? 'has-error' : '' }} ">
-                        {{ Form::label($endowmentKey, 'Endowment', ['class'=>'col-sm-3 control-label']) }}
-                        <div class="col-sm-6">
-                            {{ Form::text($endowmentKey, Input::old($endowmentKey), ['class'=>'form-control', 'placeholder'=>'Endowment']) }}
-                            <span class="error">{{ $errors->first($endowmentKey) }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Ultimatum -->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">Enable Ultimatum Task {{$ultimatumTaskId}}</label>
-                    <div class="col-sm-6">
-                        {{ Form::checkbox('ultimatumEnabled', 'enabled', false, ['id'=>'ultimatumCheckbox', 'class'=>'hiddenChecker']) }}
-                        <label class="styledBox"></label>
-                    </div>
-                </div>
-                <div id="ultimatumGroup" class="form-group {{ ($errors->has($ultimatumTotalAmountKey)) ? 'has-error' : '' }} ">
-                    {{ Form::label($ultimatumTotalAmountKey, 'Proposer Endowment', ['class'=>'col-sm-3 control-label']) }}
-                    <div class="col-sm-6">
-                        {{ Form::text($ultimatumTotalAmountKey, Input::old($ultimatumTotalAmountKey), ['class'=>'form-control', 'placeholder'=>'Proposer Endowment']) }}
-                        <span class="error">{{ $errors->first($ultimatumTotalAmountKey) }}</span>
-                    </div>
-                </div>
-
-                <!-- Trust -->
+                {{-- TASK 4: Trust --}}
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Enable Trust Task {{$trustTaskId}}</label>
                     <div class="col-sm-6">
@@ -139,21 +140,22 @@
                     </div>
                 </div>
 
-                <!-- Dictator -->
+                {{-- TASK 5: Ultimatum --}}
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Enable Dictator Task {{$dictatorTaskId}}</label>
+                    <label class="col-sm-3 control-label">Enable Ultimatum Task {{$ultimatumTaskId}}</label>
                     <div class="col-sm-6">
-                        {{ Form::checkbox('dictatorEnabled', 'enabled', false, ['id'=>'dictatorCheckbox', 'class'=>'hiddenChecker']) }}
+                        {{ Form::checkbox('ultimatumEnabled', 'enabled', false, ['id'=>'ultimatumCheckbox', 'class'=>'hiddenChecker']) }}
                         <label class="styledBox"></label>
                     </div>
                 </div>
-                <div id="dictatorGroup" class="form-group {{ ($errors->has($dictatorEndowmentKey)) ? 'has-error' : '' }} ">
-                    {{ Form::label($dictatorEndowmentKey, 'Dictator Endowment', ['class'=>'col-sm-3 control-label']) }}
+                <div id="ultimatumGroup" class="form-group {{ ($errors->has($ultimatumTotalAmountKey)) ? 'has-error' : '' }} ">
+                    {{ Form::label($ultimatumTotalAmountKey, 'Proposer Endowment', ['class'=>'col-sm-3 control-label']) }}
                     <div class="col-sm-6">
-                        {{ Form::text($dictatorEndowmentKey, Input::old($dictatorEndowmentKey), ['class'=>'form-control', 'placeholder'=>'Dictator Endowment']) }}
-                        <span class="error">{{ $errors->first($dictatorEndowmentKey) }}</span>
+                        {{ Form::text($ultimatumTotalAmountKey, Input::old($ultimatumTotalAmountKey), ['class'=>'form-control', 'placeholder'=>'Proposer Endowment']) }}
+                        <span class="error">{{ $errors->first($ultimatumTotalAmountKey) }}</span>
                     </div>
                 </div>
+
                 {{ Form::button('Add Session', ['class'=>'btn btn-default', 'type'=>'submit']) }}
                 {{ Form::close() }}
             </div>
