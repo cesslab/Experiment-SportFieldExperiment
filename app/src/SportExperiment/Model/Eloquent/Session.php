@@ -203,36 +203,33 @@ class Session extends BaseEloquent
     /**
      * Returns the active treatments for this session.
      *
-     * @param mixed $taskId
+     * @param mixed $orderId
      * @return \SportExperiment\Model\TreatmentInterface
      */
-    public function getEnabledTreatment($taskId)
+    public function getTask($orderId)
     {
-        $riskAversionTreatment = $this->getRiskAversionTreatment();
-        $willingnessPayTreatment = $this->getWillingnessPayTreatment();
-        $ultimatumTreatment = $this->getUltimatumTreatment();
-        $trustTreatment = $this->getTrustTreatment();
-        $dictatorTreatment = $this->getDictatorTreatment();
+        $treatments = $this->getOrderedTasks();
+        return $treatments[$orderId];
+    }
 
-        if ($riskAversionTreatment != null)
-            if ($riskAversionTreatment->getTreatmentTaskId() == $taskId)
-                return $riskAversionTreatment;
+    /**
+     * Returns the active treatments ordered by Task Id.
+     *
+     * @return \SportExperiment\Model\TreatmentInterface[]
+     */
+    public function getOrderedTasks()
+    {
+        $treatments = $this->getEnabledTreatments();
+        $orderedTreatments[] = $treatments[0];
+        for ($i = 1; $i < count($treatments); ++$i) {
+            for ($j = $i; $j > 0 && $treatments[$j]->getTreatmentTaskId() < $treatments[$j-1]->getTreatmentTaskId(); --$j) {
+                $tempTreatment = $treatments[$j-1];
+                $treatments[$j-1] = $treatments[$j];
+                $treatments[$j] = $tempTreatment;
+            }
+        }
 
-        if ($willingnessPayTreatment != null)
-            if ($willingnessPayTreatment->getTreatmentTaskId() == $taskId)
-                return $willingnessPayTreatment;
-
-        if ($ultimatumTreatment != null)
-            if ($ultimatumTreatment->getTreatmentTaskId() == $taskId)
-                return $ultimatumTreatment;
-
-        if ($trustTreatment != null)
-            if ($trustTreatment->getTreatmentTaskId() == $taskId)
-                return $trustTreatment;
-
-        if ($dictatorTreatment != null)
-            if ($dictatorTreatment->getTreatmentTaskId() == $taskId)
-                return $dictatorTreatment;
+        return $treatments;
     }
 
     /**
@@ -240,29 +237,22 @@ class Session extends BaseEloquent
      *
      * @return \SportExperiment\Model\TreatmentInterface
      */
-    public function getFirstTreatment()
+    public function getFirstTask()
     {
-        $treatments = $this->getEnabledTreatments();
-        foreach ($treatments as $treatment) {
-            if ($treatment->getTreatmentTaskId() > SubjectEntryState::$NO_TREATMENT_ID_SET) {
-                return $treatment;
-            }
-        }
-
-        return null;
+        $orderedTreatments = $this->getOrderedTasks();
+        return $orderedTreatments[0];
     }
 
     /**
-     * @param TreatmentInterface $currentTreatment
+     * @param SubjectEntryState $entryState
      * @return null|\SportExperiment\Model\TreatmentInterface
      */
-    public function getNextTreatment(TreatmentInterface $currentTreatment)
+    public function getNextTask(SubjectEntryState $entryState)
     {
-        $treatments = $this->getEnabledTreatments();
-        foreach ($treatments as $treatment) {
-            if ($treatment->getTreatmentTaskId() > $currentTreatment->getTreatmentTaskId()) {
-                return $treatment;
-            }
+        $nextOrderId = $entryState->getOrderId() + 1;
+        $treatments = $this->getOrderedTasks();
+        if (isset($treatments[$nextOrderId])) {
+            return $treatments[$nextOrderId];
         }
 
         return null;
@@ -270,18 +260,33 @@ class Session extends BaseEloquent
 
 
     /**
-     * Returns a randomly selected treatment for this session.
+     * Returns a randomly selected treatment. If an $exceptTreatment parameter is
+     * provided, that treatment is ignored.
      *
+     * @param null|TreatmentInterface $exceptTreatment
      * @return int
      */
-    private function getRandomTreatmentTaskId()
+    private function getRandomTreatmentTaskId(TreatmentInterface $exceptTreatment = null)
     {
-        $enabledTreatments = $this->getEnabledTreatments();
-        $randIndex = rand(0, count($enabledTreatments)-1);
-        return $enabledTreatments[$randIndex]::getTaskId();
+        if ($exceptTreatment != null) {
+            $enabledTreatments = $this->getEnabledTreatments();
+            $selectedTreatments = [];
+            foreach($enabledTreatments as $treatment) {
+                if ($treatment->getTreatmentTaskId() != $exceptTreatment->getTreatmentTaskId()) {
+                    $selectedTreatments[] = $treatment;
+                }
+            }
+        }
+        else {
+            $selectedTreatments = $this->getEnabledTreatments();
+        }
+        $randIndex = rand(0, count($selectedTreatments)-1);
+        return $selectedTreatments[$randIndex]::getTaskId();
     }
 
-
+    /**
+     *  Calculates all subject payoffs.
+     */
     public function calculatePayoffs()
     {
         $riskAversionTreatment = $this->getRiskAversionTreatment();
@@ -291,8 +296,19 @@ class Session extends BaseEloquent
         $dictatorTreatment = $this->getDictatorTreatment();
 
         $subjects = $this->getSubjects();
+
+        /* -----------------------------------------------
+         * Willingness Pay: Single Random Player Chosen
+         * ----------------------------------------------- */
+        $randomSubjectId = rand(0, count($subjects)-1);
+        $willingnessPaySubject = $subjects[$randomSubjectId];
+        if ($willingnessPayTreatment != null) {
+            $willingnessPayTreatment->calculatePayoff($willingnessPaySubject);
+            unset($subjects[$randomSubjectId]);
+        }
+
         foreach($subjects as $subject) {
-            $taskId = $this->getRandomTreatmentTaskId();
+            $taskId = $this->getRandomTreatmentTaskId($willingnessPayTreatment);
 
             /* -------------------
              * Single Player
@@ -303,10 +319,6 @@ class Session extends BaseEloquent
                 $riskAversionTreatment->calculatePayoff($subject);
             }
 
-            // Willingness Pay Payoff
-            if ($willingnessPayTreatment != null && $willingnessPayTreatment::getTaskId() == $taskId) {
-                $willingnessPayTreatment->calculatePayoff($subject);
-            }
 
             /* -------------------
              * Multi Player
