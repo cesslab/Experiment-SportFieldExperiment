@@ -1,6 +1,8 @@
 <?php namespace SportExperiment\Model;
 
+use SportExperiment\Model\Eloquent\Charity;
 use SportExperiment\Model\Eloquent\DictatorEntry;
+use SportExperiment\Model\Eloquent\Good;
 use SportExperiment\Model\Eloquent\Subject;
 use SportExperiment\Model\Eloquent\TaskEntry;
 use SportExperiment\Model\Eloquent\TrustProposerEntry;
@@ -46,6 +48,20 @@ class SubjectRepository implements SubjectRepositoryInterface
 
         if ($subject->getDictatorTreatment() instanceof $nextTreatment) {
             $this->saveEntry($collection->getModel(DictatorEntry::getNamespace()), $subject);
+        }
+
+        // Save Charity Selection
+        $charity = $collection->getModel(Charity::getNamespace());
+        if ($charity != null) {
+            $charity->subject()->associate($subject);
+            $charity->save();
+        }
+
+        // Save Good Selection
+        $good = $collection->getModel(Good::getNamespace());
+        if ($good != null) {
+            $good->subject()->associate($subject);
+            $good->save();
         }
     }
 
