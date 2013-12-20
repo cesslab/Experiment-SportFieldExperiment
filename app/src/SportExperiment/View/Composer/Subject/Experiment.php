@@ -1,6 +1,8 @@
 <?php namespace SportExperiment\View\Composer\Subject;
 
+use SportExperiment\Model\Eloquent\Charity;
 use SportExperiment\Model\Eloquent\DictatorTreatment;
+use SportExperiment\Model\Eloquent\Good;
 use SportExperiment\Model\Eloquent\RiskAversionEntry;
 use SportExperiment\Model\Eloquent\RiskAversionTreatment;
 use SportExperiment\Model\Eloquent\Subject;
@@ -29,20 +31,26 @@ class Experiment extends BaseComposer
     {
         $entryState = $this->subject->getSubjectEntryState();
 
-        // Treatment Phase
-        if ( ! $entryState->getTreatmentCompleted()) {
+        // Display Tasks
+        if ( ! $entryState->taskEntriesComplete()) {
             $view->with('displayTask', true);
 
-            if ($entryState->isTreatmentSet()) {
-                $nextTreatment = $this->subject->getTreatment($entryState->getCurrentTaskId());
-            }
-            else {
-                $nextTreatment = $this->subject->getFirstTreatment();
-            }
+            $nextTreatment = $this->subject->getSession()->getTask($entryState->getOrderId());
 
             // Willingness Pay
             $willingnessPayTreatment = $this->subject->getWillingnessPayTreatment();
             if ($willingnessPayTreatment instanceof $nextTreatment) {
+                $chosenGood = $this->subject->getGood();
+                if ($chosenGood == null) {
+                    $view->with('getGood', true);
+                    $view->with('good', Good::$GOOD_KEY);
+                }
+                else {
+                    $view->with('getGood', false);
+                    $view->with('good', $chosenGood->getGood());
+                }
+
+                $view->with('goodOptions', array_merge(['default'=>'Select A Good'], Good::getGoods()));
                 $view->with('taskId', WillingnessPayTreatment::getTaskId());
                 $view->with('endowment', $willingnessPayTreatment->getEndowment());
                 $view->with('willingnessPayTaskId', WillingnessPayTreatment::getTaskId());
@@ -54,6 +62,13 @@ class Experiment extends BaseComposer
             /* @var \SportExperiment\Model\Eloquent\RiskAversionTreatment $riskAversionTreatment */
             $riskAversionTreatment = $this->subject->getRiskAversionTreatment();
             if ($riskAversionTreatment instanceof $nextTreatment) {
+                if (count($this->subject->getRiskAversionEntries()) == 0) {
+                    $view->with('isFirstEntry', true);
+                }
+                else {
+                    $view->with('isFirstEntry', false);
+                }
+
                 $view->with('taskId', RiskAversionTreatment::getTaskId());
                 $view->with('riskAversionTaskId', RiskAversionTreatment::getTaskId());
                 $view->with('lowPrize', $riskAversionTreatment->getLowPrize());
@@ -78,6 +93,12 @@ class Experiment extends BaseComposer
             // Trust Treatment
             $trustTreatment = $this->subject->getTrustTreatment();
             if ($trustTreatment instanceof $nextTreatment) {
+                if (count($this->subject->getTrustEntries()) == 0) {
+                    $view->with('isFirstEntry', true);
+                }
+                else {
+                    $view->with('isFirstEntry', false);
+                }
                 $proposerAllocations = $this->composeProposerAllocations(
                     array_merge(['dev'=>'--'], $trustTreatment->getProposerAllocationOptions()));
                 $view->with('taskId', TrustTreatment::getTaskId());
@@ -85,6 +106,7 @@ class Experiment extends BaseComposer
                 $view->with('isTrustProposer', $this->subject->getTrustGroup()->getSubjectRole() == TrustTreatment::getProposerRoleId());
                 $view->with('proposerAllocationOptions', $proposerAllocations);
                 $view->with('receiverAllocationOptions', $trustTreatment->getReceiverAllocationOptions());
+                $view->with('receiverMultiplier', $trustTreatment->getReceiverAllocationMultiplier());
                 $view->with('numProposerAllocations', TrustTreatment::getNumProposerAllocations());
                 $view->with('numReceiverAllocations', TrustTreatment::getNumReceiverAllocations());
                 $view->with('allocationKey', TrustProposerEntry::$ALLOCATION_KEY);
@@ -94,6 +116,17 @@ class Experiment extends BaseComposer
             // Dictator Treatment
             $dictatorTreatment = $this->subject->getDictatorTreatment();
             if ($dictatorTreatment instanceof $nextTreatment) {
+                $chosenCharity = $this->subject->getCharity();
+                if ($chosenCharity == null) {
+                    $view->with('getCharity', true);
+                    $view->with('charity', Charity::$CHARITY_KEY);
+                }
+                else {
+                    $view->with('getCharity', false);
+                    $view->with('charity', $chosenCharity->getCharity());
+                }
+
+                $view->with('charityOptions', array_merge(['default'=>'Select A Charity'], Charity::getCharities()));
                 $view->with('taskId', DictatorTreatment::getTaskId());
                 $view->with('dictatorTaskId', DictatorTreatment::getTaskId());
                 $view->with('dictatorEndowment', $dictatorTreatment->getProposerEndowment());
