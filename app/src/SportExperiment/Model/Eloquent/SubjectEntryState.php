@@ -6,13 +6,16 @@ class SubjectEntryState extends BaseEloquent
 
     public static $ID_KEY = 'id';
     public static $SUBJECT_ID_KEY = 'subject_id';
-    public static $CURRENT_TASK_ID_KEY = 'task_id';
-    public static $TASKS_COMPLETED_KEY = 'tasks_completed';
-    public static $QUESTIONS_COMPLETED_KEY = 'question_completed';
+    public static $ORDER_ID_KEY = 'order_id';
+    public static $TASK_ID_KEY = 'task_id';
+    public static $TASK_ENTRY_STATE_KEY = 'tasks_entry_state';
+    public static $QUESTION_ENTRY_STATE_KEY = 'question_entry_state';
 
     public $timestamps = false;
 
-    public static $NO_TREATMENT_ID_SET = 0;
+    public static $TASK_ENTRIES_COMPLETE = true;
+    public static $TASK_ENTRIES_REQUIRED = false;
+    public static $FIRST_TASK = 0;
 
     protected $table;
     protected $fillable;
@@ -43,17 +46,9 @@ class SubjectEntryState extends BaseEloquent
     /**
      * @return bool
      */
-    public function isTreatmentSet()
+    public function taskEntriesComplete()
     {
-        return $this->getCurrentTaskId() != self::$NO_TREATMENT_ID_SET;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTreatmentPhaseComplete()
-    {
-        return $this->getTreatmentCompleted() == true;
+        return $this->getTaskEntryState() == self::$TASK_ENTRIES_COMPLETE;
     }
 
     /* ---------------------------------------------------------------------
@@ -65,14 +60,14 @@ class SubjectEntryState extends BaseEloquent
         $this->setAttribute(self::$SUBJECT_ID_KEY, $subjectId);
     }
 
-    public function setCurrentTaskId($treatmentId)
+    public function setTaskId($treatmentId)
     {
-        $this->setAttribute(self::$CURRENT_TASK_ID_KEY, $treatmentId);
+        $this->setAttribute(self::$TASK_ID_KEY, $treatmentId);
     }
 
-    public function setTasksCompleted($completed)
+    public function setTaskEntryState($state)
     {
-        $this->setAttribute(self::$TASKS_COMPLETED_KEY, $completed);
+        $this->setAttribute(self::$TASK_ENTRY_STATE_KEY, $state);
     }
 
     public function getSubjectId()
@@ -80,18 +75,33 @@ class SubjectEntryState extends BaseEloquent
         return $this->getAttribute(self::$SUBJECT_ID_KEY);
     }
 
-    public function getCurrentTaskId()
+    public function getTaskId()
     {
-        return $this->getAttribute(self::$CURRENT_TASK_ID_KEY);
+        return $this->getAttribute(self::$TASK_ID_KEY);
     }
 
-    public function getTreatmentCompleted()
+    public function getOrderId()
     {
-        return $this->getAttribute(self::$TASKS_COMPLETED_KEY);
+        return $this->getAttribute(self::$ORDER_ID_KEY);
     }
 
-    public function getQuestionsCompleted()
+    public function setOrderId($orderId)
     {
-        return $this->getAttribute(self::$QUESTIONS_COMPLETED_KEY);
+        $this->setAttribute(self::$ORDER_ID_KEY, $orderId);
+    }
+
+    public function getNextOrderId()
+    {
+        return $this->getOrderId() + 1;
+    }
+
+    public function getTaskEntryState()
+    {
+        return $this->getAttribute(self::$TASK_ENTRY_STATE_KEY);
+    }
+
+    public function getQuestionEntryState()
+    {
+        return $this->getAttribute(self::$QUESTION_ENTRY_STATE_KEY);
     }
 }
