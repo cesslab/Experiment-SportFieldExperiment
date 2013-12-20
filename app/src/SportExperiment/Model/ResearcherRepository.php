@@ -32,6 +32,7 @@ class ResearcherRepository implements ResearcherRepositoryInterface
 
     private function createSessionSubjects(Session $session)
     {
+        /* @var \SportExperiment\Model\Eloquent\Subject[] $subjects */
         $subjects = [];
         $id = $this->getNextUserId();
         for ($i = 0; $i < $session->getNumSubjects(); ++$i, ++$id) {
@@ -40,6 +41,7 @@ class ResearcherRepository implements ResearcherRepositoryInterface
 
             $subjectEntryState = new SubjectEntryState();
             $subjectEntryState->subject()->associate($subjects[$i]);
+            $subjectEntryState->setTaskId($subjects[$i]->getSession()->getFirstTask()->getTreatmentTaskId());
             $subjectEntryState->save();
         }
 
