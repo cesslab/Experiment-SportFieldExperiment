@@ -22,6 +22,8 @@ class CreatePregameQuestionnaireTable extends Migration {
             $table->string(PreGameQuestionnaire::$FAVORITE_TEAM_KEY);
             $table->string(PreGameQuestionnaire::$FAVORED_TEAM_KEY);
             $table->integer(PreGameQuestionnaire::$MEASURE_FAVORED_TEAM_KEY)->unsigned();
+            $table->integer(PreGameQuestionnaire::$DISLIKE_OPPONENT_TEAM_KEY)->unsigned();
+            $table->integer(PreGameQuestionnaire::$REASON_FOR_ROOTING_KEY)->unsigned();
             $table->timestamps();
         });
 	}
