@@ -40,8 +40,8 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface, Tr
         $this->fillable = [self::$PROPOSER_ALLOCATION_MULTIPLIER_KEY, self::$RECEIVER_ALLOCATION_MULTIPLIER_KEY];
 
         $this->rules = [
-            self::$PROPOSER_ALLOCATION_MULTIPLIER_KEY=>'required|numeric|min:0|max:1000000',
-            self::$RECEIVER_ALLOCATION_MULTIPLIER_KEY=>'required|numeric|min:0|max:1000000'
+            self::$PROPOSER_ALLOCATION_MULTIPLIER_KEY=>'required|integer|min:0|max:1000000',
+            self::$RECEIVER_ALLOCATION_MULTIPLIER_KEY=>'required|integer|min:0|max:1000000'
         ];
 
         parent::__construct($attributes);
