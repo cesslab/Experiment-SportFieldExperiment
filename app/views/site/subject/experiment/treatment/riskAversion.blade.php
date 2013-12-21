@@ -22,7 +22,7 @@
                     <p>
                         Remember, the price you pay is chosen in a way such that it is in your best interest to write
                         down exactly the most you would be willing to pay for the risky gamble.
-                        (Please choose an amount between $0 and ${{$endowment}}).
+                        (Please choose an amount between $0 and ${{$endowment}}.)
                     </p>
                     {{ Form::text($gamblePayment, Input::old($gamblePayment), ['class'=>'form-control', 'type'=>'number', 'placeholder'=>'Amount Willing to Pay']) }}
                     <span class="error">{{ $errors->first($gamblePayment) }}</span>

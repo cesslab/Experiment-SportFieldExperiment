@@ -15,11 +15,9 @@
         @if ($willingnessPayActive)
             <h2>Task {{$willingnessPayTaskId}} was randomly selected for payoff.</h2>
             <p>From the entries you made for this task a random commercial break entry was randomly selected.
-                The payoff for this entry is <strong>${{$willingnessPayPayoff}}</strong>,
+                The payoff for this entry is <strong>${{$willingnessPayPayoff}}</strong>.</p>
             @if ($itemPurchased)
-                and the item you purchased.</p>
-            @else
-               </strong>.</p>
+                <p>You have also purchased the item you selected.</p>
             @endif
         @endif
 

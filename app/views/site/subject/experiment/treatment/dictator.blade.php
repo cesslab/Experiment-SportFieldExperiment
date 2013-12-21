@@ -23,7 +23,7 @@
                 @endif
                 <p>
                     At this moment, how much of your ${{$endowment}} do you want to donate to the charity you
-                    selected at the start of the game? (Please choose an amount between $0 and ${{$endowment}}.)"
+                    selected at the start of the game? (Please choose an amount between $0 and ${{$endowment}}.)
                 </p>
 
                 <div class="form-group {{ ($errors->has($allocationKey)) ? 'has-error' : '' }} ">
