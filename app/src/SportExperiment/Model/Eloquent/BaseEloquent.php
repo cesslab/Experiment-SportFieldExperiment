@@ -11,7 +11,6 @@ class BaseEloquent extends Model
     /* @var $rules array */
     protected $rules = [];
 
-
     /**
      * @param array $attributes
      */
