@@ -1,7 +1,5 @@
 <?php namespace SportExperiment\Model\Eloquent;
 
-use SportExperiment\Model\TreatmentInterface;
-
 class Subject extends BaseEloquent
 {
     public static $TABLE_KEY = 'subjects';
