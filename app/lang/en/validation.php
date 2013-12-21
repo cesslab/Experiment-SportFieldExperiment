@@ -1,5 +1,14 @@
 <?php
 
+use SportExperiment\Model\Eloquent\DictatorEntry;
+use SportExperiment\Model\Eloquent\GameQuestionnaire;
+use SportExperiment\Model\Eloquent\Charity;
+use SportExperiment\Model\Eloquent\Good;
+use SportExperiment\Model\Eloquent\WillingnessPayEntry;
+use SportExperiment\Model\Eloquent\RiskAversionEntry;
+use SportExperiment\Model\Eloquent\TrustProposerEntry;
+use SportExperiment\Model\Eloquent\PreGameQuestionnaire;
+
 return array(
 
 	/*
@@ -85,6 +94,108 @@ return array(
 	*/
 
 	'custom' => array(
+        /*
+         * Game Questionnaire
+         */
+        PreGameQuestionnaire::$SPORT_FAN_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        PreGameQuestionnaire::$FOOTBALL_FAN_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        PreGameQuestionnaire::$FAVORITE_TEAM_KEY => array(
+            'required'=>'A team selection is required',
+            'integer'=>'A team selection is required',
+            'in'=>'An team must be selected',
+            'min'=>'An team must be selected',
+        ),
+        PreGameQuestionnaire::$FAVORED_TEAM_KEY => array(
+            'required'=>'A team selection is required',
+            'integer'=>'A team selection is required',
+            'in'=>'An team must be selected',
+            'min'=>'An team must be selected',
+        ),
+        PreGameQuestionnaire::$MEASURE_FAVORED_TEAM_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        PreGameQuestionnaire::$DISLIKE_OPPONENT_TEAM_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        PreGameQuestionnaire::$REASON_FOR_ROOTING_KEY => array(
+            'required'=>'A selection is required',
+            'in'=>'A selection is required'
+        ),
+        /*
+         * Game Questionnaire
+         */
+        GameQuestionnaire::$LEVEL_EXCITATION_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        GameQuestionnaire::$LEVEL_SURPRISE_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        GameQuestionnaire::$LEVEL_HAPPINESS_KEY => array(
+            'required'=>'An entry between 1 and 7 is required',
+            'in'=>'An entry between 1 and 7 is required'
+        ),
+        GameQuestionnaire::$LIKELINESS_WINNING_KEY => array(
+            'in'=> 'An entry between 0 and 100 is required',
+            'required'=> 'An entry between 0 and 100 is required'
+        ),
+        /*
+         * Charity
+         */
+        Charity::$CHARITY_KEY => array(
+            'required' => 'One of the charities listed must be selected',
+            'integer' => 'One of the charities listed must be selected',
+            'in' => 'One of the charities listed must be selected'
+        ),
+        /*
+         * Dictator Entry
+         */
+        DictatorEntry::$DICTATOR_ALLOCATION_KEY => array(
+            'required' => 'A donation value entry is required',
+            'numeric' => 'The donation value must be a number',
+            'min' => 'A donation value of at least $:min is required',
+            'max' => 'A donation value of at most $:max is required'
+        ),
+        /*
+         * Good
+         */
+        Good::$GOOD_KEY => array(
+            'required' => 'One of the goods listed must be selected',
+            'integer' => 'One of the goods listed must be selected',
+            'in' => 'One of the goods listed must be selected'
+        ),
+        /*
+         * Willingness Pay Entry
+         */
+        WillingnessPayEntry::$WILLING_PAY_KEY => array(
+            'required' => 'An entry is required',
+            'in' => 'One of the values listed must be selected',
+            'min' => 'The entered value must be at least $:min',
+            'max' => 'The entered value must be at most $:max'
+        ),
+        /*
+         * Risk Aversion Entry
+         */
+        RiskAversionEntry::$GAMBLE_PAYMENT_KEY => array(
+            'required' => 'An entry is required',
+            'numeric' => 'A numeric value must be entered',
+            'min' => 'The entered value must be at least $:min',
+            'max' => 'The entered value must be at most $:max'
+        ),
+        TrustProposerEntry::$ALLOCATION_KEY => array(
+            'required' => 'An entry is required',
+            'numeric' => 'A numeric value must be entered',
+            'in' => 'One of the values listed must be selected',
+        )
     ),
 
 	/*
