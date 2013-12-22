@@ -28,7 +28,7 @@ class CreateSubjectsTable extends Migration {
             $table->string(Subject::$WORK_STATUS_KEY)->nullable();
             $table->string(Subject::$INCOME_KEY)->nullable();
 
-            $table->double(Subject::$PAYOFF_KEY, 5,2)->default(0.0);
+            $table->double(Subject::$PAYOFF_KEY, 7,2)->default(0.0);
             $table->integer(Subject::$PAYOFF_TASK_ID_KEY)->default(0);
             $table->boolean(Subject::$ITEM_PURCHASED_KEY)->default(false);
             $table->timestamps();
