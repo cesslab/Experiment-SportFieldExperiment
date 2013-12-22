@@ -123,10 +123,18 @@ class DictatorTreatment extends BaseEloquent implements GroupTreatmentInterface,
         $receiverEntry->setPayoff($dictatorEntry->getDictatorAllocation());
 
         if ($subject->getDictatorGroup()->isProposer()) {
+            $subject->setPayoffTaskId($this->getTreatmentTaskId());
+            $subject->setPayoff($dictatorEntry->getPayoff());
+            $subject->save();
+
             $dictatorEntry->setSelectedForPayoff(true);
             $dictatorEntry->save();
         }
         else {
+            $subject->setPayoffTaskId($this->getTreatmentTaskId());
+            $subject->setPayoff($receiverEntry->getPayoff());
+            $subject->save();
+
             $receiverEntry->save();
             $receiverEntry->setSelectedForPayoff(true);
         }

@@ -172,10 +172,18 @@ class UltimatumTreatment extends BaseEloquent implements GroupTreatmentInterface
 
         // Save only the subjects payoffs, not her partners.
         if ($subject->getUltimatumGroup()->isProposer()) {
+            $subject->setPayoffTaskId($this->getTreatmentTaskId());
+            $subject->setPayoff($proposerEntry->getPayoff());
+            $subject->save();
+
             $proposerEntry->setSelectedForPayoff(true);
             $proposerEntry->save();
         }
         else {
+            $subject->setPayoffTaskId($this->getTreatmentTaskId());
+            $subject->setPayoff($receiverEntry->getPayoff());
+            $subject->save();
+
             $receiverEntry->setSelectedForPayoff(true);
             $receiverEntry->save();
         }

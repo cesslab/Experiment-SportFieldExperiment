@@ -86,6 +86,10 @@ class RiskAversionTreatment extends BaseEloquent implements TreatmentInterface
         $entry->setPayoff($payoff);
         $entry->setSelectedForPayoff(true);
         $entry->save();
+
+        $subject->setPayoffTaskId($this->getTreatmentTaskId());
+        $subject->setPayoff($entry->getPayoff());
+        $subject->save();
     }
 
     /* ---------------------------------------------------------------------

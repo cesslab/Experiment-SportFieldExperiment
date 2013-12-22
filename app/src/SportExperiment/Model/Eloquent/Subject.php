@@ -7,6 +7,7 @@ class Subject extends BaseEloquent
     public static $ID_KEY = 'id';
     public static $GAME_STATE_KEY = 'game_state';
     public static $USER_ID_KEY = 'user_id';
+
     public static $FIRST_NAME_KEY = 'first_name';
     public static $LAST_NAME_KEY = 'last_name';
     public static $SESSION_ID_KEY = 'session_id';
@@ -15,6 +16,10 @@ class Subject extends BaseEloquent
     public static $AGE_KEY = 'age';
     public static $WORK_STATUS_KEY = 'work_status';
     public static $INCOME_KEY = 'income';
+
+    public static $PAYOFF_KEY = 'payoff';
+    public static $PAYOFF_TASK_ID_KEY = 'task_id';
+    public static $ITEM_PURCHASED_KEY = 'item_purchased';
 
     private static $workStatusOptions = [
         'unemployed'=>'Unemployed', 'full'=>'Full Time','part'=>'Part Time', 'student'=>'Student'];
@@ -485,6 +490,30 @@ class Subject extends BaseEloquent
     }
 
     /**
+     * @param $payoff
+     */
+    public function setPayoff($payoff)
+    {
+        $this->setAttribute(self::$PAYOFF_KEY, $payoff);
+    }
+
+    /**
+     * @param $payoffTaskId
+     */
+    public function setPayoffTaskId($payoffTaskId)
+    {
+        $this->setAttribute(self::$PAYOFF_TASK_ID_KEY, $payoffTaskId);
+    }
+
+    /**
+     * @param $itemPurchased
+     */
+    public function setItemPurchased($itemPurchased)
+    {
+        $this->setAttribute(self::$ITEM_PURCHASED_KEY, $itemPurchased);
+    }
+
+    /**
      * @param $id
      */
     public function setId($id)
@@ -610,5 +639,29 @@ class Subject extends BaseEloquent
     public function getLastName()
     {
         return $this->getAttribute(self::$LAST_NAME_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayoff()
+    {
+        return $this->getAttribute(self::$PAYOFF_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPayoffTaskId()
+    {
+        return $this->getAttribute(self::$PAYOFF_TASK_ID_KEY);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemPurchased()
+    {
+        return $this->getAttribute(self::$ITEM_PURCHASED_KEY);
     }
 }

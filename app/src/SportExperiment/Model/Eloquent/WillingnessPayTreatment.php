@@ -67,6 +67,11 @@ class WillingnessPayTreatment extends BaseEloquent implements TreatmentInterface
             $entry->setItemPurchased(false);
         }
 
+        $subject->setPayoffTaskId($this->getTreatmentTaskId());
+        $subject->setPayoff($entry->getPayoff());
+        $subject->setItemPurchased($entry->getItemPurchased());
+        $subject->save();
+
         $entry->setSelectedForPayoff(true);
         $entry->save();
     }

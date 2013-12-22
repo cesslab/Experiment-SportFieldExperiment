@@ -144,11 +144,19 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface, Tr
             $proposerEntry->setSelectedForPayoff(true);
             $proposerEntry->setPayoff($this->getProposerEndowment() - $proposerAllocation + $receiverAllocation);
             $proposerEntry->save();
+
+            $subject->setPayoffTaskId($this->getTreatmentTaskId());
+            $subject->setPayoff($proposerEntry->getPayoff());
+            $subject->save();
         }
         else {
             $receiverEntry->setSelectedForPayoff(true);
             $receiverEntry->setPayoff($proposerAllocation - $receiverAllocation);
             $receiverEntry->save();
+
+            $subject->setPayoffTaskId($this->getTreatmentTaskId());
+            $subject->setPayoff($receiverEntry->getPayoff());
+            $subject->save();
         }
     }
 
