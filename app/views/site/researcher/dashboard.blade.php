@@ -71,18 +71,22 @@
             <table id="subjectTable" class="table table-bordered table-hover tablesorter">
                 <thead>
                 <tr>
-                    <th>Subject ID <i class="fa fa-sort"></i></th>
                     <th>Session ID <i class="fa fa-sort"></i></th>
                     <th>User Name <i class="fa fa-sort"></i></th>
+                    <th>Payoff Task ID<i class="fa fa-sort"></i></th>
+                    <th>Payoff <i class="fa fa-sort"></i></th>
+                    <th>Item Purchased <i class="fa fa-sort"></i></th>
                     <th>Game State <i class="fa fa-sort"></i></th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($subjects as $subject)
                 <tr>
-                    <td>{{ $subject->id }}</td>
                     <td>{{ $subject->session_id }}</td>
                     <td>{{ $subject->user->user_name }}</td>
+                    <td>{{ $subject->getPayoffTaskId() }}</td>
+                    <td>{{ $subject->getPayoff() }}</td>
+                    <td>{{ ($subject->getItemPurchased()) ? "Item Purchased" : "" }}</td>
                     @if ($subject->getState() == $registrationState)
                     <td>Registration</td>
                     @elseif ($subject->getState() == $holdState)
