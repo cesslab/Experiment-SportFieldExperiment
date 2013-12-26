@@ -132,6 +132,7 @@ class Experiment extends BaseController
             $gameQuestionnaire->save();
 
             // Update SubjectEntryState
+            $entryState->setCommercialBreakEntry($entryState->getCommercialBreakEntry() + 1);
             $entryState->setTaskEntryState(SubjectEntryState::$TASK_ENTRIES_REQUIRED);
             $entryState->save();
 
