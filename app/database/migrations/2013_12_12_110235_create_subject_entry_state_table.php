@@ -19,7 +19,7 @@ class CreateSubjectEntryStateTable extends Migration {
             $table->integer(SubjectEntryState::$TASK_ID_KEY)->unsigned()->default(0);
             $table->integer(SubjectEntryState::$ORDER_ID_KEY)->unsigned()->default(0);
             $table->boolean(SubjectEntryState::$TASK_ENTRY_STATE_KEY)->default(false);
-            $table->boolean(SubjectEntryState::$QUESTION_ENTRY_STATE_KEY)->default(false);
+            $table->integer(SubjectEntryState::$COMMERCIAL_BREAK_ENTRY_KEY)->unsigned()->default(0);
         });
 	}
 
