@@ -98,7 +98,7 @@
                     <td>Questionnaire</td>
                     @elseif ($subject->getState() == $completedState)
                     <td>Completed</td>
-                    @elsif ($subject->getState() == $preGameQuestionnaireState)
+                    @elseif ($subject->getState() == $preGameQuestionnaireState)
                     <td>Pre-Game Questionnaire</td>
                     @else
                     <td>Undeclared</td>
