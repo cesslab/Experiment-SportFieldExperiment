@@ -17,8 +17,6 @@
 @stop
 
 @section('content')
-<meta http-equiv="Refresh" content="20">
-
 
 <div class="row">
     <div class="col-lg-12">
@@ -27,10 +25,10 @@
             <table id = "sessionTable" class="table table-bordered table-hover tablesorter">
                 <thead>
                 <tr>
-                    <th>Session ID <i class="fa fa-sort"></i></th>
-                    <th>Number of Subjects <i class="fa fa-sort"></i></th>
-                    <th>Session State <i class="fa fa-sort"></i></th>
-                    <th>Manage Session <i class="fa fa-sort"></i></th>
+                    <th>Session ID </th>
+                    <th>Number of Subjects </th>
+                    <th>Session State </th>
+                    <th>Manage Session </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -71,12 +69,13 @@
             <table id="subjectTable" class="table table-bordered table-hover tablesorter">
                 <thead>
                 <tr>
-                    <th>Session ID <i class="fa fa-sort"></i></th>
-                    <th>User Name <i class="fa fa-sort"></i></th>
-                    <th>Payoff Task ID<i class="fa fa-sort"></i></th>
-                    <th>Payoff <i class="fa fa-sort"></i></th>
-                    <th>Item Purchased <i class="fa fa-sort"></i></th>
-                    <th>Game State <i class="fa fa-sort"></i></th>
+                    <th>Session ID </th>
+                    <th>User Name </th>
+                    <th>Payoff Task ID</th>
+                    <th>Payoff</th>
+                    <th>Item Purchased</th>
+                    <th>Game State</th>
+                    <th>Commercial Entries</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -99,9 +98,12 @@
                     <td>Questionnaire</td>
                     @elseif ($subject->getState() == $completedState)
                     <td>Completed</td>
+                    @elsif ($subject->getState() == $preGameQuestionnaireState)
+                    <td>Pre-Game Questionnaire</td>
                     @else
                     <td>Undeclared</td>
                     @endif
+                    <td>{{ $subject->getSubjectEntryState()->getCommercialBreakEntry() }}</td>
                 </tr>
                 @endforeach
                 </tbody>
