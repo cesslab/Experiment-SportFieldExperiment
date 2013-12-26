@@ -16,6 +16,7 @@ use SportExperiment\Controller\Subject\Payoff;
 use SportExperiment\Controller\Subject\Questionnaire;
 use SportExperiment\Controller\Subject\Completed;
 use SportExperiment\Controller\Subject\PreGame\Questionnaire as PreGameQuestionnaire;
+use SportExperiment\Controller\Researcher\SessionTable;
 
 Route::get('/', function(){});
 
@@ -24,14 +25,18 @@ Route::get('/', function(){});
 | Researcher Routes
 |--------------------------------------------------------------------------
  */
-// Researcher Login
-Route::get(ResearcherLogin::getRoute(), ResearcherLogin::getNamespace() . '@getLogin');
-Route::post(ResearcherLogin::getRoute(), array('before'=>'csrf', 'uses'=>ResearcherLogin::getNamespace() .'@postLogin'));
+    // Researcher Login
+    Route::get(ResearcherLogin::getRoute(), ResearcherLogin::getNamespace() . '@getLogin');
+    Route::post(ResearcherLogin::getRoute(), array('before'=>'csrf', 'uses'=>ResearcherLogin::getNamespace() .'@postLogin'));
 
 // Researcher Auth Filter Routes
 Route::group(array('before'=>ResearcherAuthFilter::getName()), function(){
+
     // Dashboard
     Route::get(Dashboard::getRoute(), Dashboard::getNamespace() . '@getDashboard');
+
+    // Subjects Table
+    Route::get(SessionTable::getRoute(), SessionTable::getNamespace() . '@getSessionTable');
 
     // Session
     Route::get(Session::getRoute(), Session::getNamespace() . '@getSession');
