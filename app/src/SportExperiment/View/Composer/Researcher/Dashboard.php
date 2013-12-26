@@ -35,6 +35,7 @@ class Dashboard extends BaseComposer
         $view->with('payoffState', SubjectState::$PAYOFF);
         $view->with('questionnaireState', SubjectState::$OUTGOING_QUESTIONNAIRE);
         $view->with('completedState', SubjectState::$COMPLETED);
+        $view->with('preGameQuestionnaireState', SubjectState::$PRE_GAME_QUESTIONNAIRE_STATE);
         $view->with('postUrl', URL::to(SessionController::getUpdateRoute()));
         $view->with('ultimatumProposerRoleId', UltimatumTreatment::getProposerRoleId());
         $view->with('ultimatumReceiverRoleId', UltimatumTreatment::getReceiverRoleId());
