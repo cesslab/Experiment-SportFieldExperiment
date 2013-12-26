@@ -19,7 +19,7 @@
                     back for each of the amounts of money that Player A might have transferred to you.
                 </p>
                 <p>
-                    You are Player A. Select one of the four possible dollar amounts to send to Player B.
+                    <strong>You are Player B</strong>. Select one of the four possible dollar amounts to send to <strong>Player A</strong>.
                 </p>
                 <div class="form-group {{ ($errors->has($allocationKey)) ? 'has-error' : '' }} ">
                     @for($i = 0; $i < count($receiverAllocationOptions); ++$i)
