@@ -9,7 +9,7 @@ class SubjectEntryState extends BaseEloquent
     public static $ORDER_ID_KEY = 'order_id';
     public static $TASK_ID_KEY = 'task_id';
     public static $TASK_ENTRY_STATE_KEY = 'tasks_entry_state';
-    public static $QUESTION_ENTRY_STATE_KEY = 'question_entry_state';
+    public static $COMMERCIAL_BREAK_ENTRY_KEY = 'commercial_break_entry';
 
     public $timestamps = false;
 
@@ -70,6 +70,11 @@ class SubjectEntryState extends BaseEloquent
         $this->setAttribute(self::$TASK_ENTRY_STATE_KEY, $state);
     }
 
+    public function setCommercialBreakEntry($entryNumber)
+    {
+        $this->setAttribute(self::$COMMERCIAL_BREAK_ENTRY_KEY, $entryNumber);
+    }
+
     public function getSubjectId()
     {
         return $this->getAttribute(self::$SUBJECT_ID_KEY);
@@ -100,8 +105,8 @@ class SubjectEntryState extends BaseEloquent
         return $this->getAttribute(self::$TASK_ENTRY_STATE_KEY);
     }
 
-    public function getQuestionEntryState()
+    public function getCommercialBreakEntry()
     {
-        return $this->getAttribute(self::$QUESTION_ENTRY_STATE_KEY);
+        return $this->getAttribute(self::$COMMERCIAL_BREAK_ENTRY_KEY);
     }
 }
