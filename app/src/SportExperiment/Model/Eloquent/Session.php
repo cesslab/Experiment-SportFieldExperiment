@@ -318,24 +318,19 @@ class Session extends BaseEloquent
             if ($riskAversionTreatment != null && $riskAversionTreatment::getTaskId() == $taskId ) {
                 $riskAversionTreatment->calculatePayoff($subject);
             }
-
-
             /* -------------------
              * Multi Player
              * ------------------- */
-
             // Ultimatum Payoff
-            if ($ultimatumTreatment != null && $ultimatumTreatment::getTaskId() == $taskId) {
+            elseif ($ultimatumTreatment != null && $ultimatumTreatment::getTaskId() == $taskId) {
                 $ultimatumTreatment->calculatePayoff($subject);
             }
-
             // Trust Payoff
-            if ($trustTreatment != null && $trustTreatment::getTaskId() == $taskId) {
+            elseif ($trustTreatment != null && $trustTreatment::getTaskId() == $taskId) {
                 $trustTreatment->calculatePayoff($subject);
             }
-
             // Dictator Payoff
-            if ($dictatorTreatment != null && $dictatorTreatment::getTaskId() == $taskId) {
+            elseif ($dictatorTreatment != null && $dictatorTreatment::getTaskId() == $taskId) {
                 $dictatorTreatment->calculatePayoff($subject);
             }
         }
