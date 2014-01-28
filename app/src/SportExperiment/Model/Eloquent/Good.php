@@ -11,7 +11,7 @@ class Good extends BaseEloquent
 
     public $timestamps = true;
 
-    public static $GOODS = ['A', 'B', 'C'];
+    public static $GOODS = ['Winter Hat', 'Headphones', 'Video Streaming Device'];
 
     protected $rules;
     protected $table;
