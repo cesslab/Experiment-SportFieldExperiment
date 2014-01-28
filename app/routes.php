@@ -17,17 +17,20 @@ use SportExperiment\Controller\Subject\Questionnaire;
 use SportExperiment\Controller\Subject\Completed;
 use SportExperiment\Controller\Subject\PreGame\Questionnaire as PreGameQuestionnaire;
 use SportExperiment\Controller\Researcher\SessionTable;
+use SportExperiment\Controller\Researcher\Session\Data as SessionData;
+use SportExperiment\Model\Eloquent\Session as SessionModel;
 
-Route::get('/', function(){});
+Route::model(SessionData::getSessionIdKey(), SessionModel::getNamespace());
 
+Route::get('/', SubjectLogin::getNamespace() . '@getLogin');
 /*
 |--------------------------------------------------------------------------
 | Researcher Routes
 |--------------------------------------------------------------------------
  */
-    // Researcher Login
-    Route::get(ResearcherLogin::getRoute(), ResearcherLogin::getNamespace() . '@getLogin');
-    Route::post(ResearcherLogin::getRoute(), array('before'=>'csrf', 'uses'=>ResearcherLogin::getNamespace() .'@postLogin'));
+// Researcher Login
+Route::get(ResearcherLogin::getRoute(), ResearcherLogin::getNamespace() . '@getLogin');
+Route::post(ResearcherLogin::getRoute(), array('before'=>'csrf', 'uses'=>ResearcherLogin::getNamespace() .'@postLogin'));
 
 // Researcher Auth Filter Routes
 Route::group(array('before'=>ResearcherAuthFilter::getName()), function(){
@@ -42,6 +45,9 @@ Route::group(array('before'=>ResearcherAuthFilter::getName()), function(){
     Route::get(Session::getRoute(), Session::getNamespace() . '@getSession');
     Route::post(Session::getRoute(), Session::getNamespace() . '@postSession');
     Route::post(Session::getUpdateRoute(), Session::getNamespace() . '@updateSession');
+
+    // Session Data
+    Route::get(SessionData::getRoute(), SessionData::getNamespace() . '@getSessionData');
 });
 
 /*
