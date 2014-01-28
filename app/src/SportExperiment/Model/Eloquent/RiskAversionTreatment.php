@@ -76,10 +76,10 @@ class RiskAversionTreatment extends BaseEloquent implements TreatmentInterface
         else {
             $gambleDraw = lcg_value();
             if ($gambleDraw <= $this->getPrizeProbability()) {
-                $payoff = $this->getEndowment() - $entry->getGamblePayment() + $this->getHighPrize();
+                $payoff = $this->getEndowment() - $prizeDraw + $this->getHighPrize();
             }
             else {
-                $payoff = $this->getEndowment() - $entry->getGamblePayment() + $this->getLowPrize();
+                $payoff = $this->getEndowment() - $prizeDraw + $this->getLowPrize();
             }
         }
 
