@@ -36,10 +36,10 @@ class Questionnaire extends BaseComposer
         $view->with('reasonForRootingOptions',
             array_merge(['default'=>'Select One'],
                 [
-                    1=>'They are my favorite team',
-                    2=>'I need that team to win in order for my truly favorite team to make the playoffs',
-                    3=>'I bet on that team',
-                    4=>'For fantasy football'
+                    1=>'I need that team to win in order for my truly favorite team to make the playoffs',
+                    2=>'I bet on that team',
+                    3=>'For fantasy football',
+                    4=>'Other'
                 ]));
     }
 
