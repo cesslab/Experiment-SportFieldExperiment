@@ -82,35 +82,6 @@ class TrustTreatment extends BaseEloquent implements GroupTreatmentInterface, Tr
     }
 
     /**
-     * Calculates and saves the receiver and proposer payoffs.
-     *
-     * @param Subject $receiver
-     * @param Subject $proposer
-     */
-    public function calculateGroupPayoff(Subject $proposer, Subject $receiver)
-    {
-        $proposerEntry = $proposer->getRandomTrustEntry();
-        $proposerEntry->setSelectedForPayoff(true);
-
-        $proposerAllocationEntry = $proposerEntry->getProposerEntry();
-        $proposerAllocation = $proposerAllocationEntry->getAllocation();
-
-        $receiverEntry = $receiver->getRandomTrustEntry();
-        $receiverEntry->setSelectedForPayoff(true);
-
-        $trustTreatment = $proposer->getTrustTreatment();
-
-        $receiverAllocationEntry = $receiverEntry->getReceiverAllocationEntry($proposerAllocationEntry, $trustTreatment);
-        $receiverAllocation = $receiverAllocationEntry->getAllocation();
-
-        $proposerEntry->setPayoff($this->getProposerEndowment() - $proposerAllocation + $receiverAllocation);
-        $receiverEntry->setPayoff($proposerAllocation - $receiverAllocation);
-
-        $proposerEntry->save();
-        $receiverEntry->save();
-    }
-
-    /**
      * Calculates the specified subject Trust Payoffs.
      *
      * @param Subject $subject
