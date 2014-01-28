@@ -58,7 +58,7 @@ class WillingnessPayTreatment extends BaseEloquent implements TreatmentInterface
 
         // Subject Won Item
         if ($randomGoodPrice <= $entry->getWillingnessPay()) {
-            $entry->setPayoff($endowment - $entry->getWillingnessPay());
+            $entry->setPayoff($endowment - $randomGoodPrice);
             $entry->setItemPurchased(true);
         }
         // Subject Didn't Win Item
